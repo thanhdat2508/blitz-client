@@ -15,9 +15,9 @@ function RootComponent() {
           <div className="flex items-center gap-6">
             <Link to="/" className="flex items-center gap-2 font-bold text-lg hover:opacity-90">
               <span className="bg-primary text-primary-foreground px-2.5 py-1 rounded-lg text-sm font-black shadow-sm">
-                R19
+                địt
               </span>
-              <span>React Base</span>
+              <span>mẹ</span>
             </Link>
             <nav className="flex items-center gap-2 text-sm font-medium">
               <Link
@@ -31,6 +31,13 @@ function RootComponent() {
                 className="px-3 py-1.5 rounded-md hover:bg-accent transition-colors [&.active]:bg-accent [&.active]:font-semibold"
               >
                 Sản phẩm (Feature)
+              </Link>
+              <Link
+                to="/news"
+                className="px-3 py-1.5 rounded-md hover:bg-accent transition-colors [&.active]:bg-accent [&.active]:font-semibold flex items-center gap-1.5"
+              >
+                <span>News</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
               </Link>
               <Link
                 to="/demo"
