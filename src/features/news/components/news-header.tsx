@@ -1,5 +1,14 @@
 import { useState } from 'react'
-import { Link2, Check } from 'lucide-react'
+import { Link2, Check, Radio } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { Avatar, AvatarFallback, AvatarBadge } from '@/components/ui/avatar'
 
 export function NewsHeader() {
   const [copied, setCopied] = useState(false)
@@ -10,58 +19,70 @@ export function NewsHeader() {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
-      // Fallback
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     }
   }
 
   return (
-    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-border/40">
-      <div className="flex items-center gap-4">
-        {/* LoL Hextech Crest Icon */}
-        <div className="relative shrink-0 w-12 h-12 rounded-full p-[2px] bg-gradient-to-tr from-amber-600 via-amber-400 to-cyan-400 shadow-md shadow-amber-500/10">
-          <div className="w-full h-full rounded-full bg-[#0a0c10] flex items-center justify-center border border-amber-300/30">
-            <span className="font-black text-xl tracking-tighter bg-gradient-to-b from-amber-200 to-amber-500 bg-clip-text text-transparent select-none">
-              L
-            </span>
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          {/* LoL Hextech Crest with ShadCN Avatar */}
+          <Avatar size="lg" className="border-2 border-amber-500/50 shadow-md shadow-amber-500/10 ring-2 ring-amber-500/20">
+            <AvatarFallback className="bg-gradient-to-tr from-amber-600 via-amber-400 to-cyan-500 text-black font-black text-xl">
+              <span className="w-full h-full rounded-full bg-[#0a0c10] flex items-center justify-center border border-amber-300/30 text-transparent bg-clip-text bg-gradient-to-b from-amber-200 to-amber-500 font-extrabold text-lg select-none">
+                L
+              </span>
+            </AvatarFallback>
+            <AvatarBadge className="bg-emerald-500 ring-background" />
+          </Avatar>
+
+          {/* Title & Subtitle */}
+          <div className="space-y-1">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+                League of Legends News
+              </h1>
+              <Badge variant="outline" className="text-[11px] gap-1 py-0.5 border-amber-500/40 text-amber-500 dark:text-amber-400">
+                <Radio className="w-3 h-3 text-emerald-400 animate-pulse" />
+                Live Feed
+              </Badge>
+            </div>
+            <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl leading-relaxed">
+              All the latest from League of Legends breaking down the news, latest patch notes, and champion balance updates.
+            </p>
           </div>
-          <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-background rounded-full" />
         </div>
 
-        {/* Title & Subtitle */}
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
-            League of Legends News
-          </h1>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 max-w-2xl">
-            All the latest from League of Legends breaking down the news, latest patch notes, and more.
-          </p>
+        {/* Share / Copy Link Button with ShadCN Tooltip & Button */}
+        <div className="flex items-center self-start sm:self-center">
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={handleCopyLink}
+                  aria-label="Sao chép liên kết"
+                  className="hover:border-amber-500/40 hover:text-amber-400 transition-colors"
+                />
+              }
+            >
+              {copied ? (
+                <Check className="size-4 text-emerald-400" />
+              ) : (
+                <Link2 className="size-4" />
+              )}
+            </TooltipTrigger>
+            <TooltipContent side="top" align="center">
+              {copied ? 'Đã sao chép liên kết!' : 'Sao chép liên kết trang'}
+            </TooltipContent>
+          </Tooltip>
         </div>
       </div>
 
-      {/* Share / Copy Link Button */}
-      <div className="flex items-center self-start sm:self-center">
-        <button
-          onClick={handleCopyLink}
-          type="button"
-          title="Sao chép liên kết"
-          className="group relative flex items-center justify-center w-9 h-9 rounded-lg bg-card/60 hover:bg-card border border-border/60 hover:border-amber-500/40 text-muted-foreground hover:text-amber-400 transition-all cursor-pointer shadow-sm"
-        >
-          {copied ? (
-            <Check className="w-4 h-4 text-emerald-400" />
-          ) : (
-            <Link2 className="w-4 h-4 group-hover:rotate-45 transition-transform duration-200" />
-          )}
-
-          {/* Tooltip */}
-          {copied && (
-            <span className="absolute -top-8 right-0 text-[10px] font-semibold bg-emerald-950 text-emerald-300 border border-emerald-800/80 px-2 py-0.5 rounded shadow-lg whitespace-nowrap animate-in fade-in zoom-in-95">
-              Đã sao chép!
-            </span>
-          )}
-        </button>
-      </div>
+      <Separator className="border-border/40" />
     </div>
   )
 }

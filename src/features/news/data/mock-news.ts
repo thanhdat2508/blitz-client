@@ -11,7 +11,7 @@ export const MOCK_NEWS_ARTICLES: NewsArticle[] = [
     bannerUrl: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000&auto=format&fit=crop',
     publishedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
     readTimeMinutes: 4,
-    author: 'Riot Riru & Blitz Editorial',
+    author: 'Riot Riru & Editorial',
     isFeatured: true,
     changes: [
       {
@@ -133,7 +133,7 @@ export const MOCK_NEWS_ARTICLES: NewsArticle[] = [
     bannerUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1000&auto=format&fit=crop',
     publishedAt: new Date(Date.now() - 75 * 24 * 60 * 60 * 1000).toISOString(),
     readTimeMinutes: 7,
-    author: 'Blitz Newsroom',
+    author: 'Gaming Newsroom',
     content: `Chế độ chơi LoL Classic chính thức mở cửa trở lại! Trải nghiệm lại cảm giác của bản đồ Summoner's Rift cổ điển với bảng bổ trợ 30 điểm và Bùa Đầu Lâu huyền thoại.`,
   },
   {
@@ -145,7 +145,7 @@ export const MOCK_NEWS_ARTICLES: NewsArticle[] = [
     bannerUrl: 'https://images.unsplash.com/photo-1542751110-97427bbecf20?q=80&w=1000&auto=format&fit=crop',
     publishedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
     readTimeMinutes: 4,
-    author: 'Blitz Analytics',
+    author: 'Esports Analytics',
     content: `Phân tích chuyên sâu dữ liệu lượt cấm chọn và tỷ lệ thắng của các đội tuyển hàng đầu thế giới bước vào vòng Tứ Kết giải đấu CKTG.`,
   },
   {

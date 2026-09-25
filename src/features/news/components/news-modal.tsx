@@ -1,8 +1,30 @@
-import { useEffect, useState } from 'react'
-import { X, Check, Share2, Clock, Calendar, ShieldAlert, TrendingUp, TrendingDown, RefreshCw } from 'lucide-react'
-import type { NewsArticle } from '../types/news'
+import { useState } from 'react'
+import {
+  Share2,
+  Check,
+  Calendar,
+  Clock,
+  TrendingUp,
+  TrendingDown,
+  RefreshCw,
+  ShieldAlert,
+} from 'lucide-react'
+import type { NewsArticle, ChampionChange } from '../types/news'
 import { formatRelativeTime } from '../utils/date'
 import { formatDate } from '@/utils/format'
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 
 interface NewsModalProps {
   article: NewsArticle | null
@@ -12,195 +34,220 @@ interface NewsModalProps {
 export function NewsModal({ article, onClose }: NewsModalProps) {
   const [copied, setCopied] = useState(false)
 
-  // Đóng bằng phím Escape
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [onClose])
-
-  if (!article) return null
-
   const handleCopy = async () => {
+    if (!article) return
     const shareUrl = `${window.location.origin}/news#${article.slug}`
     await navigator.clipboard.writeText(shareUrl)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const getChangeBadge = (type: string) => {
+  const renderChangeBadge = (type: ChampionChange['type']) => {
     switch (type) {
       case 'buff':
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
-            <TrendingUp className="w-3 h-3" /> Tăng sức mạnh (Buff)
-          </span>
+          <Badge
+            variant="outline"
+            className="gap-1 border-emerald-500/40 bg-emerald-500/15 text-emerald-400 font-semibold text-[11px]"
+          >
+            <TrendingUp className="size-3" />
+            Tăng sức mạnh (Buff)
+          </Badge>
         )
       case 'nerf':
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 border border-rose-500/40">
-            <TrendingDown className="w-3 h-3" /> Giảm sức mạnh (Nerf)
-          </span>
+          <Badge
+            variant="outline"
+            className="gap-1 border-rose-500/40 bg-rose-500/15 text-rose-400 font-semibold text-[11px]"
+          >
+            <TrendingDown className="size-3" />
+            Giảm sức mạnh (Nerf)
+          </Badge>
         )
       case 'rework':
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 border border-purple-500/40">
-            <RefreshCw className="w-3 h-3" /> Làm lại (Rework)
-          </span>
+          <Badge
+            variant="outline"
+            className="gap-1 border-purple-500/40 bg-purple-500/15 text-purple-400 font-semibold text-[11px]"
+          >
+            <RefreshCw className="size-3" />
+            Làm lại (Rework)
+          </Badge>
         )
       default:
         return (
-          <span className="inline-flex items-center gap-1 text-[11px] font-bold px-2 py-0.5 rounded bg-sky-500/20 text-sky-400 border border-sky-500/40">
-            <ShieldAlert className="w-3 h-3" /> Điều chỉnh (Adjust)
-          </span>
+          <Badge
+            variant="outline"
+            className="gap-1 border-sky-500/40 bg-sky-500/15 text-sky-400 font-semibold text-[11px]"
+          >
+            <ShieldAlert className="size-3" />
+            Điều chỉnh (Adjust)
+          </Badge>
         )
     }
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-      {/* Backdrop overlay click */}
-      <div className="absolute inset-0" onClick={onClose} />
+    <Dialog
+      open={!!article}
+      onOpenChange={(isOpen) => {
+        if (!isOpen) onClose()
+      }}
+    >
+      {article && (
+        <DialogContent
+          className="max-w-3xl p-0 overflow-hidden sm:max-w-3xl bg-background/95 border-border/80 shadow-2xl gap-0"
+          showCloseButton={true}
+        >
+          {/* Header Banner */}
+          <DialogHeader className="relative h-48 sm:h-60 w-full shrink-0 overflow-hidden bg-black p-0 gap-0">
+            <img
+              src={article.bannerUrl}
+              alt={article.title}
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-black/55 to-black/30" />
 
-      {/* Modal Container */}
-      <div className="relative w-full max-w-3xl max-h-[90vh] flex flex-col bg-background/95 border border-border/80 rounded-2xl shadow-2xl overflow-hidden z-10">
-        {/* Banner with Close Button */}
-        <div className="relative h-48 sm:h-64 w-full shrink-0 overflow-hidden bg-black">
-          <img
-            src={article.bannerUrl}
-            alt={article.title}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-black/50 to-black/30" />
-
-          {/* Close button */}
-          <button
-            onClick={onClose}
-            type="button"
-            className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/60 hover:bg-black/90 text-white flex items-center justify-center backdrop-blur-md border border-white/20 transition-all cursor-pointer"
-          >
-            <X className="w-4 h-4" />
-          </button>
-
-          {/* Banner bottom info */}
-          <div className="absolute bottom-4 left-4 right-4">
-            <div className="flex items-center gap-2 mb-1.5">
-              {article.patchVersion && (
-                <span className="px-2 py-0.5 rounded bg-amber-500 text-black text-xs font-black tracking-wider uppercase shadow">
-                  Patch {article.patchVersion}
+            {/* Banner info overlay */}
+            <div className="absolute bottom-4 left-4 right-4 z-10 space-y-1">
+              <div className="flex items-center gap-2">
+                {article.patchVersion && (
+                  <Badge className="bg-amber-500 text-black font-black uppercase text-xs shadow-md border-0">
+                    Patch {article.patchVersion}
+                  </Badge>
+                )}
+                <span className="text-[11px] font-semibold text-zinc-300">
+                  {formatRelativeTime(article.publishedAt)}
                 </span>
-              )}
-              <span className="text-[11px] font-semibold text-zinc-300">
-                {formatRelativeTime(article.publishedAt)}
-              </span>
-            </div>
-            <h2 className="text-xl sm:text-2xl font-black text-white leading-tight drop-shadow">
-              {article.title}
-            </h2>
-          </div>
-        </div>
-
-        {/* Modal Body (Scrollable) */}
-        <div className="p-5 sm:p-6 overflow-y-auto space-y-6 text-sm">
-          {/* Metadata bar */}
-          <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground pb-4 border-b border-border/40">
-            <div className="flex items-center gap-4">
-              <span className="flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-amber-400" />
-                {formatDate(article.publishedAt)}
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-amber-400" />
-                {article.readTimeMinutes} phút đọc
-              </span>
-              <span>Tác giả: <strong className="text-foreground">{article.author}</strong></span>
-            </div>
-
-            <button
-              onClick={handleCopy}
-              type="button"
-              className="flex items-center gap-1.5 px-3 py-1 rounded-md bg-card hover:bg-muted border border-border/60 text-foreground text-xs font-medium cursor-pointer transition-colors"
-            >
-              {copied ? (
-                <>
-                  <Check className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="text-emerald-400">Đã copy link!</span>
-                </>
-              ) : (
-                <>
-                  <Share2 className="w-3.5 h-3.5" />
-                  <span>Chia sẻ</span>
-                </>
-              )}
-            </button>
-          </div>
-
-          {/* Overview text */}
-          <div className="space-y-3">
-            <h4 className="text-base font-bold text-foreground">Tổng quan bản cập nhật</h4>
-            <p className="text-muted-foreground leading-relaxed text-sm">
-              {article.summary}
-            </p>
-            {article.content && (
-              <p className="text-muted-foreground leading-relaxed text-sm">
-                {article.content}
-              </p>
-            )}
-          </div>
-
-          {/* Champion Changes Section */}
-          {article.changes && article.changes.length > 0 && (
-            <div className="space-y-3 pt-2">
-              <h4 className="text-base font-bold text-foreground flex items-center gap-2">
-                <span>Chi tiết thay đổi Tướng & Cơ chế</span>
-                <span className="text-xs font-normal text-muted-foreground">({article.changes.length})</span>
-              </h4>
-
-              <div className="space-y-2.5">
-                {article.changes.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="p-3 rounded-xl bg-card/60 border border-border/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3"
-                  >
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={item.avatarUrl}
-                        alt={item.champion}
-                        className="w-10 h-10 rounded-lg object-cover border border-border/60 shrink-0"
-                      />
-                      <div>
-                        <div className="font-bold text-foreground text-sm flex items-center gap-2">
-                          {item.champion}
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-0.5">
-                          {item.summary}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="shrink-0 self-start sm:self-center">
-                      {getChangeBadge(item.type)}
-                    </div>
-                  </div>
-                ))}
               </div>
+              <DialogTitle className="text-xl sm:text-2xl font-black text-white leading-tight drop-shadow">
+                {article.title}
+              </DialogTitle>
+              <DialogDescription className="sr-only">
+                {article.summary}
+              </DialogDescription>
             </div>
-          )}
-        </div>
+          </DialogHeader>
 
-        {/* Modal Footer */}
-        <div className="p-4 border-t border-border/40 bg-card/40 flex items-center justify-end gap-2">
-          <button
-            onClick={onClose}
-            type="button"
-            className="px-4 py-1.5 text-xs font-semibold rounded-lg bg-card hover:bg-muted border border-border/60 text-foreground transition-colors cursor-pointer"
-          >
-            Đóng
-          </button>
-        </div>
-      </div>
-    </div>
+          {/* Scrollable Content Area */}
+          <ScrollArea className="max-h-[60vh] sm:max-h-[62vh] px-5 sm:px-6 py-4">
+            <div className="space-y-5">
+              {/* Metadata Bar */}
+              <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground pb-2">
+                <div className="flex items-center gap-4 flex-wrap">
+                  <span className="flex items-center gap-1.5">
+                    <Calendar className="size-3.5 text-amber-400" />
+                    {formatDate(article.publishedAt)}
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Clock className="size-3.5 text-amber-400" />
+                    {article.readTimeMinutes} phút đọc
+                  </span>
+                  <span>
+                    Tác giả: <strong className="text-foreground">{article.author}</strong>
+                  </span>
+                </div>
+
+                <Button
+                  variant="outline"
+                  size="xs"
+                  onClick={handleCopy}
+                  className="gap-1.5 text-xs cursor-pointer"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="size-3.5 text-emerald-400" />
+                      <span className="text-emerald-400 font-medium">Đã copy link!</span>
+                    </>
+                  ) : (
+                    <>
+                      <Share2 className="size-3.5" />
+                      <span>Chia sẻ</span>
+                    </>
+                  )}
+                </Button>
+              </div>
+
+              <Separator />
+
+              {/* Overview Section */}
+              <div className="space-y-2">
+                <h4 className="text-sm sm:text-base font-bold text-foreground">
+                  Tổng quan bản cập nhật
+                </h4>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  {article.summary}
+                </p>
+                {article.content && (
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    {article.content}
+                  </p>
+                )}
+              </div>
+
+              {/* Champion Changes Section */}
+              {article.changes && article.changes.length > 0 && (
+                <div className="space-y-3 pt-1">
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-sm sm:text-base font-bold text-foreground">
+                      Chi tiết thay đổi Tướng & Cơ chế
+                    </h4>
+                    <Badge variant="secondary" className="text-xs">
+                      {article.changes.length}
+                    </Badge>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    {article.changes.map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="p-3 rounded-xl bg-card/60 border border-border/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-border transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <Avatar size="lg" className="rounded-lg shrink-0 border border-border/60">
+                            <AvatarImage
+                              src={item.avatarUrl}
+                              alt={item.champion}
+                              className="rounded-lg object-cover"
+                            />
+                            <AvatarFallback className="rounded-lg font-bold text-xs">
+                              {item.champion.slice(0, 2).toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <div className="font-bold text-foreground text-sm">
+                              {item.champion}
+                            </div>
+                            <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
+                              {item.summary}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="shrink-0 self-start sm:self-center">
+                          {renderChangeBadge(item.type)}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </ScrollArea>
+
+          {/* Dialog Footer */}
+          <DialogFooter className="p-3 sm:p-4 bg-muted/30 border-t border-border/40 flex items-center justify-end">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onClose}
+              className="cursor-pointer"
+            >
+              Đóng
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      )}
+    </Dialog>
   )
 }

@@ -1,5 +1,5 @@
 /**
- * Format timestamp sang dạng chuỗi tương đối theo chuẩn Blitz.gg (VD: "2 DAYS AGO", "14 DAYS AGO")
+ * Format timestamp sang dạng chuỗi tương đối (VD: "2 DAYS AGO", "14 DAYS AGO")
  */
 export function formatRelativeTime(dateString: string): string {
   const date = new Date(dateString)

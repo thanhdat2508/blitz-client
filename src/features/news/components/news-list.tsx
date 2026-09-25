@@ -6,9 +6,10 @@ import { NewsCard } from './news-card'
 import { NewsSkeletonGrid } from './news-skeleton'
 import { NewsModal } from './news-modal'
 import { EmptyState } from '@/components/common/empty-state'
+import { Button } from '@/components/ui/button'
 import { useDebounce } from '@/hooks/use-debounce'
 import type { NewsArticle, NewsCategory } from '../types/news'
-import { Newspaper, ChevronDown } from 'lucide-react'
+import { Newspaper, ChevronDown, RotateCcw } from 'lucide-react'
 
 export function NewsList() {
   const [category, setCategory] = useState<NewsCategory>('all')
@@ -30,12 +31,18 @@ export function NewsList() {
     setDisplayLimit((prev) => prev + 3)
   }
 
+  const handleResetFilters = () => {
+    setCategory('all')
+    setSearchInput('')
+    setDisplayLimit(6)
+  }
+
   return (
     <div className="space-y-6">
-      {/* Page Header */}
+      {/* Page Header with ShadCN Avatar & Tooltip */}
       <NewsHeader />
 
-      {/* Filter and Search Bar */}
+      {/* Filter and Search Bar with ShadCN Button, Input & Badge */}
       <NewsFilter
         category={category}
         onCategoryChange={(newCat) => {
@@ -58,18 +65,20 @@ export function NewsList() {
           title="Không thể tải dữ liệu"
           description="Có lỗi xảy ra trong quá trình nạp danh sách tin tức. Vui lòng thử lại."
           action={
-            <button
+            <Button
               onClick={() => refetch()}
-              type="button"
-              className="px-4 py-2 text-xs font-semibold rounded-lg bg-amber-500 text-black hover:bg-amber-400 cursor-pointer"
+              variant="default"
+              size="sm"
+              className="bg-amber-500 text-black hover:bg-amber-400 font-semibold cursor-pointer"
             >
+              <RotateCcw className="size-3.5 mr-1" />
               Thử lại
-            </button>
+            </Button>
           }
         />
       ) : articles.length === 0 ? (
         <EmptyState
-          icon={<Newspaper className="w-8 h-8 text-amber-500/80" />}
+          icon={<Newspaper className="size-8 text-amber-500/80" />}
           title="Không tìm thấy bài viết"
           description={
             debouncedSearch
@@ -78,22 +87,20 @@ export function NewsList() {
           }
           action={
             (category !== 'all' || searchInput) && (
-              <button
-                onClick={() => {
-                  setCategory('all')
-                  setSearchInput('')
-                }}
-                type="button"
-                className="px-4 py-2 text-xs font-semibold rounded-lg bg-card border border-border/80 hover:bg-muted text-foreground cursor-pointer"
+              <Button
+                onClick={handleResetFilters}
+                variant="outline"
+                size="sm"
+                className="cursor-pointer"
               >
                 Đặt lại bộ lọc
-              </button>
+              </Button>
             )
           }
         />
       ) : (
         <div className="space-y-8">
-          {/* News Card Grid */}
+          {/* News Card Grid using ShadCN Card */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {visibleArticles.map((article) => (
               <NewsCard
@@ -104,23 +111,24 @@ export function NewsList() {
             ))}
           </div>
 
-          {/* Load More Button */}
+          {/* Load More Button using ShadCN Button */}
           {hasMore && (
             <div className="flex justify-center pt-2 pb-6">
-              <button
-                type="button"
+              <Button
+                variant="outline"
+                size="lg"
                 onClick={handleLoadMore}
-                className="group flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-semibold bg-card/60 hover:bg-card border border-border/60 hover:border-amber-500/40 text-foreground transition-all cursor-pointer shadow-sm hover:shadow-md"
+                className="group rounded-full px-6 py-2.5 text-xs font-semibold hover:border-amber-500/40 hover:text-amber-400 transition-all cursor-pointer shadow-sm"
               >
                 <span>Tải thêm tin tức</span>
-                <ChevronDown className="w-3.5 h-3.5 text-muted-foreground group-hover:text-amber-400 group-hover:translate-y-0.5 transition-all" />
-              </button>
+                <ChevronDown className="size-3.5 text-muted-foreground group-hover:text-amber-400 group-hover:translate-y-0.5 transition-transform" />
+              </Button>
             </div>
           )}
         </div>
       )}
 
-      {/* Interactive Detail Modal */}
+      {/* Interactive Detail Modal using ShadCN Dialog */}
       <NewsModal
         article={selectedArticle}
         onClose={() => setSelectedArticle(null)}
