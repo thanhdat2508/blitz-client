@@ -1,10 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { NewsList } from '@/features/news'
 
-export const Route = createFileRoute('/')({
-  component: IndexComponent,
+export const Route = createFileRoute('/news')({
+  component: NewsPage,
 })
 
-function IndexComponent() {
+function NewsPage() {
   return <NewsList />
 }
