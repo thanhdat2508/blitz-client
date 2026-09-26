@@ -1,7 +1,0 @@
-export * from './types/news'
-export * from './api/get-news'
-export * from './components/news-list'
-export * from './components/news-card'
-export * from './components/news-header'
-export * from './components/news-filter'
-export * from './components/news-modal'
