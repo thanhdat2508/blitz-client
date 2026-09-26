@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useNews } from '../api/get-news'
-import { NewsHeader } from './news-header'
 import { NewsFilter } from './news-filter'
 import { NewsCard } from './news-card'
 import { NewsSkeletonGrid } from './news-skeleton'
@@ -39,9 +38,6 @@ export function NewsList() {
 
   return (
     <div className="space-y-6">
-      {/* Page Header with ShadCN Avatar & Tooltip */}
-      <NewsHeader />
-
       {/* Filter and Search Bar with ShadCN Button, Input & Badge */}
       <NewsFilter
         category={category}
