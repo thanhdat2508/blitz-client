@@ -6,60 +6,13 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { useProPlayers, type ProPlayerApiItem } from "../api/get-pro-players";
-
-// Fallback pro builds in case backend is offline
-const FALLBACK_BUILDS = [
-  {
-    id: "lucian",
-    name: "Lucian",
-    avatarUrl: "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/Lucian.png",
-    borderColor: "border-yellow-500/50",
-    roleInfo: "Lucian · ADC · 10 / 2 / 5 KDA",
-    items: [
-      "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/6672.png",
-      "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3072.png",
-      "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3006.png",
-      "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3094.png",
-      "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3031.png",
-    ],
-  },
-  {
-    id: "sylas",
-    name: "Sylas",
-    avatarUrl: "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/Sylas.png",
-    borderColor: "border-blue-500/50",
-    roleInfo: "Sylas · Mid · 8 / 1 / 12 KDA",
-    items: [
-      "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3152.png",
-      "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3020.png",
-      "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3157.png",
-      "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3089.png",
-      "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3135.png",
-    ],
-  },
-  {
-    id: "jinx",
-    name: "Jinx",
-    avatarUrl: "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/Jinx.png",
-    borderColor: "border-pink-500/50",
-    roleInfo: "ADC · 16 / 1 / 10 KDA · 26.0 KDA",
-    items: [
-      "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3031.png",
-      "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3085.png",
-      "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3094.png",
-      "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3036.png",
-      "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3006.png",
-    ],
-  },
-];
+import { useProPlayers, type ProPlayerApiItem } from "@/hooks/use-pro-players";
 
 export function ProBuildsSection() {
   const { data, isLoading } = useProPlayers();
 
   const formattedBuilds =
-    data && data.length > 0
+    data && data.length
       ? data.map((player: ProPlayerApiItem) => {
           const match = player.lastMatch;
           const champName = match?.championName || player.name;
@@ -87,12 +40,13 @@ export function ProBuildsSection() {
             id: player.id,
             name: champName,
             avatarUrl: champIcon,
-            borderColor: borderColors[player.themeColor] || "border-purple-500/60",
+            borderColor:
+              borderColors[player.themeColor] || "border-purple-500/60",
             roleInfo,
-            items: itemIcons.length > 0 ? itemIcons : FALLBACK_BUILDS[0].items,
+            items: itemIcons.length ? itemIcons : [],
           };
         })
-      : FALLBACK_BUILDS;
+      : [];
 
   return (
     <Card className="group bg-[#12131c] border-gray-800 transition-all duration-300 shadow-xl rounded-2xl p-0 gap-0">
@@ -100,19 +54,15 @@ export function ProBuildsSection() {
         <div className="space-y-1">
           <CardTitle className="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
             Latest Pro Builds
-            {isLoading && <Loader2 className="w-4 h-4 animate-spin text-gray-400" />}
+            {isLoading && (
+              <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
+            )}
           </CardTitle>
           <CardDescription className="text-xs text-gray-400">
-            Real matches from professional LoL players and their winning item paths.
+            Real matches from professional LoL players and their winning item
+            paths.
           </CardDescription>
         </div>
-
-        <Badge
-          variant="outline"
-          className="hidden sm:inline-flex text-[10px] font-bold text-green-400 bg-green-500/10 border-green-500/20 px-3 py-1 rounded-full tracking-wider"
-        >
-          LIVE PRO
-        </Badge>
       </CardHeader>
 
       <CardContent className="p-5 lg:p-6 pt-0">
@@ -120,7 +70,7 @@ export function ProBuildsSection() {
           {formattedBuilds.map((build) => (
             <div
               key={build.id}
-              className="bg-[#1a1b26] p-4 rounded-xl flex flex-wrap items-center justify-between border border-gray-800 hover:border-gray-600 hover:scale-[1.01] cursor-pointer transition-all duration-300"
+              className="bg-[#1a1b26] p-4 rounded-xl flex flex-col flex-wrap gap-4 border border-gray-800 hover:border-gray-600 hover:scale-[1.01] cursor-pointer transition-all duration-300"
             >
               <div className="flex items-center gap-4">
                 <img
@@ -132,7 +82,6 @@ export function ProBuildsSection() {
                       "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/Ahri.png";
                   }}
                 />
-
                 <div>
                   <p className="font-bold text-base text-white">{build.name}</p>
                   <p className="text-xs font-semibold text-gray-400 mt-1">

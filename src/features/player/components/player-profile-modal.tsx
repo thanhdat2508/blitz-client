@@ -15,7 +15,7 @@ import {
   usePlayerProfile,
   type CleanRankInfo,
   type CleanMatchSummary,
-} from "../api/get-player-profile";
+} from "../../../hooks/use-player-profile";
 
 interface PlayerProfileModalProps {
   isOpen: boolean;
@@ -34,9 +34,14 @@ export function PlayerProfileModal({
 }: PlayerProfileModalProps) {
   const [copiedPuuid, setCopiedPuuid] = useState(false);
 
-  const { data: profile, isLoading, isError, error } = usePlayerProfile(
+  const {
+    data: profile,
+    isLoading,
+    isError,
+    error,
+  } = usePlayerProfile(
     { gameName, tagLine, region },
-    { enabled: isOpen && Boolean(gameName) && Boolean(tagLine) }
+    { enabled: isOpen && Boolean(gameName) && Boolean(tagLine) },
   );
 
   if (!isOpen) return null;
@@ -75,7 +80,9 @@ export function PlayerProfileModal({
             <div className="py-24 flex flex-col items-center justify-center gap-4 text-center">
               <Loader2 className="w-10 h-10 text-yellow-500 animate-spin" />
               <div>
-                <p className="text-lg font-bold text-white">Searching Riot Network...</p>
+                <p className="text-lg font-bold text-white">
+                  Searching Riot Network...
+                </p>
                 <p className="text-sm text-gray-400 mt-1">
                   Fetching stats and recent 10 matches for {gameName}#{tagLine}
                 </p>
@@ -86,7 +93,9 @@ export function PlayerProfileModal({
               <AlertCircle className="w-12 h-12 text-red-400" />
               <p className="text-xl font-bold text-white">Player Not Found</p>
               <p className="text-sm text-gray-400 max-w-md">
-                {error instanceof Error ? error.message : "Unable to load player profile."}
+                {error instanceof Error
+                  ? error.message
+                  : "Unable to load player profile."}
               </p>
               <Button
                 variant="outline"
@@ -123,7 +132,9 @@ export function PlayerProfileModal({
                   <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3">
                     <h2 className="text-3xl font-black tracking-tight text-white">
                       {profile.gameName}
-                      <span className="text-gray-500 font-bold ml-1">#{profile.tagLine}</span>
+                      <span className="text-gray-500 font-bold ml-1">
+                        #{profile.tagLine}
+                      </span>
                     </h2>
                     <Badge className="bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 font-bold uppercase text-[11px] px-2.5 py-0.5">
                       {profile.regionName} ({profile.region.toUpperCase()})
@@ -133,8 +144,10 @@ export function PlayerProfileModal({
                   {/* PUUID & Icon ID */}
                   <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 text-xs text-gray-400 pt-1">
                     <div className="flex items-center gap-1.5 bg-[#0e0f17] px-3 py-1.5 rounded-lg border border-gray-800">
-                      <span className="text-gray-500 font-semibold">PUUID:</span>
-                      <span className="font-mono text-gray-300 truncate max-w-[140px] sm:max-w-[200px]">
+                      <span className="text-gray-500 font-semibold">
+                        PUUID:
+                      </span>
+                      <span className="font-mono text-gray-300 truncate max-w-35 sm:max-w-50">
                         {profile.puuid}
                       </span>
                       <button
@@ -151,8 +164,12 @@ export function PlayerProfileModal({
                     </div>
 
                     <div className="flex items-center gap-1.5 bg-[#0e0f17] px-3 py-1.5 rounded-lg border border-gray-800">
-                      <span className="text-gray-500 font-semibold">Icon ID:</span>
-                      <span className="font-mono text-gray-300">{profile.profileIconId}</span>
+                      <span className="text-gray-500 font-semibold">
+                        Icon ID:
+                      </span>
+                      <span className="font-mono text-gray-300">
+                        {profile.profileIconId}
+                      </span>
                     </div>
 
                     {profile.fromCache && (
@@ -167,7 +184,8 @@ export function PlayerProfileModal({
               {/* 2. Ranks Section (Solo & Flex) */}
               <div className="space-y-4">
                 <h4 className="text-sm font-black uppercase tracking-wider text-gray-400 flex items-center gap-2">
-                  <Trophy size={16} className="text-yellow-400" /> Ranked Tier Overview
+                  <Trophy size={16} className="text-yellow-400" /> Ranked Tier
+                  Overview
                 </h4>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -189,8 +207,8 @@ export function PlayerProfileModal({
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h4 className="text-sm font-black uppercase tracking-wider text-gray-400 flex items-center gap-2">
-                    <Swords size={16} className="text-yellow-400" /> Top Champions Performance
-                    (Last 10 Matches)
+                    <Swords size={16} className="text-yellow-400" /> Top
+                    Champions Performance (Last 10 Matches)
                   </h4>
                   <span className="text-xs text-gray-500 font-semibold">
                     Top 4 Most Played
@@ -224,17 +242,29 @@ export function PlayerProfileModal({
                         <div className="mt-4 pt-3 border-t border-gray-800/80 space-y-2">
                           <div className="flex items-center justify-between text-xs">
                             <span className="text-gray-400 font-medium">
-                              Gameplay: <strong className="text-white">{champ.gamesPlayed} games</strong>
+                              Gameplay:{" "}
+                              <strong className="text-white">
+                                {champ.gamesPlayed} games
+                              </strong>
                             </span>
                             <span className="text-gray-400">
-                              <span className="text-green-400 font-bold">{champ.wins}W</span> -{" "}
-                              <span className="text-red-400 font-bold">{champ.losses}L</span>
+                              <span className="text-green-400 font-bold">
+                                {champ.wins}W
+                              </span>{" "}
+                              -{" "}
+                              <span className="text-red-400 font-bold">
+                                {champ.losses}L
+                              </span>
                             </span>
                           </div>
 
                           <div className="flex items-center justify-between text-xs font-extrabold">
                             <span className="text-gray-400">Win Rate</span>
-                            <span className={isHighWr ? "text-green-400" : "text-yellow-400"}>
+                            <span
+                              className={
+                                isHighWr ? "text-green-400" : "text-yellow-400"
+                              }
+                            >
                               {champ.winRate}%
                             </span>
                           </div>
@@ -258,8 +288,8 @@ export function PlayerProfileModal({
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h4 className="text-sm font-black uppercase tracking-wider text-gray-400 flex items-center gap-2">
-                    <Clock size={16} className="text-yellow-400" /> Recent 10 Matches & 10-Player
-                    Lobbies
+                    <Clock size={16} className="text-yellow-400" /> Recent 10
+                    Matches & 10-Player Lobbies
                   </h4>
                   <span className="text-xs text-gray-500 font-semibold">
                     {profile.recentMatches.length} Matches Found
@@ -365,7 +395,7 @@ function MatchCard({ match }: { match: CleanMatchSummary }) {
     >
       <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-5">
         {/* Match General Status */}
-        <div className="flex items-center gap-4 min-w-[200px]">
+        <div className="flex items-center gap-4 min-w-50">
           <div className="flex flex-col items-start">
             <Badge
               className={`font-black text-xs px-2.5 py-0.5 uppercase tracking-wider mb-1.5 ${
@@ -376,7 +406,9 @@ function MatchCard({ match }: { match: CleanMatchSummary }) {
             >
               {isWin ? "VICTORY" : "DEFEAT"}
             </Badge>
-            <span className="text-xs font-extrabold text-gray-300">{match.queueType}</span>
+            <span className="text-xs font-extrabold text-gray-300">
+              {match.queueType}
+            </span>
             <span className="text-[11px] text-gray-400 mt-0.5">
               {match.gameDuration} · {match.timeAgo}
             </span>
@@ -405,7 +437,7 @@ function MatchCard({ match }: { match: CleanMatchSummary }) {
         </div>
 
         {/* Player In-Game Stats */}
-        <div className="flex flex-col items-start sm:items-center min-w-[150px]">
+        <div className="flex flex-col items-start sm:items-center min-w-37.5">
           <div className="text-base font-black text-white">
             <span>{match.stats.kills}</span> /{" "}
             <span className="text-red-400">{match.stats.deaths}</span> /{" "}
@@ -420,7 +452,7 @@ function MatchCard({ match }: { match: CleanMatchSummary }) {
         </div>
 
         {/* Items Built */}
-        <div className="flex flex-wrap gap-1 max-w-[170px]">
+        <div className="flex flex-wrap gap-1 max-w-42.5">
           {match.items.slice(0, 7).map((item, idx) => (
             <div
               key={idx}
@@ -445,7 +477,9 @@ function MatchCard({ match }: { match: CleanMatchSummary }) {
               <div
                 key={idx}
                 className={`flex items-center gap-1.5 px-1.5 py-0.5 rounded ${
-                  p.isCurrentPlayer ? "bg-blue-500/20 font-bold text-white" : "text-gray-400"
+                  p.isCurrentPlayer
+                    ? "bg-blue-500/20 font-bold text-white"
+                    : "text-gray-400"
                 }`}
               >
                 <img
@@ -453,7 +487,9 @@ function MatchCard({ match }: { match: CleanMatchSummary }) {
                   alt=""
                   className="w-4 h-4 rounded-sm object-cover border border-gray-700"
                 />
-                <span className="truncate max-w-[95px] text-[11px]">{p.riotId}</span>
+                <span className="truncate max-w-23.75 text-[11px]">
+                  {p.riotId}
+                </span>
               </div>
             ))}
           </div>
@@ -464,7 +500,9 @@ function MatchCard({ match }: { match: CleanMatchSummary }) {
               <div
                 key={idx}
                 className={`flex items-center gap-1.5 px-1.5 py-0.5 rounded ${
-                  p.isCurrentPlayer ? "bg-red-500/20 font-bold text-white" : "text-gray-400"
+                  p.isCurrentPlayer
+                    ? "bg-red-500/20 font-bold text-white"
+                    : "text-gray-400"
                 }`}
               >
                 <img
@@ -472,7 +510,9 @@ function MatchCard({ match }: { match: CleanMatchSummary }) {
                   alt=""
                   className="w-4 h-4 rounded-sm object-cover border border-gray-700"
                 />
-                <span className="truncate max-w-[95px] text-[11px]">{p.riotId}</span>
+                <span className="truncate max-w-23.75 text-[11px]">
+                  {p.riotId}
+                </span>
               </div>
             ))}
           </div>

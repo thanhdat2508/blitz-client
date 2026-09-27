@@ -1,8 +1,9 @@
 import { useState, type FormEvent } from "react";
 import LolIcon from "@/components/icon/lol";
 import { Input } from "@/components/ui/input";
-import { Search, Globe, Sparkles } from "lucide-react";
+import { Search, Globe } from "lucide-react";
 import { PlayerProfileModal } from "@/features/player/components/player-profile-modal";
+import { Button } from "@/components/ui/button";
 
 const REGION_OPTIONS = [
   { id: "vn2", label: "VN" },
@@ -90,10 +91,9 @@ export function HeroSection() {
             Elevate your gameplay with Build, Meta & Summoner Analytics.
           </p>
         </div>
-
         {/* Search Bar Form */}
         <form onSubmit={onSubmit} className="relative w-full group">
-          <div className="relative flex items-center w-full bg-[#121420]/90 backdrop-blur-md rounded-2xl border border-gray-700/80 hover:border-yellow-500/60 focus-within:border-yellow-500 focus-within:ring-2 focus-within:ring-yellow-500/20 transition-all shadow-2xl overflow-hidden">
+          <div className="relative flex items-center w-full bg-[#121420]/90 backdrop-blur-md rounded-2xl border hover:border-yellow-500/60 focus-within:border-yellow-500 focus-within:ring-2 focus-within:ring-yellow-500/20 transition-all shadow-2xl overflow-hidden">
             {/* Region Selector */}
             <div className="flex items-center gap-1 pl-4 pr-2 border-r border-gray-700/80 text-xs font-bold text-gray-400">
               <Globe size={15} className="text-yellow-400" />
@@ -103,7 +103,11 @@ export function HeroSection() {
                 className="bg-transparent text-gray-200 uppercase font-black text-xs focus:outline-none cursor-pointer py-3 pr-1"
               >
                 {REGION_OPTIONS.map((reg) => (
-                  <option key={reg.id} value={reg.id} className="bg-[#121420] text-white">
+                  <option
+                    key={reg.id}
+                    value={reg.id}
+                    className="bg-[#121420] text-white"
+                  >
                     {reg.label}
                   </option>
                 ))}
@@ -121,27 +125,24 @@ export function HeroSection() {
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 placeholder="Search Player (e.g. Faker#KR1 or Duy#prime)..."
-                className="w-full bg-transparent border-none text-white text-base md:text-lg font-semibold py-6 pl-12 pr-4 focus:ring-0 focus-visible:ring-0 placeholder:text-gray-500"
+                className="w-full bg-transparent border-none text-white text-base md:text-lg font-semibold py-6 pl-12 pr-4 focus:ring-0"
               />
             </div>
 
             {/* Search Submit Button */}
-            <button
+            <Button
               type="submit"
-              className="mr-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-black font-black text-sm transition-all shadow-lg cursor-pointer"
+              className="mr-2 px-5 py-2.5 rounded-xl bg-linear-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-black font-black text-sm transition-all shadow-lg cursor-pointer"
             >
               Search
-            </button>
+            </Button>
           </div>
         </form>
 
         {/* Quick Suggestions Chips */}
         <div className="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs">
-          <span className="text-gray-400 font-medium flex items-center gap-1">
-            <Sparkles size={13} className="text-yellow-400" /> Try searching:
-          </span>
           {SUGGESTED_PLAYERS.map((player) => (
-            <button
+            <Button
               key={player.riotId}
               type="button"
               onClick={() => {
@@ -152,7 +153,7 @@ export function HeroSection() {
               className="px-2.5 py-1 rounded-lg bg-gray-800/80 hover:bg-yellow-500/20 hover:text-yellow-400 border border-gray-700/60 text-gray-300 font-semibold transition cursor-pointer"
             >
               {player.riotId}
-            </button>
+            </Button>
           ))}
         </div>
       </div>

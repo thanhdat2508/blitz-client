@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchClient } from "@/lib/fetch-client";
+import { ENV } from "@/config/env";
 
 export interface PostAuthor {
   id: string;
@@ -66,16 +66,24 @@ export const postKeys = {
 };
 
 export async function getPosts(params: GetPostsParams = {}): Promise<PostsApiResponse> {
-  return fetchClient<PostsApiResponse>("/api/posts", {
-    params: {
-      page: params.page || 1,
-      limit: params.limit || 10,
-      search: params.search?.trim() || undefined,
-      tag: params.tag && params.tag !== "all" ? params.tag : undefined,
-      status: params.status || "PUBLISHED",
-      authorId: params.authorId,
-    },
-  });
+  const searchParams = new URLSearchParams();
+  if (params.page) searchParams.set("page", String(params.page));
+  if (params.limit) searchParams.set("limit", String(params.limit));
+  if (params.search) searchParams.set("search", params.search);
+  if (params.tag) searchParams.set("tag", params.tag);
+  if (params.status) searchParams.set("status", params.status);
+
+  const queryString = searchParams.toString();
+  const endpoint = `/api/posts${queryString ? `?${queryString}` : ""}`;
+  const url =
+    typeof window !== "undefined" ? endpoint : `${ENV.BACKEND_URL}${endpoint}`;
+
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch posts: ${res.status} ${res.statusText}`);
+  }
+
+  return res.json();
 }
 
 export function usePosts(params: GetPostsParams = {}) {

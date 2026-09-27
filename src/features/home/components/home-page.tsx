@@ -3,7 +3,6 @@ import { HomeNewsSection } from "./home-news-section";
 import { NewChampionsSection } from "./new-champions-section";
 import { TierListSection } from "./tier-list-section";
 import { ProBuildsSection } from "./pro-builds-section";
-import { GuidesSection } from "./guides-section";
 
 export function HomePage() {
   return (
@@ -17,7 +16,6 @@ export function HomePage() {
             <TierListSection />
             <ProBuildsSection />
           </div>
-          <GuidesSection />
         </div>
       </div>
     </div>
