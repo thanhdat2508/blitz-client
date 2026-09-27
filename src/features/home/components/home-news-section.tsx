@@ -52,7 +52,10 @@ export function HomeNewsSection() {
           image:
             post.coverImageUrl ||
             "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/janna/skins/skin67/images/janna_splash_centered_67.skins_janna_skin67.jpg",
-          category: post.tags?.[0]?.tag?.name || "News",
+          category:
+            (post.tags?.[0] as any)?.name ||
+            (post.tags?.[0] as any)?.tag?.name ||
+            "News",
           slug: post.slug,
         }))
       : FALLBACK_NEWS_ITEMS;

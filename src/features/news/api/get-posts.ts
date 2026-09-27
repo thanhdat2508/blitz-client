@@ -23,7 +23,9 @@ export interface PostApiItem {
   coverImageUrl?: string;
   blurHash?: string;
   author?: PostAuthor;
-  tags?: Array<{ tag: PostTagItem }>;
+  tags?: Array<PostTagItem | { tag: PostTagItem }>;
+  readingTime?: number;
+  url?: string;
   createdAt: string;
   updatedAt: string;
 }
