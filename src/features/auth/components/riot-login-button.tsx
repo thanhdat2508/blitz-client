@@ -1,18 +1,19 @@
-import { RiotIcon } from './social-icons'
-import { Loader2 } from 'lucide-react'
+import { Button } from "@/components/ui/button";
+import { RiotIcon } from "./social-icons";
+import { Loader2 } from "lucide-react";
 
 interface RiotLoginButtonProps {
-  isLoading?: boolean
-  onClick: () => void
+  isLoading?: boolean;
+  onClick: () => void;
 }
 
 export function RiotLoginButton({ isLoading, onClick }: RiotLoginButtonProps) {
   return (
-    <button
+    <Button
       type="button"
       disabled={isLoading}
       onClick={onClick}
-      className="w-full h-12 px-4 rounded-2xl font-bold text-sm tracking-wide transition-all duration-200 flex items-center justify-center gap-2.5 cursor-pointer disabled:cursor-not-allowed select-none bg-[#e60026] hover:bg-[#cf0022] active:scale-[0.99] text-white shadow-[0_4px_16px_rgba(230,0,38,0.25)] border border-[#ff3355]/30 group"
+      className="w-full h-12 px-4 rounded-2xl font-bold text-sm tracking-wide transition-all duration-200 flex items-center justify-center gap-2.5 cursor-pointer select-none bg-[#e60026] hover:bg-[#cf0022] active:scale-[0.99] text-white shadow-[0_4px_16px_rgba(230,0,38,0.25)] border border-[#ff3355]/30 group"
       aria-label="Đăng nhập bằng Riot Games"
     >
       {isLoading ? (
@@ -28,6 +29,6 @@ export function RiotLoginButton({ isLoading, onClick }: RiotLoginButtonProps) {
           <span>Đăng nhập bằng Riot Games</span>
         </>
       )}
-    </button>
-  )
+    </Button>
+  );
 }
