@@ -81,7 +81,7 @@ export function ChampionHeroHeader({ champion, selectedRole }: ChampionHeroHeade
               )}
             </div>
             {/* Tier Badge Overlay */}
-            <div className="absolute -bottom-2 -left-2 scale-90 origin-bottom-left shadow-lg">
+            <div className="absolute -bottom-1 left-1.5 shadow-md">
               <TierBadge tier={champion.tier} />
             </div>
           </div>
