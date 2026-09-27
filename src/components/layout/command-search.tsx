@@ -7,6 +7,9 @@ import {
   Compass,
   ArrowRight,
   TrendingUp,
+  Swords,
+  Trophy,
+  Loader2,
 } from "lucide-react";
 import {
   Dialog,
@@ -17,144 +20,38 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-
-interface SearchChampion {
-  name: string;
-  role: string;
-  avatarUrl: string;
-  badge?: string;
-  badgeVariant?: "default" | "secondary" | "outline";
-}
-
-interface SearchNews {
-  version: string;
-  title: string;
-  slug: string;
-}
-
-const CHAMPIONS: SearchChampion[] = [
-  {
-    name: "Ahri",
-    role: "Mid",
-    avatarUrl:
-      "https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/Ahri.png",
-    badge: "Tier S",
-  },
-  {
-    name: "Locke",
-    role: "New Champion",
-    avatarUrl:
-      "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Locke_0.jpg",
-    badge: "Mới ra mắt",
-  },
-  {
-    name: "Zaahen",
-    role: "New Champion",
-    avatarUrl:
-      "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Zaahen_0.jpg",
-    badge: "Mới ra mắt",
-  },
-  {
-    name: "Yunara",
-    role: "New Champion",
-    avatarUrl:
-      "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Yunara_0.jpg",
-    badge: "Mới ra mắt",
-  },
-  {
-    name: "Lucian",
-    role: "ADC",
-    avatarUrl:
-      "https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/Lucian.png",
-    badge: "Pro Meta",
-  },
-  {
-    name: "Sylas",
-    role: "Mid",
-    avatarUrl:
-      "https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/Sylas.png",
-    badge: "Pro Meta",
-  },
-  {
-    name: "Tristana",
-    role: "ADC",
-    avatarUrl:
-      "https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/Tristana.png",
-    badge: "Tier S+",
-  },
-  {
-    name: "Syndra",
-    role: "Mid",
-    avatarUrl:
-      "https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/Syndra.png",
-    badge: "Tier S+",
-  },
-  {
-    name: "Lee Sin",
-    role: "Jungle",
-    avatarUrl:
-      "https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/LeeSin.png",
-    badge: "Tier A",
-  },
-  {
-    name: "Rammus",
-    role: "Jungle",
-    avatarUrl:
-      "https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/Rammus.png",
-    badge: "Tier S",
-  },
-  {
-    name: "Sejuani",
-    role: "Jungle",
-    avatarUrl:
-      "https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/Sejuani.png",
-    badge: "Tier S",
-  },
-  {
-    name: "Hwei",
-    role: "Mid Lane",
-    avatarUrl:
-      "https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/Hwei.png",
-    badge: "Tier S",
-  },
-];
-
-const NEWS_LIST: SearchNews[] = [
-  {
-    version: "26.19",
-    title: "Chi tiết bản cập nhật 26.19: Cân bằng tướng và buff đường trên",
-    slug: "patch-notes-26-19",
-  },
-  {
-    version: "26.18",
-    title: "Chi tiết bản cập nhật 26.18: 5 vị tướng cổ điển quay trở lại",
-    slug: "patch-notes-26-18",
-  },
-  {
-    version: "26.17",
-    title: "Chi tiết bản cập nhật 26.17: Tinh chỉnh trang bị và cân bằng meta",
-    slug: "patch-notes-26-17",
-  },
-];
+import { useGlobalSearch } from "@/hooks/use-global-search";
 
 const QUICK_LINKS = [
   {
-    name: "Trang chủ",
+    name: "Home",
     href: "/",
     icon: Compass,
-    desc: "Trang thông tin tổng hợp",
+    desc: "League of Legends statistics & analytics overview",
   },
   {
-    name: "Tin tức & Bản cập nhật",
+    name: "Champions & Tier List",
+    href: "/champions",
+    icon: Swords,
+    desc: "Meta tier rankings, builds & win rates",
+  },
+  {
+    name: "Leaderboard",
+    href: "/leaderboard",
+    icon: Trophy,
+    desc: "Regional top tier challenger rankings",
+  },
+  {
+    name: "News & Patch Notes",
     href: "/news",
     icon: Newspaper,
-    desc: "Cập nhật thay đổi meta và tướng",
+    desc: "Game balance updates & patch analysis",
   },
   {
-    name: "Cấu trúc dự án",
+    name: "About & Architecture",
     href: "/about",
     icon: Compass,
-    desc: "Tài liệu kỹ thuật và kiến trúc",
+    desc: "Technical architecture & platform documentation",
   },
 ];
 
@@ -175,25 +72,9 @@ export function CommandSearch() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  const { data: searchData, isLoading } = useGlobalSearch(query, "vn2");
+
   const normalizedQuery = query.trim().toLowerCase();
-
-  const filteredChampions = useMemo(() => {
-    if (!normalizedQuery) return CHAMPIONS.slice(0, 6);
-    return CHAMPIONS.filter(
-      (c) =>
-        c.name.toLowerCase().includes(normalizedQuery) ||
-        c.role.toLowerCase().includes(normalizedQuery),
-    );
-  }, [normalizedQuery]);
-
-  const filteredNews = useMemo(() => {
-    if (!normalizedQuery) return NEWS_LIST;
-    return NEWS_LIST.filter(
-      (n) =>
-        n.version.toLowerCase().includes(normalizedQuery) ||
-        n.title.toLowerCase().includes(normalizedQuery),
-    );
-  }, [normalizedQuery]);
 
   const filteredLinks = useMemo(() => {
     if (!normalizedQuery) return QUICK_LINKS;
@@ -204,15 +85,39 @@ export function CommandSearch() {
     );
   }, [normalizedQuery]);
 
+  const champions = searchData?.champions || [];
+  const proPlayers = searchData?.proPlayers || [];
+  const posts = searchData?.posts || [];
+
   const hasResults =
-    filteredChampions.length > 0 ||
-    filteredNews.length > 0 ||
-    filteredLinks.length > 0;
+    champions.length > 0 ||
+    proPlayers.length > 0 ||
+    posts.length > 0 ||
+    filteredLinks.length > 0 ||
+    !normalizedQuery;
 
   const handleSelectLink = (href: string) => {
     setIsOpen(false);
     setQuery("");
     navigate({ to: href as any });
+  };
+
+  const handleSelectChampion = (championId: string) => {
+    setIsOpen(false);
+    setQuery("");
+    navigate({
+      to: "/champions/$championId",
+      params: { championId },
+    });
+  };
+
+  const handleSelectPost = (slug: string) => {
+    setIsOpen(false);
+    setQuery("");
+    navigate({
+      to: "/news",
+      search: { article: slug } as any,
+    });
   };
 
   return (
@@ -221,10 +126,13 @@ export function CommandSearch() {
       <Button
         onClick={() => setIsOpen(true)}
         className="group flex items-center gap-2.5 h-9 w-44 sm:w-60 md:w-72 px-3 rounded-xl bg-[#141622] hover:bg-[#1a1d2e] border border-neutral-800 hover:border-neutral-700 text-neutral-400 hover:text-neutral-200 text-xs font-medium transition-all shadow-inner cursor-pointer"
-        aria-label="Tìm kiếm tướng, bài viết..."
+        aria-label="Search champions, articles..."
       >
         <Search className="w-3.5 h-3.5 text-neutral-400 group-hover:text-amber-400 transition-colors shrink-0" />
-        <p className="truncate flex-1 text-left">Tìm kiếm tướng, bài viết...</p>
+        <p className="truncate flex-1 text-left">Search champions, news...</p>
+        <kbd className="hidden sm:inline-block text-[10px] font-mono text-neutral-500 bg-neutral-900 border border-neutral-800 rounded px-1.5 py-0.5">
+          ⌘K
+        </kbd>
       </Button>
 
       {/* Command Palette Dialog */}
@@ -233,20 +141,24 @@ export function CommandSearch() {
           className="bg-[#0e1017] border-neutral-800 text-neutral-100 sm:max-w-xl p-0 rounded-2xl shadow-2xl overflow-hidden gap-0"
           showCloseButton={false}
         >
-          <DialogTitle className="sr-only">Tìm kiếm nhanh</DialogTitle>
+          <DialogTitle className="sr-only">Quick Search</DialogTitle>
           <DialogDescription className="sr-only">
-            Gõ tên tướng, phiên bản patch hoặc mục điều hướng cần tìm
+            Type champion name, pro player or news article
           </DialogDescription>
 
           {/* Search Header Input */}
           <div className="flex items-center gap-3 px-4 py-3.5 border-b border-neutral-800/80 bg-[#12141f]">
-            <Search className="w-5 h-5 text-amber-400 shrink-0" />
+            {isLoading ? (
+              <Loader2 className="w-5 h-5 text-amber-400 animate-spin shrink-0" />
+            ) : (
+              <Search className="w-5 h-5 text-amber-400 shrink-0" />
+            )}
             <Input
               autoFocus
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Gõ tên tướng (Faker, Ahri), bản patch (26.19)..."
+              placeholder="Search champions (Ahri, Yasuo), pros (Faker), articles..."
               className="flex-1 bg-transparent border-none text-white text-sm focus:outline-none"
             />
             {query && (
@@ -269,97 +181,136 @@ export function CommandSearch() {
               <div className="py-12 text-center text-neutral-400 space-y-1">
                 <Search className="w-8 h-8 mx-auto text-neutral-600 mb-2" />
                 <p className="text-sm font-medium text-white">
-                  Không tìm thấy kết quả nào
+                  No results found
                 </p>
                 <p className="text-xs text-neutral-500">
-                  Thử tìm kiếm với từ khóa khác như "Ahri", "26.19", hoặc "News"
+                  Try searching with keywords like "Ahri", "Faker", or "Top"
                 </p>
               </div>
             ) : (
               <>
                 {/* 1. Champions Category */}
-                {filteredChampions.length && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mt-1">
-                    {filteredChampions.map((champ) => (
-                      <Button
-                        key={champ.name}
-                        type="button"
-                        onClick={() => handleSelectLink("/")}
-                        variant="ghost"
-                        className="flex items-center gap-3 py-8 rounded-xl hover:bg-[#181a26] border border-transparent hover:border-neutral-800 transition-all text-left group cursor-pointer"
-                      >
-                        <img
-                          src={champ.avatarUrl}
-                          alt={champ.name}
-                          className="w-9 h-9 rounded-lg object-cover border border-neutral-700 shrink-0"
-                        />
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm font-bold text-white group-hover:text-amber-400 transition-colors truncate">
-                            {champ.name}
-                          </p>
-                          <p className="text-[11px] text-neutral-400 truncate">
-                            {champ.role}
-                          </p>
-                        </div>
-                        {champ.badge && (
-                          <Badge
-                            variant="outline"
-                            className="text-xs font-medium px-1.5 py-0"
-                          >
-                            {champ.badge}
-                          </Badge>
-                        )}
-                      </Button>
-                    ))}
-                  </div>
-                )}
-
-                {/* 2. News / Patch Notes Category */}
-                {filteredNews.length && (
+                {champions.length > 0 && (
                   <div>
-                    <div className="flex items-center gap-1.5 px-2 py-1 text-xs font-bold uppercase tracking-wider">
-                      <Newspaper className="w-3 h-3" /> Update and news
+                    <div className="flex items-center gap-1.5 px-2 py-1 text-xs font-bold uppercase tracking-wider text-cyan-400">
+                      <Swords className="w-3.5 h-3.5" /> CHAMPIONS ({champions.length})
                     </div>
-                    <div className="space-y-1 mt-1">
-                      {filteredNews.map((news) => (
-                        <Button
-                          key={news.version}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mt-1">
+                      {champions.map((champ) => (
+                        <button
+                          key={champ.id}
                           type="button"
-                          onClick={() => handleSelectLink("/news")}
-                          variant="ghost"
-                          className="flex w-full items-center justify-between gap-3 py-8 rounded-xl hover:bg-[#181a26] border border-transparent hover:border-neutral-800 transition-all text-left group cursor-pointer"
+                          onClick={() => handleSelectChampion(champ.key || champ.id)}
+                          className="flex items-center gap-3 p-2.5 rounded-xl bg-[#141624]/60 hover:bg-cyan-500/15 border border-neutral-800 hover:border-cyan-500/40 transition-all text-left group cursor-pointer"
                         >
-                          <div className="flex items-center gap-2.5 min-w-0">
-                            <p className="font-mono text-xs font-bold text-amber-400 bg-amber-400/10 border border-amber-400/30 px-2 py-0.5 rounded-md shrink-0">
-                              v{news.version}
+                          <img
+                            src={champ.avatarUrl}
+                            alt={champ.name}
+                            className="w-9 h-9 rounded-lg object-cover border border-neutral-700 group-hover:border-cyan-400 shrink-0"
+                            onError={(e) => {
+                              (e.target as HTMLElement).style.display = "none";
+                            }}
+                          />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs font-bold text-white group-hover:text-cyan-300 transition-colors truncate">
+                              {champ.name}
                             </p>
-                            <p className="text-xs text-neutral-200 group-hover:text-white truncate">
-                              {news.title}
+                            <p className="text-[10px] text-neutral-400 truncate capitalize">
+                              {champ.title}
                             </p>
                           </div>
-                          <ArrowRight className="w-3.5 h-3.5 text-neutral-500 group-hover:text-amber-400 group-hover:translate-x-0.5 transition-all shrink-0 ml-2" />
-                        </Button>
+                          <Badge
+                            variant="outline"
+                            className="text-[10px] font-medium px-1.5 py-0 text-cyan-400 border-cyan-500/30"
+                          >
+                            BUILD
+                          </Badge>
+                        </button>
                       ))}
                     </div>
                   </div>
                 )}
 
-                {/* 3. Quick Links Navigation */}
-                {filteredLinks.length && (
+                {/* 2. Pro Players Category */}
+                {proPlayers.length > 0 && (
                   <div>
-                    <div className="flex items-center gap-1.5 px-2 py-1 text-xs font-bold uppercase tracking-wider">
-                      <TrendingUp className="w-3 h-3" /> Điều hướng nhanh
+                    <div className="flex items-center gap-1.5 px-2 py-1 text-xs font-bold uppercase tracking-wider text-amber-400">
+                      <Trophy className="w-3.5 h-3.5" /> PRO PLAYERS ({proPlayers.length})
+                    </div>
+                    <div className="space-y-1 mt-1">
+                      {proPlayers.map((player) => (
+                        <div
+                          key={player.id}
+                          className="flex items-center justify-between p-2 rounded-xl bg-[#141624]/60 border border-neutral-800 text-left"
+                        >
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <img
+                              src={player.avatar}
+                              alt={player.nickname}
+                              className="w-8 h-8 rounded-full object-cover border border-neutral-700"
+                            />
+                            <div>
+                              <div className="text-xs font-bold text-white flex items-center gap-2">
+                                <span>{player.nickname}</span>
+                                <span className="text-[10px] text-amber-400 font-normal">({player.team})</span>
+                              </div>
+                              <p className="text-[10px] text-neutral-400 font-mono">
+                                Riot ID: {player.riotId} • Role: {player.role}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* 3. News / Patch Notes Category */}
+                {posts.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-1.5 px-2 py-1 text-xs font-bold uppercase tracking-wider text-emerald-400">
+                      <Newspaper className="w-3.5 h-3.5" /> ARTICLES & NEWS ({posts.length})
+                    </div>
+                    <div className="space-y-1 mt-1">
+                      {posts.map((post) => (
+                        <button
+                          key={post.id}
+                          type="button"
+                          onClick={() => handleSelectPost(post.slug)}
+                          className="flex w-full items-center justify-between gap-3 p-2.5 rounded-xl hover:bg-emerald-500/10 border border-transparent hover:border-emerald-500/30 transition-all text-left group cursor-pointer"
+                        >
+                          <div className="min-w-0 pr-2">
+                            <p className="text-xs font-semibold text-white group-hover:text-emerald-300 truncate">
+                              {post.title}
+                            </p>
+                            {post.contentSnippet && (
+                              <p className="text-[11px] text-neutral-400 truncate">
+                                {post.contentSnippet}
+                              </p>
+                            )}
+                          </div>
+                          <ArrowRight className="w-3.5 h-3.5 text-neutral-500 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all shrink-0 ml-2" />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* 4. Quick Links Navigation */}
+                {filteredLinks.length > 0 && (
+                  <div>
+                    <div className="flex items-center gap-1.5 px-2 py-1 text-xs font-bold uppercase tracking-wider text-neutral-400">
+                      <TrendingUp className="w-3.5 h-3.5" /> QUICK NAVIGATION
                     </div>
                     <div className="space-y-1 mt-1">
                       {filteredLinks.map((link) => {
                         const Icon = link.icon;
                         return (
-                          <Button
+                          <button
                             key={link.href}
                             type="button"
                             onClick={() => handleSelectLink(link.href)}
-                            variant="ghost"
-                            className="flex w-full items-center justify-between gap-3 py-8 rounded-xl hover:bg-[#181a26] border border-transparent hover:border-neutral-800 transition-all text-left group cursor-pointer"
+                            className="flex w-full items-center justify-between gap-3 p-2.5 rounded-xl hover:bg-[#181a26] border border-transparent hover:border-neutral-800 transition-all text-left group cursor-pointer"
                           >
                             <div className="flex items-center gap-3">
                               <div className="p-1.5 rounded-lg bg-neutral-800 text-neutral-300 group-hover:text-amber-400 group-hover:bg-amber-400/10 transition-colors">
@@ -377,7 +328,7 @@ export function CommandSearch() {
                             <p className="text-[10px] text-neutral-500 font-mono">
                               {link.href}
                             </p>
-                          </Button>
+                          </button>
                         );
                       })}
                     </div>
@@ -389,6 +340,7 @@ export function CommandSearch() {
 
           <div className="px-4 py-2.5 border-t border-neutral-800/80 bg-[#0d0e15] flex items-center justify-between text-[11px] text-neutral-500">
             <p>ESC to close</p>
+            <p>Click to navigate directly</p>
           </div>
         </DialogContent>
       </Dialog>
