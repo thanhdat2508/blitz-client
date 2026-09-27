@@ -18,7 +18,13 @@ export async function getNews({
       return res.items.map((post) => {
         // Tag could be direct { slug } or nested { tag: { slug } }
         const tagSlugs = (post.tags || [])
-          .map((t: any) => t?.slug || t?.tag?.slug || "")
+          .map(
+            (t: any) =>
+              t?.slug ||
+              t?.tag?.slug ||
+              t?.name?.toLowerCase().replace(/\s+/g, "-") ||
+              "",
+          )
           .filter(Boolean);
 
         // Map tag to known NewsCategory
