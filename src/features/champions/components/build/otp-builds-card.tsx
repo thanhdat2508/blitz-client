@@ -1,4 +1,4 @@
-import { Award } from 'lucide-react'
+import { Crown } from 'lucide-react'
 
 export interface OtpPlayer {
   id: string
@@ -9,6 +9,8 @@ export interface OtpPlayer {
   winRate: number
   games: number
   kda: string
+  avatarUrl: string
+  keystoneIcon: string
   items: string[]
 }
 
@@ -18,7 +20,7 @@ interface OtpBuildsCardProps {
   coreItemIds?: number[]
 }
 
-function getDynamicOtps(championName: string, coreItemIds?: number[]): OtpPlayer[] {
+function getDynamicOtp(championName: string, coreItemIds?: number[]): OtpPlayer {
   const itemIcons = coreItemIds && coreItemIds.length >= 3
     ? coreItemIds.slice(0, 3).map((id) => `https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/${id}.png`)
     : [
@@ -27,41 +29,19 @@ function getDynamicOtps(championName: string, coreItemIds?: number[]): OtpPlayer
         'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3157.png',
       ]
 
-  return [
-    {
-      id: 'otp-1',
-      name: `${championName} King`,
-      server: 'KR',
-      rank: 'Challenger',
-      rankBadgeColor: 'bg-amber-950/80 border-amber-700/80 text-amber-300',
-      winRate: 61.4,
-      games: 482,
-      kda: '3.6',
-      items: itemIcons,
-    },
-    {
-      id: 'otp-2',
-      name: `Hide on ${championName}`,
-      server: 'KR',
-      rank: 'Grandmaster',
-      rankBadgeColor: 'bg-rose-950/80 border-rose-700/80 text-rose-300',
-      winRate: 58.2,
-      games: 345,
-      kda: '3.2',
-      items: itemIcons,
-    },
-    {
-      id: 'otp-3',
-      name: `Best ${championName} NA`,
-      server: 'NA',
-      rank: 'Master',
-      rankBadgeColor: 'bg-purple-950/80 border-purple-700/80 text-purple-300',
-      winRate: 56.8,
-      games: 290,
-      kda: '2.9',
-      items: itemIcons,
-    },
-  ]
+  return {
+    id: 'otp-top',
+    name: `TTV Findthe${championName.toLowerCase()} #TOP`,
+    server: 'EUW',
+    rank: 'GRANDMASTER 1752 LP',
+    rankBadgeColor: 'text-amber-400 font-black',
+    winRate: 59.4,
+    games: 412,
+    kda: '3.4',
+    avatarUrl: 'https://res.cloudinary.com/vptfaug1/image/upload/player2.png',
+    keystoneIcon: 'https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png',
+    items: itemIcons,
+  }
 }
 
 export function OtpBuildsCard({
@@ -69,70 +49,72 @@ export function OtpBuildsCard({
   players,
   coreItemIds,
 }: OtpBuildsCardProps) {
-  const effectivePlayers = players || getDynamicOtps(championName, coreItemIds)
+  const topOtp = players?.[0] || getDynamicOtp(championName, coreItemIds)
 
   return (
-    <div className="bg-[#0E121A] border border-zinc-800/80 rounded-xl p-3.5 space-y-2.5 shadow-lg select-none">
-      <div className="flex items-center justify-between pb-2 border-b border-zinc-800/80">
-        <div className="flex items-center gap-1.5">
-          <Award className="w-3.5 h-3.5 text-rose-400" />
-          <p className="font-bold text-xs text-zinc-200 uppercase tracking-wide">
-            OTP Specialists ({championName})
-          </p>
-        </div>
-        <p className="text-[10px] text-zinc-500 font-medium">High Elo One-Tricks</p>
+    <div className="bg-[#12141c]/90 border border-zinc-800/80 rounded-xl p-3 space-y-2 shadow-lg select-none">
+      {/* Header matching Blitz.gg: 👑 Hwei OTP Builds */}
+      <div className="flex items-center gap-1.5 pb-1.5 border-b border-zinc-800/80">
+        <Crown className="w-3.5 h-3.5 text-amber-400" />
+        <p className="font-bold text-xs text-amber-300 uppercase tracking-wide">
+          {championName} OTP Builds
+        </p>
       </div>
 
-      <div className="space-y-2">
-        {effectivePlayers.map((p) => (
-          <div
-            key={p.id}
-            className="p-2.5 rounded-lg bg-zinc-950/60 border border-zinc-800/80 hover:border-zinc-700 transition-colors space-y-1.5"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <p className="text-xs font-bold text-zinc-200">{p.name}</p>
-                <div className="px-1.5 py-0.5 rounded bg-zinc-800 text-[9px] font-mono text-zinc-400">
-                  {p.server}
-                </div>
-              </div>
-              <div
-                className={`px-1.5 py-0.5 rounded border text-[9px] font-black uppercase ${p.rankBadgeColor}`}
-              >
-                {p.rank}
-              </div>
-            </div>
+      {/* 1-Row Compact Card (Blitz.gg style) */}
+      <div className="p-2.5 rounded-lg bg-zinc-950/70 border border-zinc-800/80 hover:border-zinc-700 transition-colors flex items-center justify-between gap-2">
+        {/* Left: Avatar + Server Tag + Name & Rank LP */}
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="relative shrink-0">
+            <img
+              src={topOtp.avatarUrl}
+              alt={topOtp.name}
+              className="w-9 h-9 rounded-full border border-amber-500/50 object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src =
+                  'https://res.cloudinary.com/vptfaug1/image/upload/player2.png'
+              }}
+            />
+            <span className="absolute -bottom-1 -right-1 text-[8px] font-black px-1 rounded bg-zinc-850 border border-zinc-700 text-amber-300 leading-tight">
+              {topOtp.server}
+            </span>
+          </div>
 
-            <div className="flex items-center justify-between text-[11px]">
-              <div className="flex items-center gap-2">
-                <p className="font-black text-cyan-400">{p.winRate}% WR</p>
-                <p className="text-zinc-500 font-mono text-[10px]">
-                  {p.games} games
-                </p>
-              </div>
-              <p className="text-[10px] text-zinc-400 font-mono">KDA: {p.kda}</p>
-            </div>
-
-            <div className="flex items-center gap-1.5 pt-1 border-t border-zinc-900">
-              <p className="text-[9px] text-zinc-500 font-medium uppercase">
-                Core Items:
-              </p>
-              <div className="flex items-center gap-1">
-                {p.items.map((itemUrl, idx) => (
-                  <img
-                    key={idx}
-                    src={itemUrl}
-                    alt="Core Item"
-                    className="w-5 h-5 rounded border border-zinc-700/80 bg-zinc-900"
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).style.display = 'none'
-                    }}
-                  />
-                ))}
-              </div>
+          <div className="truncate min-w-0">
+            <p className="font-bold text-xs text-zinc-100 truncate hover:text-amber-300">
+              {topOtp.name}
+            </p>
+            <div className="flex items-center gap-1 text-[10px] text-amber-400 font-extrabold uppercase tracking-tight">
+              <Crown className="w-2.5 h-2.5 inline" />
+              <span>{topOtp.rank}</span>
             </div>
           </div>
-        ))}
+        </div>
+
+        {/* Right: Keystone Rune + Core Items */}
+        <div className="flex items-center gap-1.5 shrink-0">
+          <div className="w-5 h-5 rounded-full overflow-hidden bg-zinc-900 border border-cyan-500/40">
+            <img
+              src={topOtp.keystoneIcon}
+              alt="Rune"
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          <div className="flex items-center gap-0.5">
+            {topOtp.items.slice(0, 3).map((itemUrl, idx) => (
+              <img
+                key={idx}
+                src={itemUrl}
+                alt="Item"
+                className="w-5 h-5 rounded border border-zinc-800 bg-zinc-900 object-cover"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none'
+                }}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   )
