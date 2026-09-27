@@ -1,40 +1,54 @@
-import { useState } from 'react'
-import { useNews } from '../api/get-news'
-import { NewsFilter } from './news-filter'
-import { NewsCard } from './news-card'
-import { NewsSkeletonGrid } from './news-skeleton'
-import { NewsModal } from './news-modal'
-import { EmptyState } from '@/components/common/empty-state'
-import { Button } from '@/components/ui/button'
-import { useDebounce } from '@/hooks/use-debounce'
-import type { NewsArticle, NewsCategory } from '../types/news'
-import { Newspaper, ChevronDown, RotateCcw } from 'lucide-react'
+import { useMemo, useState } from "react";
+import { useNews } from "../api/get-news";
+import { NewsFilter } from "./news-filter";
+import { NewsCard } from "./news-card";
+import { NewsSkeletonGrid } from "./news-skeleton";
+import { NewsModal } from "./news-modal";
+import { EmptyState } from "@/components/common/empty-state";
+import { Button } from "@/components/ui/button";
+import { useDebounce } from "@/hooks/use-debounce";
+import { Newspaper, ChevronDown, RotateCcw } from "lucide-react";
+import type { NewsArticle, NewsCategory } from "@/types/news";
 
-export function NewsList() {
-  const [category, setCategory] = useState<NewsCategory>('all')
-  const [searchInput, setSearchInput] = useState('')
-  const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null)
-  const [displayLimit, setDisplayLimit] = useState(6)
+const NewsList = () => {
+  const [category, setCategory] = useState<NewsCategory>("all");
+  const [searchInput, setSearchInput] = useState<string>("");
+  const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(
+    null,
+  );
+  const [displayLimit, setDisplayLimit] = useState(6);
 
-  const debouncedSearch = useDebounce(searchInput, 300)
+  const debouncedSearch = useDebounce(searchInput, 300);
 
-  const { data: articles = [], isLoading, isError, refetch } = useNews({
+  const {
+    data: articles = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useNews({
     category,
     search: debouncedSearch,
-  })
+  });
 
-  const visibleArticles = articles.slice(0, displayLimit)
-  const hasMore = articles.length > displayLimit
+  const visibleArticles = useMemo(
+    () => articles.slice(0, displayLimit),
+    [articles, displayLimit],
+  );
+
+  const hasMore = useMemo(
+    () => articles.length > displayLimit,
+    [articles.length, displayLimit],
+  );
 
   const handleLoadMore = () => {
-    setDisplayLimit((prev) => prev + 3)
-  }
+    setDisplayLimit((prev) => prev + 3);
+  };
 
   const handleResetFilters = () => {
-    setCategory('all')
-    setSearchInput('')
-    setDisplayLimit(6)
-  }
+    setCategory("all");
+    setSearchInput("");
+    setDisplayLimit(6);
+  };
 
   return (
     <div className="space-y-6">
@@ -42,13 +56,13 @@ export function NewsList() {
       <NewsFilter
         category={category}
         onCategoryChange={(newCat) => {
-          setCategory(newCat)
-          setDisplayLimit(6)
+          setCategory(newCat);
+          setDisplayLimit(6);
         }}
         search={searchInput}
         onSearchChange={(query) => {
-          setSearchInput(query)
-          setDisplayLimit(6)
+          setSearchInput(query);
+          setDisplayLimit(6);
         }}
         totalCount={articles.length}
       />
@@ -68,21 +82,21 @@ export function NewsList() {
               className="bg-amber-500 text-black hover:bg-amber-400 font-semibold cursor-pointer"
             >
               <RotateCcw className="size-3.5 mr-1" />
-              Thử lại
+              Retry
             </Button>
           }
         />
-      ) : articles.length === 0 ? (
+      ) : !articles.length ? (
         <EmptyState
           icon={<Newspaper className="size-8 text-amber-500/80" />}
           title="Không tìm thấy bài viết"
           description={
             debouncedSearch
               ? `Không có bài viết nào khớp với từ khóa "${debouncedSearch}".`
-              : 'Chưa có bài viết nào trong chuyên mục này.'
+              : "Chưa có bài viết nào trong chuyên mục này."
           }
           action={
-            (category !== 'all' || searchInput) && (
+            (category !== "all" || searchInput) && (
               <Button
                 onClick={handleResetFilters}
                 variant="outline"
@@ -116,7 +130,7 @@ export function NewsList() {
                 onClick={handleLoadMore}
                 className="group rounded-full px-6 py-2.5 text-xs font-semibold hover:border-amber-500/40 hover:text-amber-400 transition-all cursor-pointer shadow-sm"
               >
-                <span>Tải thêm tin tức</span>
+                <p>Tải thêm tin tức</p>
                 <ChevronDown className="size-3.5 text-muted-foreground group-hover:text-amber-400 group-hover:translate-y-0.5 transition-transform" />
               </Button>
             </div>
@@ -130,5 +144,7 @@ export function NewsList() {
         onClose={() => setSelectedArticle(null)}
       />
     </div>
-  )
-}
+  );
+};
+
+export default NewsList;
