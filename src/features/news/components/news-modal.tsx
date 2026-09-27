@@ -182,7 +182,7 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
                   {article.summary}
                 </p>
                 {article.content && (
-                  <p className="text-muted-foreground text-sm leading-relaxed">
+                  <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">
                     {article.content}
                   </p>
                 )}

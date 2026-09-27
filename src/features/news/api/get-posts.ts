@@ -65,7 +65,9 @@ export const postKeys = {
   detail: (slug: string) => [...postKeys.details(), slug] as const,
 };
 
-export async function getPosts(params: GetPostsParams = {}): Promise<PostsApiResponse> {
+export async function getPosts(
+  params: GetPostsParams = {},
+): Promise<PostsApiResponse> {
   const searchParams = new URLSearchParams();
   if (params.page) searchParams.set("page", String(params.page));
   if (params.limit) searchParams.set("limit", String(params.limit));
@@ -95,15 +97,13 @@ export function usePosts(params: GetPostsParams = {}) {
 }
 
 export async function getPostBySlug(slug: string): Promise<PostApiItem> {
-  const endpoint = `/api/posts/${slug}`;
+  const endpoint = `/api/posts/${encodeURIComponent(slug)}`;
   const url =
     typeof window !== "undefined" ? endpoint : `${ENV.BACKEND_URL}${endpoint}`;
-
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(`Failed to fetch post: ${res.status} ${res.statusText}`);
   }
-
   const json: { message?: string; data: PostApiItem } = await res.json();
   return json.data;
 }

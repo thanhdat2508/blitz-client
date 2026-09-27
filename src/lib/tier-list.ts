@@ -19,7 +19,14 @@ export interface GetTierListParams {
   role?: string;
   tier?: string;
   search?: string;
-  sortBy?: "winRate" | "pickRate" | "banRate" | "matches" | "rank" | "patchWrChange" | "name";
+  sortBy?:
+    | "winRate"
+    | "pickRate"
+    | "banRate"
+    | "matches"
+    | "rank"
+    | "patchWrChange"
+    | "name";
   order?: "asc" | "desc";
   page?: number;
   limit?: number;
@@ -47,7 +54,8 @@ export async function getTierListResponse(
   const searchParams = new URLSearchParams();
   if (params.rank) searchParams.set("rank", params.rank);
   if (params.role) searchParams.set("role", params.role);
-  if (params.tier && params.tier !== "all") searchParams.set("tier", params.tier);
+  if (params.tier && params.tier !== "all")
+    searchParams.set("tier", params.tier);
   if (params.search) searchParams.set("search", params.search);
   if (params.sortBy) searchParams.set("sortBy", params.sortBy);
   if (params.order) searchParams.set("order", params.order);

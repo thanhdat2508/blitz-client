@@ -16,7 +16,7 @@ const NAV_ITEMS: NavItem[] = [
   { name: "Home", href: "/", icon: Home },
   { name: "News", href: "/news", icon: Newspaper, isNew: true },
   { name: "Leaderboard", href: "/leaderboard", icon: Flame },
-  { name: "Pro Builds", href: "/builds", icon: Swords },
+  { name: "Pro Builds", href: "/champions", icon: Swords },
 ];
 
 export function Header() {

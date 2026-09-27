@@ -19,7 +19,7 @@ export function ChampionRow({ champion, index, onSelect }: ChampionRowProps) {
     >
       {/* 1. RANK */}
       <td className="py-3 px-3 text-center text-zinc-400 font-semibold w-12">
-        <div className="font-mono">{index + 1}</div>
+        <div className="font-mono">{champion.rank ?? (index + 1)}</div>
       </td>
 
       {/* 2. ROLE */}
