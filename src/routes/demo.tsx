@@ -131,24 +131,22 @@ function DemoComponent() {
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div className="p-3 bg-muted/50 rounded-lg">
-                <span className="text-muted-foreground text-xs block">Public Repos</span>
-                <span className="font-bold text-lg">{user.public_repos}</span>
+                <p className="text-muted-foreground text-xs block">Public Repos</p>
+                <p className="font-bold text-lg">{user.public_repos}</p>
               </div>
               <div className="p-3 bg-muted/50 rounded-lg">
-                <span className="text-muted-foreground text-xs block">Followers</span>
-                <span className="font-bold text-lg">{user.followers}</span>
+                <p className="text-muted-foreground text-xs block">Followers</p>
+                <p className="font-bold text-lg">{user.followers}</p>
               </div>
             </div>
             <div className="pt-2 flex items-center justify-between text-xs text-muted-foreground">
-              <span>{isFetching ? '⚡ Đang cập nhật ngầm...' : '✓ Dữ liệu từ cache'}</span>
-              <a
-                href={user.html_url}
-                target="_blank"
-                rel="noreferrer"
-                className="text-primary hover:underline flex items-center gap-1 font-medium"
+              <p>{isFetching ? '⚡ Đang cập nhật ngầm...' : '✓ Dữ liệu từ cache'}</p>
+              <div
+                onClick={() => window.open(user.html_url, '_blank')}
+                className="text-primary hover:underline flex items-center gap-1 font-medium cursor-pointer"
               >
                 <User className="w-3.5 h-3.5" /> Xem trang cá nhân GitHub
-              </a>
+              </div>
             </div>
           </CardContent>
         </Card>

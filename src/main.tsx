@@ -2,6 +2,7 @@ import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
+import { LanguageProvider } from './lib/i18n/language-context'
 import './index.css'
 
 // Import the generated route tree
@@ -20,11 +21,8 @@ const queryClient = new QueryClient({
 // Create router instance
 const router = createRouter({
   routeTree,
-  context: {
-    queryClient,
-  },
   defaultPreload: 'intent',
-})
+} as any)
 
 // Register router for type safety
 declare module '@tanstack/react-router' {
@@ -39,7 +37,9 @@ if (!rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <LanguageProvider>
+          <RouterProvider router={router} />
+        </LanguageProvider>
       </QueryClientProvider>
     </StrictMode>,
   )

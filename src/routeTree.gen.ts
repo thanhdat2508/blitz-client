@@ -11,8 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as ChampionsRouteImport } from './routes/champions'
 import { Route as DemoRouteImport } from './routes/demo'
 import { Route as ProductsRouteImport } from './routes/products'
+import { Route as ChampionsIndexRouteImport } from './routes/champions.index'
+import { Route as ChampionsChampionIdRouteImport } from './routes/champions.$championId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,6 +25,11 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChampionsRoute = ChampionsRouteImport.update({
+  id: '/champions',
+  path: '/champions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoRoute = DemoRouteImport.update({
@@ -34,37 +42,77 @@ const ProductsRoute = ProductsRouteImport.update({
   path: '/products',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChampionsIndexRoute = ChampionsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ChampionsRoute,
+} as any)
+const ChampionsChampionIdRoute = ChampionsChampionIdRouteImport.update({
+  id: '/$championId',
+  path: '/$championId',
+  getParentRoute: () => ChampionsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/champions': typeof ChampionsRouteWithChildren
   '/demo': typeof DemoRoute
   '/products': typeof ProductsRoute
+  '/champions/$championId': typeof ChampionsChampionIdRoute
+  '/champions/': typeof ChampionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/demo': typeof DemoRoute
   '/products': typeof ProductsRoute
+  '/champions/$championId': typeof ChampionsChampionIdRoute
+  '/champions': typeof ChampionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/champions': typeof ChampionsRouteWithChildren
   '/demo': typeof DemoRoute
   '/products': typeof ProductsRoute
+  '/champions/$championId': typeof ChampionsChampionIdRoute
+  '/champions/': typeof ChampionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/demo' | '/products'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/champions'
+    | '/demo'
+    | '/products'
+    | '/champions/$championId'
+    | '/champions/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/demo' | '/products'
-  id: '__root__' | '/' | '/about' | '/demo' | '/products'
+  to:
+    | '/'
+    | '/about'
+    | '/demo'
+    | '/products'
+    | '/champions/$championId'
+    | '/champions'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/champions'
+    | '/demo'
+    | '/products'
+    | '/champions/$championId'
+    | '/champions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  ChampionsRoute: typeof ChampionsRouteWithChildren
   DemoRoute: typeof DemoRoute
   ProductsRoute: typeof ProductsRoute
 }
@@ -85,6 +133,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/champions': {
+      id: '/champions'
+      path: '/champions'
+      fullPath: '/champions'
+      preLoaderRoute: typeof ChampionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/demo': {
       id: '/demo'
       path: '/demo'
@@ -99,12 +154,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/champions/': {
+      id: '/champions/'
+      path: '/'
+      fullPath: '/champions/'
+      preLoaderRoute: typeof ChampionsIndexRouteImport
+      parentRoute: typeof ChampionsRoute
+    }
+    '/champions/$championId': {
+      id: '/champions/$championId'
+      path: '/$championId'
+      fullPath: '/champions/$championId'
+      preLoaderRoute: typeof ChampionsChampionIdRouteImport
+      parentRoute: typeof ChampionsRoute
+    }
   }
 }
+
+interface ChampionsRouteChildren {
+  ChampionsChampionIdRoute: typeof ChampionsChampionIdRoute
+  ChampionsIndexRoute: typeof ChampionsIndexRoute
+}
+
+const ChampionsRouteChildren: ChampionsRouteChildren = {
+  ChampionsChampionIdRoute: ChampionsChampionIdRoute,
+  ChampionsIndexRoute: ChampionsIndexRoute,
+}
+
+const ChampionsRouteWithChildren = ChampionsRoute._addFileChildren(
+  ChampionsRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  ChampionsRoute: ChampionsRouteWithChildren,
   DemoRoute: DemoRoute,
   ProductsRoute: ProductsRoute,
 }

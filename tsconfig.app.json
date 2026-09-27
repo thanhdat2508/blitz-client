@@ -8,6 +8,8 @@
       "@/*": ["./src/*"]
     },
     "types": ["vite/client"],
+    "strict": true,
+    "strictNullChecks": true,
     "allowArbitraryExtensions": true,
     "skipLibCheck": true,
 

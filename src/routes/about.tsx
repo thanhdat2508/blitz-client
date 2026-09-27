@@ -42,8 +42,8 @@ function AboutComponent() {
           <div className="border rounded-lg divide-y text-sm">
             {structure.map((item) => (
               <div key={item.path} className="p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                <span className="font-mono text-xs font-semibold text-primary">{item.path}</span>
-                <span className="text-xs text-muted-foreground">{item.desc}</span>
+                <p className="font-mono text-xs font-semibold text-primary">{item.path}</p>
+                <p className="text-xs text-muted-foreground">{item.desc}</p>
               </div>
             ))}
           </div>
