@@ -7,7 +7,7 @@ const FOOTER_COLUMNS = [
     title: "Game & Meta",
     links: [
       { name: "Champion Tier List", href: "/" },
-      { name: "Pro Player Builds", href: "/builds" },
+      { name: "Pro Player Builds", href: "/champions" },
       { name: "Patch 26.19 Notes", href: "/news" },
       { name: "New Champions (Locke, Zaahen)", href: "/" },
     ],
@@ -65,7 +65,13 @@ export function Footer() {
             <div className="flex items-center gap-3 pt-2">
               <button
                 type="button"
-                onClick={() => window.open("https://github.com/thanhdat2508/blitz-client", "_blank", "noreferrer")}
+                onClick={() =>
+                  window.open(
+                    "https://github.com/thanhdat2508/blitz-client",
+                    "_blank",
+                    "noreferrer",
+                  )
+                }
                 className="w-8 h-8 rounded-lg bg-neutral-800/80 hover:bg-neutral-700 text-neutral-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
                 aria-label="GitHub Repository"
               >

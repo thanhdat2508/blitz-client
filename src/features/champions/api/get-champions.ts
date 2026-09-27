@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import type { ChampionMeta, ChampionFilterState, Role, Tier } from '../types/champion'
+import type { ChampionMeta, ChampionFilterState, ChampionsResponse, Role, Tier } from '../types/champion'
 import { MOCK_CHAMPIONS } from '../data/mock-champions'
 
 export const championKeys = {
@@ -28,6 +28,7 @@ const BACKEND_TO_ROLE: Record<string, Role> = {
 }
 
 interface BackendTierListItem {
+  rank?: number
   championId: string
   name: string
   title?: string
@@ -41,7 +42,10 @@ interface BackendTierListItem {
   avatarUrl?: string
 }
 
-export async function fetchChampions(filters?: Partial<ChampionFilterState>): Promise<ChampionMeta[]> {
+export async function fetchChampions(filters?: Partial<ChampionFilterState>): Promise<ChampionsResponse> {
+  const pageParam = filters?.page ?? 1
+  const limitParam = filters?.pageSize ?? 20
+
   try {
     const roleParam = filters?.role ? ROLE_TO_BACKEND[filters.role] || 'all' : 'all'
     const rankParam = filters?.rank === 'ALL' ? 'all' : 'emerald'
@@ -55,6 +59,8 @@ export async function fetchChampions(filters?: Partial<ChampionFilterState>): Pr
     if (searchParam) url.searchParams.set('search', searchParam)
     url.searchParams.set('sortBy', sortByParam)
     url.searchParams.set('order', orderParam)
+    if (filters?.page !== undefined) url.searchParams.set('page', String(pageParam))
+    if (filters?.pageSize !== undefined) url.searchParams.set('limit', String(limitParam))
 
     const res = await fetch(url.toString())
     if (!res.ok) throw new Error(`Backend returned HTTP ${res.status}`)
@@ -62,7 +68,7 @@ export async function fetchChampions(filters?: Partial<ChampionFilterState>): Pr
     const json = await res.json()
     if (!json.success || !Array.isArray(json.data)) throw new Error('Invalid backend response format')
 
-    const mapped: ChampionMeta[] = (json.data as BackendTierListItem[]).map((item) => {
+    const mapped: ChampionMeta[] = (json.data as BackendTierListItem[]).map((item, idx) => {
       const feRole = BACKEND_TO_ROLE[item.role] || 'MID'
       return {
         id: item.championId,
@@ -78,6 +84,7 @@ export async function fetchChampions(filters?: Partial<ChampionFilterState>): Pr
         banRate: item.banRate,
         matches: item.matches,
         trend: item.patchWrChange || 0,
+        rank: item.rank ?? ((pageParam - 1) * limitParam + idx + 1),
         counters: [],
         buildGuide: {
           skillOrder: ['Q', 'E', 'W', 'Q', 'Q', 'R', 'Q', 'E', 'Q', 'E', 'R', 'E', 'E', 'W', 'W'],
@@ -103,7 +110,20 @@ export async function fetchChampions(filters?: Partial<ChampionFilterState>): Pr
       }
     })
 
-    return mapped
+    const total = typeof json.total === 'number' ? json.total : mapped.length
+    const page = typeof json.page === 'number' ? json.page : pageParam
+    const pageSize = typeof json.limit === 'number' ? json.limit : limitParam
+    const totalPages = typeof json.totalPages === 'number' ? json.totalPages : Math.max(1, Math.ceil(total / pageSize))
+    const patch = typeof json.patch === 'string' ? json.patch : undefined
+
+    return {
+      champions: mapped,
+      total,
+      page,
+      pageSize,
+      totalPages,
+      patch,
+    }
   } catch (err) {
     console.warn('Backend tier-list query failed, using local mock fallback:', err)
 
@@ -118,13 +138,29 @@ export async function fetchChampions(filters?: Partial<ChampionFilterState>): Pr
         (champ) => champ.name.toLowerCase().includes(q) || champ.title.toLowerCase().includes(q)
       )
     }
-    return result
+
+    const total = result.length
+    const page = pageParam
+    const pageSize = limitParam
+    const totalPages = Math.max(1, Math.ceil(total / pageSize))
+    const startIndex = (page - 1) * pageSize
+    const paginated = (filters?.page !== undefined || filters?.pageSize !== undefined)
+      ? result.slice(startIndex, startIndex + pageSize)
+      : result
+
+    return {
+      champions: paginated,
+      total,
+      page,
+      pageSize,
+      totalPages,
+    }
   }
 }
 
 export async function fetchChampionById(id: string): Promise<ChampionMeta | undefined> {
-  const allChamps = await fetchChampions()
-  const found = allChamps.find(
+  const res = await fetchChampions({ page: 1, pageSize: 200 })
+  const found = res.champions.find(
     (c) => c.id.toLowerCase() === id.toLowerCase() || c.name.toLowerCase() === id.toLowerCase()
   )
   if (found) return found
@@ -133,7 +169,7 @@ export async function fetchChampionById(id: string): Promise<ChampionMeta | unde
 }
 
 export function useChampions(filters?: Partial<ChampionFilterState>) {
-  return useQuery({
+  return useQuery<ChampionsResponse>({
     queryKey: championKeys.list(filters || {}),
     queryFn: () => fetchChampions(filters),
     staleTime: 1000 * 60 * 5,
@@ -148,3 +184,4 @@ export function useChampion(id: string) {
     staleTime: 1000 * 60 * 10,
   })
 }
+

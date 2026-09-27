@@ -171,12 +171,6 @@ export function PlayerProfileModal({
                         {profile.profileIconId}
                       </span>
                     </div>
-
-                    {profile.fromCache && (
-                      <span className="text-[11px] text-green-400 font-medium">
-                        ● Cached snapshot
-                      </span>
-                    )}
                   </div>
                 </div>
               </div>

@@ -65,7 +65,9 @@ export const postKeys = {
   detail: (slug: string) => [...postKeys.details(), slug] as const,
 };
 
-export async function getPosts(params: GetPostsParams = {}): Promise<PostsApiResponse> {
+export async function getPosts(
+  params: GetPostsParams = {},
+): Promise<PostsApiResponse> {
   const searchParams = new URLSearchParams();
   if (params.page) searchParams.set("page", String(params.page));
   if (params.limit) searchParams.set("limit", String(params.limit));

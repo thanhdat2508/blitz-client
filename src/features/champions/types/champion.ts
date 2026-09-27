@@ -62,6 +62,7 @@ export interface ChampionMeta {
   banRate: number
   matches: number
   trend: number
+  rank?: number
   counters: CounterInfo[]
   buildGuide: ChampionBuildGuide
 }
@@ -74,4 +75,15 @@ export interface ChampionFilterState {
   sortBy: 'tier' | 'winRate' | 'pickRate' | 'banRate' | 'name'
   sortOrder: 'asc' | 'desc'
   viewMode: 'table' | 'grid'
+  page?: number
+  pageSize?: number
+}
+
+export interface ChampionsResponse {
+  champions: ChampionMeta[]
+  total: number
+  page: number
+  pageSize: number
+  totalPages: number
+  patch?: string
 }
