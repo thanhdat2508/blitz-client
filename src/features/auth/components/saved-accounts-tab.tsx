@@ -51,10 +51,10 @@ export function SavedAccountsTab({
       <div className="flex items-center justify-between pb-1 border-b border-neutral-800/60">
         <div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-white uppercase tracking-wider">
+            <p className="text-xs font-bold text-white uppercase tracking-wider">
               Tài khoản đã lưu ({accounts.length})
-            </span>
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            </p>
+            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
           </div>
           <p className="text-[11px] text-neutral-400 mt-0.5 text-left">
             Chuyển nhanh tài khoản hoặc đăng nhập trực tiếp 1-click
@@ -74,7 +74,7 @@ export function SavedAccountsTab({
               isScanning ? 'animate-spin' : ''
             }`}
           />
-          <span>{isScanning ? 'Đang quét...' : 'Quét Client'}</span>
+          <p>{isScanning ? 'Đang quét...' : 'Quét Client'}</p>
         </button>
       </div>
 
@@ -145,9 +145,9 @@ export function SavedAccountsTab({
           className="w-full h-11 rounded-xl bg-gradient-to-r from-rose-600 via-rose-500 to-rose-600 hover:brightness-110 active:scale-[0.99] text-white font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer shadow-[0_4px_15px_rgba(244,63,94,0.3)]"
         >
           <LogIn className="w-4 h-4" />
-          <span>
+          <p>
             Đăng nhập ngay với {activeAccount.summonerName} #{activeAccount.tagLine}
-          </span>
+          </p>
         </button>
 
         <div className="grid grid-cols-2 gap-2">
@@ -158,7 +158,7 @@ export function SavedAccountsTab({
             className="h-10 rounded-xl bg-[#161824] hover:bg-[#1f2233] border border-neutral-700/70 hover:border-neutral-600 text-xs font-semibold text-neutral-200 hover:text-white flex items-center justify-center gap-1.5 transition-all cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5 text-amber-400" />
-            <span>Thêm tài khoản Riot</span>
+            <p>Thêm tài khoản Riot</p>
           </button>
 
           {/* Switch to normal login */}
@@ -168,7 +168,7 @@ export function SavedAccountsTab({
             className="h-10 rounded-xl bg-neutral-900/60 hover:bg-neutral-800 border border-neutral-800 text-xs font-semibold text-neutral-400 hover:text-white flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
           >
             <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Đăng nhập Email / Khác</span>
+            <p>Đăng nhập Email / Khác</p>
           </button>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Link } from '@tanstack/react-router'
 import {
   Trophy,
   Shield,
@@ -70,17 +71,17 @@ export function LolAccountSection() {
     <div className="py-1">
       {/* Section Header */}
       <div className="flex items-center justify-between px-3 py-1 mb-1">
-        <span className="text-[10px] font-black uppercase tracking-wider text-amber-500/90 flex items-center gap-1.5">
+        <div className="text-[10px] font-black uppercase tracking-wider text-amber-500/90 flex items-center gap-1.5">
           <Trophy className="w-3.5 h-3.5 text-amber-400" />
-          <span>Tài khoản Riot ({accounts.length})</span>
-        </span>
+          <p>Tài khoản Riot ({accounts.length})</p>
+        </div>
         <button
           type="button"
           onClick={() => openLoginModal()}
           className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/25 hover:bg-amber-500/20 transition-colors cursor-pointer flex items-center gap-1"
         >
           <Users className="w-2.5 h-2.5" />
-          <span>Quản lý</span>
+          <p>Quản lý</p>
         </button>
       </div>
 
@@ -100,35 +101,35 @@ export function LolAccountSection() {
                   alt={activeAccount.summonerName}
                   className="w-10 h-10 rounded-full border-2 border-amber-400/70 object-cover shadow-[0_0_10px_rgba(251,191,36,0.2)]"
                 />
-                <span className="absolute -bottom-1 -right-1 px-1 py-0.2 rounded-full bg-[#0a0a0e] border border-amber-400/40 text-[9px] font-bold text-amber-300 leading-tight">
+                <div className="absolute -bottom-1 -right-1 px-1 py-0.2 rounded-full bg-[#0a0a0e] border border-amber-400/40 text-[9px] font-bold text-amber-300 leading-tight">
                   {activeAccount.level}
-                </span>
+                </div>
               </div>
 
               {/* Name, Tag, Rank */}
               <div className="min-w-0 flex-1 text-left">
                 <div className="flex items-center gap-1 leading-tight flex-wrap">
                   {gameIcon}
-                  <span className="font-bold text-xs text-white truncate">
+                  <p className="font-bold text-xs text-white truncate">
                     {activeAccount.summonerName}
-                  </span>
-                  <span className="text-[10px] font-mono text-neutral-400 shrink-0">
+                  </p>
+                  <p className="text-[10px] font-mono text-neutral-400 shrink-0">
                     #{activeAccount.tagLine}
-                  </span>
-                  <span className="px-1 py-0.2 rounded bg-neutral-800 text-[9px] font-bold text-neutral-300">
+                  </p>
+                  <p className="px-1 py-0.2 rounded bg-neutral-800 text-[9px] font-bold text-neutral-300">
                     {activeAccount.region}
-                  </span>
+                  </p>
                 </div>
                 <div className="flex items-center gap-1.5 mt-1">
-                  <span
+                  <div
                     className={`inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[10px] font-bold ${rankInfo.bg} ${rankInfo.text} border ${rankInfo.border}`}
                   >
                     <Shield className="w-2.5 h-2.5 fill-current" />
-                    <span>{rankInfo.label}</span>
-                  </span>
-                  <span className="text-[10px] text-neutral-400 font-medium">
+                    <p>{rankInfo.label}</p>
+                  </div>
+                  <p className="text-[10px] text-neutral-400 font-medium">
                     {activeAccount.lp} LP
-                  </span>
+                  </p>
                 </div>
               </div>
 
@@ -154,9 +155,9 @@ export function LolAccountSection() {
           {/* Quick Account Switcher dropdown inside card */}
           {showAccountList && (
             <div className="border-t border-neutral-800/80 bg-[#0f1017] p-1.5 space-y-1 animate-in fade-in duration-100">
-              <span className="px-2 text-[9px] font-bold uppercase tracking-wider text-neutral-400 block text-left">
+              <p className="px-2 text-[9px] font-bold uppercase tracking-wider text-neutral-400 block text-left">
                 Chuyển tài khoản nhanh:
-              </span>
+              </p>
               {accounts.map((acc) => (
                 <div
                   key={acc.id}
@@ -176,19 +177,19 @@ export function LolAccountSection() {
                       alt={acc.summonerName}
                       className="w-5 h-5 rounded-full object-cover"
                     />
-                    <span className="font-semibold text-white truncate">
+                    <p className="font-semibold text-white truncate">
                       {acc.summonerName}
-                    </span>
-                    <span className="text-[10px] font-mono text-neutral-400">
+                    </p>
+                    <p className="text-[10px] font-mono text-neutral-400">
                       #{acc.tagLine}
-                    </span>
+                    </p>
                   </div>
                   <div className="flex items-center gap-1.5 shrink-0 text-[10px]">
-                    <span className="px-1 py-0.2 rounded bg-neutral-800 text-neutral-400 font-bold">
+                    <p className="px-1 py-0.2 rounded bg-neutral-800 text-neutral-400 font-bold">
                       {acc.region}
-                    </span>
+                    </p>
                     {acc.isActive && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                     )}
                   </div>
                 </div>
@@ -203,7 +204,7 @@ export function LolAccountSection() {
                 className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white text-[11px] font-semibold transition-colors cursor-pointer mt-1"
               >
                 <Plus className="w-3 h-3 text-amber-400" />
-                <span>Thêm tài khoản Riot</span>
+                <p>Thêm tài khoản Riot</p>
               </button>
             </div>
           )}
@@ -215,7 +216,7 @@ export function LolAccountSection() {
           className="mx-1 p-2.5 rounded-xl bg-[#161720] border border-amber-500/40 space-y-2 text-left"
         >
           <div className="flex items-center justify-between text-xs font-semibold text-white">
-            <span>Chỉnh sửa Riot ID</span>
+            <p>Chỉnh sửa Riot ID</p>
             <button
               type="button"
               onClick={() => setIsEditing(false)}
@@ -252,7 +253,7 @@ export function LolAccountSection() {
 
           {/* Region Picker in Edit mode */}
           <div className="space-y-1">
-            <span className="text-[10px] text-neutral-400 font-medium">Khu vực:</span>
+            <p className="text-[10px] text-neutral-400 font-medium">Khu vực:</p>
             <div className="flex items-center gap-1">
               {REGIONS.map((r) => (
                 <button
@@ -277,7 +278,7 @@ export function LolAccountSection() {
               className="flex-1 h-7 rounded-lg bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold transition-colors flex items-center justify-center gap-1 cursor-pointer"
             >
               <Check className="w-3 h-3" />
-              <span>Lưu</span>
+              <p>Lưu</p>
             </button>
             <button
               type="button"
@@ -392,8 +393,8 @@ export function LolAccountSection() {
         </div>
 
         {/* Link: Champion Mastery & Match History */}
-        <a
-          href="/products"
+        <Link
+          to="/champions"
           className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium text-neutral-300 hover:text-white hover:bg-white/5 transition-colors group"
         >
           <div className="flex items-center gap-2.5">
@@ -410,7 +411,7 @@ export function LolAccountSection() {
             </div>
           </div>
           <Sparkles className="w-3.5 h-3.5 text-neutral-500 group-hover:text-amber-400 transition-colors" />
-        </a>
+        </Link>
       </div>
     </div>
   )

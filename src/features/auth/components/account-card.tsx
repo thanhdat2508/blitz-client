@@ -129,53 +129,53 @@ export function AccountCard({
               } ${compact ? 'w-9 h-9' : 'w-11 h-11'}`}
             />
             {/* Level Badge */}
-            <span className="absolute -bottom-1 -right-1 px-1 py-0.2 rounded-full bg-[#0a0a0f] border border-neutral-700 text-[9px] font-bold text-neutral-300 leading-tight">
+            <div className="absolute -bottom-1 -right-1 px-1 py-0.2 rounded-full bg-[#0a0a0f] border border-neutral-700 text-[9px] font-bold text-neutral-300 leading-tight">
               {account.level}
-            </span>
+            </div>
           </div>
 
           {/* Info: Name, Tags, Region, Rank */}
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5 leading-tight flex-wrap">
-              <span className="font-bold text-sm text-white truncate hover:underline">
+              <p className="font-bold text-sm text-white truncate hover:underline">
                 {account.summonerName}
-              </span>
-              <span className="text-xs font-mono text-neutral-400 shrink-0">
+              </p>
+              <p className="text-xs font-mono text-neutral-400 shrink-0">
                 #{account.tagLine}
-              </span>
+              </p>
 
               {/* Game Badge */}
-              <span
+              <div
                 className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold border ${gameBadge.color}`}
               >
                 {gameBadge.icon}
-                <span>{gameBadge.label}</span>
-              </span>
+                <p>{gameBadge.label}</p>
+              </div>
 
               {/* Server Region */}
-              <span className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-neutral-800 text-neutral-400">
+              <p className="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-neutral-800 text-neutral-400">
                 {account.region}
-              </span>
+              </p>
             </div>
 
             {/* Rank info and Winrate */}
             <div className="flex items-center gap-2 mt-1.5 text-xs">
-              <span
+              <div
                 className={`inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[10px] font-bold ${rankTheme.bg} ${rankTheme.text} border ${rankTheme.border}`}
               >
                 <Shield className="w-2.5 h-2.5 fill-current" />
-                <span>{rankTheme.label}</span>
-              </span>
-              <span className="text-[11px] text-neutral-400 font-medium">
+                <p>{rankTheme.label}</p>
+              </div>
+              <p className="text-[11px] text-neutral-400 font-medium">
                 {account.lp} LP
-              </span>
-              <span className="text-[11px] text-emerald-400 font-semibold">
+              </p>
+              <p className="text-[11px] text-emerald-400 font-semibold">
                 {account.winRate}% WR
-              </span>
+              </p>
               {account.mainRole && (
-                <span className="text-[10px] text-neutral-500 uppercase tracking-wider font-mono">
+                <p className="text-[10px] text-neutral-500 uppercase tracking-wider font-mono">
                   {account.mainRole}
-                </span>
+                </p>
               )}
             </div>
           </div>
@@ -185,8 +185,8 @@ export function AccountCard({
         <div className="flex items-center gap-2 shrink-0">
           {account.isActive ? (
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-semibold select-none">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span>Đang chọn</span>
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <p>Đang chọn</p>
             </div>
           ) : (
             <button
@@ -206,7 +206,7 @@ export function AccountCard({
               className="h-8 px-2.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer shadow-sm"
             >
               <LogIn className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Đăng nhập</span>
+              <p className="hidden sm:inline">Đăng nhập</p>
             </button>
           )}
 
@@ -235,7 +235,7 @@ export function AccountCard({
                   className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-white/10 text-left text-neutral-300 hover:text-white transition-colors cursor-pointer"
                 >
                   <Star className="w-3.5 h-3.5 text-amber-400" />
-                  <span>Đặt làm mặc định</span>
+                  <p>Đặt làm mặc định</p>
                 </button>
 
                 <button
@@ -246,11 +246,11 @@ export function AccountCard({
                   }}
                   className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-white/10 text-left text-neutral-300 hover:text-white transition-colors cursor-pointer"
                 >
-                  <span className="flex items-center gap-2">
+                  <div className="flex items-center gap-2">
                     <Zap className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Auto Bảng ngọc</span>
-                  </span>
-                  <span
+                    <p>Auto Bảng ngọc</p>
+                  </div>
+                  <div
                     className={`w-2 h-2 rounded-full ${
                       account.autoRunes ? 'bg-emerald-400' : 'bg-neutral-600'
                     }`}
@@ -265,11 +265,11 @@ export function AccountCard({
                   }}
                   className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-white/10 text-left text-neutral-300 hover:text-white transition-colors cursor-pointer"
                 >
-                  <span className="flex items-center gap-2">
+                  <div className="flex items-center gap-2">
                     <Layers className="w-3.5 h-3.5 text-cyan-400" />
-                    <span>Lớp phủ Overlay</span>
-                  </span>
-                  <span
+                    <p>Lớp phủ Overlay</p>
+                  </div>
+                  <div
                     className={`w-2 h-2 rounded-full ${
                       account.inGameOverlay ? 'bg-emerald-400' : 'bg-neutral-600'
                     }`}
@@ -284,11 +284,11 @@ export function AccountCard({
                   }}
                   className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-white/10 text-left text-neutral-300 hover:text-white transition-colors cursor-pointer"
                 >
-                  <span className="flex items-center gap-2">
+                  <div className="flex items-center gap-2">
                     <Crosshair className="w-3.5 h-3.5 text-rose-400" />
-                    <span>Tự chấp nhận trận</span>
-                  </span>
-                  <span
+                    <p>Tự chấp nhận trận</p>
+                  </div>
+                  <div
                     className={`w-2 h-2 rounded-full ${
                       account.autoAccept ? 'bg-emerald-400' : 'bg-neutral-600'
                     }`}
@@ -306,7 +306,7 @@ export function AccountCard({
                   className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-rose-500/10 text-left text-rose-400 hover:text-rose-300 transition-colors cursor-pointer"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
-                  <span>Xóa tài khoản</span>
+                  <p>Xóa tài khoản</p>
                 </button>
               </div>
             )}

@@ -70,12 +70,12 @@ export function LinkAccountTab({ onAddAccount, onCancel }: LinkAccountTabProps) 
           className="text-xs text-neutral-400 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Quay lại danh sách</span>
+          <p>Quay lại danh sách</p>
         </button>
-        <span className="text-[11px] font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1">
+        <div className="text-[11px] font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1">
           <Sparkles className="w-3 h-3" />
-          <span>Liên kết Riot Games</span>
-        </span>
+          <p>Liên kết Riot Games</p>
+        </div>
       </div>
 
       {error && (
@@ -100,7 +100,7 @@ export function LinkAccountTab({ onAddAccount, onCancel }: LinkAccountTabProps) 
             }`}
           >
             <LeagueIcon className="w-3.5 h-3.5" />
-            <span>LoL</span>
+            <p>LoL</p>
           </button>
 
           <button
@@ -113,7 +113,7 @@ export function LinkAccountTab({ onAddAccount, onCancel }: LinkAccountTabProps) 
             }`}
           >
             <ValorantIcon className="w-3.5 h-3.5" />
-            <span>Valorant</span>
+            <p>Valorant</p>
           </button>
 
           <button
@@ -126,7 +126,7 @@ export function LinkAccountTab({ onAddAccount, onCancel }: LinkAccountTabProps) 
             }`}
           >
             <TftIcon className="w-3.5 h-3.5" />
-            <span>Đấu Trường Chân Lý</span>
+            <p>Đấu Trường Chân Lý</p>
           </button>
         </div>
       </div>
@@ -156,9 +156,9 @@ export function LinkAccountTab({ onAddAccount, onCancel }: LinkAccountTabProps) 
             Tag (#)
           </label>
           <div className="relative">
-            <span className="absolute left-2.5 top-2.5 text-neutral-500 text-xs font-mono">
+            <p className="absolute left-2.5 top-2.5 text-neutral-500 text-xs font-mono">
               #
-            </span>
+            </p>
             <input
               id="tagline"
               type="text"
@@ -196,33 +196,33 @@ export function LinkAccountTab({ onAddAccount, onCancel }: LinkAccountTabProps) 
 
       {/* Live Preview Card */}
       <div className="p-3 rounded-xl bg-[#12141c] border border-neutral-800 text-left space-y-1">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">
+        <p className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">
           Xem trước hiển thị trên Blitz:
-        </span>
+        </p>
         <div className="flex items-center gap-3 pt-1">
           <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-500/20 to-rose-500/20 border-2 border-amber-400/60 flex items-center justify-center font-bold text-amber-300 text-sm">
             {summonerName.trim().slice(0, 2).toUpperCase() || 'ID'}
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-1.5">
-              <span className="font-bold text-sm text-white truncate">
+              <p className="font-bold text-sm text-white truncate">
                 {summonerName.trim() || 'Summoner'}
-              </span>
-              <span className="text-xs font-mono text-neutral-400">
+              </p>
+              <p className="text-xs font-mono text-neutral-400">
                 #{effectiveTag}
-              </span>
-              <span className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-neutral-800 text-neutral-300">
+              </p>
+              <p className="px-1.5 py-0.5 rounded text-[9px] font-bold bg-neutral-800 text-neutral-300">
                 {region}
-              </span>
+              </p>
             </div>
             <div className="flex items-center gap-1.5 mt-0.5">
-              <span
+              <div
                 className={`inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[10px] font-bold ${rankTheme.bg} ${rankTheme.text} border ${rankTheme.border}`}
               >
                 <Shield className="w-2.5 h-2.5 fill-current" />
-                <span>{rankTheme.label}</span>
-              </span>
-              <span className="text-[10px] text-neutral-400">75 LP • Cấp 120</span>
+                <p>{rankTheme.label}</p>
+              </div>
+              <p className="text-[10px] text-neutral-400">75 LP • Cấp 120</p>
             </div>
           </div>
         </div>
@@ -236,7 +236,7 @@ export function LinkAccountTab({ onAddAccount, onCancel }: LinkAccountTabProps) 
           onChange={(e) => setMakeActive(e.target.checked)}
           className="w-4 h-4 rounded bg-neutral-900 border-neutral-700 text-amber-500 focus:ring-amber-500"
         />
-        <span>Đặt làm tài khoản hoạt động ngay trên Blitz</span>
+        <p>Đặt làm tài khoản hoạt động ngay trên Blitz</p>
       </label>
 
       {/* Submit Button */}
@@ -246,7 +246,7 @@ export function LinkAccountTab({ onAddAccount, onCancel }: LinkAccountTabProps) 
           className="flex-1 h-11 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer shadow-[0_0_15px_rgba(245,158,11,0.25)]"
         >
           <Plus className="w-4 h-4 stroke-[3]" />
-          <span>Liên kết tài khoản này</span>
+          <p>Liên kết tài khoản này</p>
         </button>
         <button
           type="button"

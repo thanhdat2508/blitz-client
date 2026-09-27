@@ -63,29 +63,30 @@ export function Footer() {
             </p>
 
             <div className="flex items-center gap-3 pt-2">
-              <a
-                href="https://github.com/thanhdat2508/blitz-client"
-                target="_blank"
-                rel="noreferrer"
-                className="w-8 h-8 rounded-lg bg-neutral-800/80 hover:bg-neutral-700 text-neutral-300 hover:text-white flex items-center justify-center transition-colors"
+              <button
+                type="button"
+                onClick={() => window.open("https://github.com/thanhdat2508/blitz-client", "_blank", "noreferrer")}
+                className="w-8 h-8 rounded-lg bg-neutral-800/80 hover:bg-neutral-700 text-neutral-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
                 aria-label="GitHub Repository"
               >
                 <GithubIcon className="w-4 h-4" />
-              </a>
-              <a
-                href="#"
-                className="w-8 h-8 rounded-lg bg-neutral-800/80 hover:bg-neutral-700 text-neutral-300 hover:text-white flex items-center justify-center transition-colors"
+              </button>
+              <button
+                type="button"
+                onClick={() => {}}
+                className="w-8 h-8 rounded-lg bg-neutral-800/80 hover:bg-neutral-700 text-neutral-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
                 aria-label="Discord Community"
               >
                 <DiscordIcon className="w-4 h-4" />
-              </a>
-              <a
-                href="#"
-                className="w-8 h-8 rounded-lg bg-neutral-800/80 hover:bg-neutral-700 text-neutral-300 hover:text-white flex items-center justify-center transition-colors"
+              </button>
+              <button
+                type="button"
+                onClick={() => {}}
+                className="w-8 h-8 rounded-lg bg-neutral-800/80 hover:bg-neutral-700 text-neutral-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
                 aria-label="Twitter / X"
               >
                 <TwitterIcon className="w-4 h-4" />
-              </a>
+              </button>
             </div>
           </div>
 

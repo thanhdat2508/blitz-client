@@ -114,9 +114,9 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
                     Patch {article.patchVersion}
                   </Badge>
                 )}
-                <span className="text-[11px] font-semibold text-zinc-300">
+                <p className="text-[11px] font-semibold text-zinc-300">
                   {formatRelativeTime(article.publishedAt)}
-                </span>
+                </p>
               </div>
               <DialogTitle className="text-xl sm:text-2xl font-black text-white leading-tight drop-shadow">
                 {article.title}
@@ -133,20 +133,20 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
               {/* Metadata Bar */}
               <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground pb-2">
                 <div className="flex items-center gap-4 flex-wrap">
-                  <span className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1.5">
                     <Calendar className="size-3.5 text-amber-400" />
                     {formatDate(article.publishedAt)}
-                  </span>
-                  <span className="flex items-center gap-1.5">
+                  </div>
+                  <div className="flex items-center gap-1.5">
                     <Clock className="size-3.5 text-amber-400" />
                     {article.readTimeMinutes} phút đọc
-                  </span>
-                  <span>
+                  </div>
+                  <p>
                     Tác giả:{" "}
                     <strong className="text-foreground">
                       {article.author}
                     </strong>
-                  </span>
+                  </p>
                 </div>
 
                 <Button
@@ -158,14 +158,14 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
                   {copied ? (
                     <>
                       <Check className="size-3.5 text-emerald-400" />
-                      <span className="text-emerald-400 font-medium">
+                      <p className="text-emerald-400 font-medium">
                         Đã copy link!
-                      </span>
+                      </p>
                     </>
                   ) : (
                     <>
                       <Share2 className="size-3.5" />
-                      <span>Chia sẻ</span>
+                      <p>Chia sẻ</p>
                     </>
                   )}
                 </Button>
