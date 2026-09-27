@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Link, Check } from 'lucide-react'
 import type { ChampionMeta, Role } from '../../types/champion'
 import { TierBadge } from '../tier-badge'
-import { useLanguage } from '@/lib/i18n/language-context'
 import { getChampionAvatarUrl } from '../../data/ddragon-ids'
 
 interface ChampionHeroHeaderProps {
@@ -10,8 +9,15 @@ interface ChampionHeroHeaderProps {
   selectedRole?: Role
 }
 
+const ROLE_DISPLAY_NAMES: Record<string, string> = {
+  MID: 'Mid',
+  TOP: 'Top',
+  JUNGLE: 'Jungle',
+  ADC: 'ADC',
+  SUPPORT: 'Support',
+}
+
 export function ChampionHeroHeader({ champion, selectedRole }: ChampionHeroHeaderProps) {
-  const { t, language } = useLanguage()
   const [copied, setCopied] = useState(false)
   const [imgErr, setImgErr] = useState(false)
   const [avatarFailed, setAvatarFailed] = useState(false)
@@ -21,27 +27,7 @@ export function ChampionHeroHeader({ champion, selectedRole }: ChampionHeroHeade
 
   const canonicalAvatarUrl = getChampionAvatarUrl(champKey)
   const avatarSrc = imgErr ? canonicalAvatarUrl : (champion.avatarUrl || canonicalAvatarUrl)
-
-  const roleText =
-    language === 'vi'
-      ? activeRole === 'MID'
-        ? 'Đường Giữa'
-        : activeRole === 'TOP'
-        ? 'Đường Trên'
-        : activeRole === 'JUNGLE'
-        ? 'Rừng'
-        : activeRole === 'ADC'
-        ? 'Xạ Thủ'
-        : 'Hỗ Trợ'
-      : activeRole === 'MID'
-      ? 'Mid'
-      : activeRole === 'TOP'
-      ? 'Top'
-      : activeRole === 'JUNGLE'
-      ? 'Jungle'
-      : activeRole === 'ADC'
-      ? 'ADC'
-      : 'Support'
+  const roleText = ROLE_DISPLAY_NAMES[activeRole] || activeRole
 
   const handleCopyLink = () => {
     if (typeof window !== 'undefined') {
@@ -53,18 +39,18 @@ export function ChampionHeroHeader({ champion, selectedRole }: ChampionHeroHeade
 
   return (
     <div className="space-y-3 select-none">
-      {/* 1. BREADCRUMBS (League of Legends / Champions / Quinn Mid Build) */}
+      {/* 1. BREADCRUMBS */}
       <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-zinc-500">
         <p className="hover:text-zinc-300 transition-colors cursor-pointer">
-          {t('breadcrumbLoL')}
+          League of Legends
         </p>
         <p className="text-zinc-600">/</p>
         <p className="hover:text-zinc-300 transition-colors cursor-pointer">
-          {t('breadcrumbChampions')}
+          Champions
         </p>
         <p className="text-zinc-600">/</p>
         <p className="text-zinc-300 font-medium">
-          {champion.name} {roleText} {language === 'en' ? 'Build' : ''}
+          {champion.name} {roleText} Build
         </p>
       </nav>
 
@@ -102,13 +88,13 @@ export function ChampionHeroHeader({ champion, selectedRole }: ChampionHeroHeade
 
           <div className="space-y-1">
             <h1 className="text-lg sm:text-2xl font-black text-white tracking-tight">
-              {champion.name} {roleText} {t('buildHeadingSuffix')}
+              {champion.name} {roleText} Build & Runes - Patch 26.19 (Emerald+)
             </h1>
             <p className="text-xs text-zinc-400 max-w-3xl">
-              {t('recommendedSubtext', { champ: champion.name, role: roleText })}
+              Optimal runes, items, skill order, and win rate stats for {champion.name} {roleText} in Emerald+ on Patch 26.19.
             </p>
             <p className="text-[11px] text-zinc-500 font-medium">
-              {t('dataUpdated')}
+              Data updated 3 hours ago.
             </p>
           </div>
         </div>
@@ -118,8 +104,8 @@ export function ChampionHeroHeader({ champion, selectedRole }: ChampionHeroHeade
           <button
             type="button"
             onClick={handleCopyLink}
-            aria-label={t('shareLink')}
-            title={copied ? t('copiedLink') : t('shareLink')}
+            aria-label="Copy link"
+            title={copied ? "Copied link!" : "Copy link"}
             className={`w-9 h-9 rounded-lg flex items-center justify-center border transition-all cursor-pointer ${
               copied
                 ? 'bg-emerald-950/80 border-emerald-500 text-emerald-300 shadow-md shadow-emerald-500/20'
@@ -130,7 +116,7 @@ export function ChampionHeroHeader({ champion, selectedRole }: ChampionHeroHeade
           </button>
           {copied && (
             <div className="absolute -bottom-8 right-0 whitespace-nowrap px-2 py-0.5 rounded bg-emerald-900 border border-emerald-700 text-emerald-200 text-[10px] font-bold shadow-lg animate-fade-in">
-              {t('copiedLink')}
+              Copied link!
             </div>
           )}
         </div>

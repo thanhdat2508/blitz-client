@@ -82,12 +82,12 @@ export function Header() {
                       )}
                     >
                       <Icon className="w-3.5 h-3.5" />
-                      <span>{item.name}</span>
+                      <p>{item.name}</p>
                       {item.isNew && (
-                        <span className="relative flex h-1.5 w-1.5 ml-0.5">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500" />
-                        </span>
+                        <div className="relative flex h-1.5 w-1.5 ml-0.5">
+                          <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                          <div className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500" />
+                        </div>
                       )}
                     </NavigationMenuLink>
                   </NavigationMenuItem>

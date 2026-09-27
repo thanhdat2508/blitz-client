@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useLanguage } from '@/lib/i18n/language-context'
 import { getItemIconUrl, getSpellIconUrl, getItemName } from '../../data/ddragon-ids'
 import type { ChampionItems, SpellPair, BuildRole } from '../../types/champion-build'
 import { Shield, Sword, Package, Star } from 'lucide-react'
@@ -32,10 +31,9 @@ function ItemIcon({
   onSelectPreview,
   onClosePreview,
 }: ItemIconProps) {
-  const { language } = useLanguage()
   const [err, setErr] = useState(false)
   const url = getItemIconUrl(itemId, DDRAGON_VERSION)
-  const itemName = getItemName(itemId, language)
+  const itemName = getItemName(itemId, 'en')
 
   const handleTrigger = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!onSelectPreview) return
@@ -109,8 +107,6 @@ export function ItemBuildPath({
   onSelectPreview,
   onClosePreview,
 }: ItemBuildPathProps) {
-  const { t, language } = useLanguage()
-
   // Best spell combo (most popular = first)
   const bestSpell = spells[0]
 
@@ -128,7 +124,7 @@ export function ItemBuildPath({
       {/* ── Top Header ── */}
       <div className="flex items-center justify-between pb-2 border-b border-zinc-800/80">
         <p className="font-bold text-xs text-zinc-200 uppercase tracking-wide">
-          {language === 'en' ? `Build Path (${championName || 'Champion'})` : `Lộ Trình Lên Đồ (${championName || 'Tướng'})`}
+          Build Path ({championName || 'Champion'})
         </p>
         <p className="text-[10px] text-zinc-500 font-mono">Patch 26.19</p>
       </div>
@@ -139,7 +135,7 @@ export function ItemBuildPath({
           <div className="flex items-center gap-2 pb-1.5 border-b border-zinc-800/60">
             <Shield className="w-3.5 h-3.5 text-amber-400" />
             <p className="font-bold text-xs text-zinc-200 uppercase tracking-wide">
-              {t('summonerSpells') || 'Summoner Spells'}
+              Summoner Spells
             </p>
             <div className="ml-auto text-[10px] text-zinc-500 font-mono">
               {bestSpell.winRate.toFixed(1)}% WR · {bestSpell.pickRate.toFixed(1)}% Pick
@@ -168,7 +164,7 @@ export function ItemBuildPath({
         <div className="flex items-center gap-2 pb-1.5 border-b border-zinc-800/60">
           <Package className="w-3.5 h-3.5 text-cyan-400" />
           <p className="font-bold text-xs text-zinc-200 uppercase tracking-wide">
-            {t('startingItems') || 'Starting Items'}
+            Starting Items
           </p>
           <div className="ml-auto text-[10px] text-zinc-500 font-mono">
             {items.starting[0]?.winRate.toFixed(1)}% WR
@@ -191,7 +187,7 @@ export function ItemBuildPath({
         <div className="flex items-center gap-2 pb-1.5 border-b border-zinc-800/60">
           <Sword className="w-3.5 h-3.5 text-rose-400" />
           <p className="font-bold text-xs text-zinc-200 uppercase tracking-wide">
-            {t('coreBuild') || 'Core Build'}
+            Core Build
           </p>
           <div className="ml-auto text-[10px] text-zinc-500 font-mono">
             {items.core[0]?.winRate.toFixed(1)}% WR
@@ -215,7 +211,7 @@ export function ItemBuildPath({
           <div className="flex items-center gap-2 pb-1.5 border-b border-zinc-800/60">
             <Star className="w-3.5 h-3.5 text-amber-400" />
             <p className="font-bold text-xs text-zinc-200 uppercase tracking-wide">
-              {t('buildOrder') || 'Build Order'}
+              Build Order
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-1.5">
@@ -241,7 +237,7 @@ export function ItemBuildPath({
       <div className="space-y-2">
         <div className="flex items-center gap-2 pb-1.5 border-b border-zinc-800/60">
           <p className="font-bold text-xs text-zinc-200 uppercase tracking-wide">
-            {t('completedBuild') || 'Full Build'}
+            Full Build
           </p>
           <div className="ml-auto text-[10px] text-zinc-500 font-mono">
             {items.completed[0]?.winRate.toFixed(1)}% WR
@@ -277,7 +273,7 @@ export function ItemBuildPath({
       <div className="space-y-2">
         <div className="flex items-center gap-2 pb-1.5 border-b border-zinc-800/60">
           <p className="font-bold text-xs text-zinc-200 uppercase tracking-wide">
-            {t('boots') || 'Boots'}
+            Boots
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -310,7 +306,7 @@ export function ItemBuildPath({
         <div className="space-y-2">
           <div className="flex items-center gap-2 pb-1.5 border-b border-zinc-800/60">
             <p className="font-bold text-xs text-zinc-200 uppercase tracking-wide">
-              {t('situationalItems') || 'Situational'}
+              Situational
             </p>
           </div>
           <div className="flex flex-wrap gap-2">

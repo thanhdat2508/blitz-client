@@ -1,5 +1,4 @@
 import { Link2, RefreshCw } from 'lucide-react'
-import { useLanguage } from '@/lib/i18n/language-context'
 
 interface ChampionsHeaderProps {
   totalChampions: number
@@ -13,8 +12,6 @@ export function ChampionsHeader({
   isFetching,
   onRefresh,
 }: ChampionsHeaderProps) {
-  const { t, language } = useLanguage()
-
   return (
     <div className="space-y-4 select-none">
       {/* 1. TOP TITLE BLOCK WITH HEXTECH EMBLEM */}
@@ -32,21 +29,21 @@ export function ChampionsHeader({
           {/* Title & Subtitle */}
           <div>
             <h1 className="text-xl md:text-2xl lg:text-[26px] font-black text-white tracking-tight leading-tight">
-              {t('championsPageTitle')}{' '}
+              LoL Champion Tier List & Meta Stats{' '}
               <em className="font-normal text-zinc-400 not-italic">
-                {t('forEmeraldPatch')}
+                for Emerald+ Patch 26.19
               </em>
             </h1>
             <p className="text-zinc-400 text-xs md:text-sm mt-0.5 font-normal">
-              {t('championsPageSubtitle')}
+              Find the strongest League of Legends champions with win rates, pick rates, and tier rankings.
             </p>
             <div className="flex items-center gap-2 text-zinc-500 text-xs mt-0.5 font-normal">
-              <p>{t('dataUpdatedHours')}</p>
+              <p>Data updated 3 hours ago</p>
               {totalChampions > 0 && (
                 <>
                   <p>•</p>
                   <p className="font-mono text-zinc-400">
-                    {totalChampions} {language === 'en' ? 'champions' : 'tướng'}
+                    {totalChampions} champions
                   </p>
                 </>
               )}
@@ -60,15 +57,15 @@ export function ChampionsHeader({
             type="button"
             onClick={onRefresh}
             aria-label="Refresh Data"
-            title={language === 'en' ? 'Refresh Data' : 'Làm mới dữ liệu'}
+            title="Refresh Data"
             className="p-2 rounded-lg bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer shrink-0"
           >
             <RefreshCw className={`w-4 h-4 ${isFetching ? 'animate-spin text-amber-400' : ''}`} />
           </button>
           <button
             type="button"
-            aria-label={t('shareLink')}
-            title={t('shareLink')}
+            aria-label="Share link"
+            title="Share link"
             className="p-2 rounded-lg bg-zinc-900 border border-zinc-800 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer shrink-0"
           >
             <Link2 className="w-4 h-4" />
@@ -82,31 +79,31 @@ export function ChampionsHeader({
           type="button"
           className="px-3 py-2 text-white border-b-2 border-amber-400 whitespace-nowrap cursor-pointer font-bold"
         >
-          <p>{t('tabRankedStats')}</p>
+          <p>Ranked Stats</p>
         </button>
 
         <div className="px-3 py-2 text-zinc-400 hover:text-zinc-200 whitespace-nowrap cursor-pointer font-medium">
-          <p>{t('tabMasteryStats')}</p>
+          <p>Mastery</p>
         </div>
 
         <div className="px-3 py-2 text-zinc-400 hover:text-zinc-200 whitespace-nowrap cursor-pointer font-medium">
-          <p>{t('tabAramStats')}</p>
+          <p>ARAM</p>
         </div>
 
         <div className="px-3 py-2 text-zinc-400 hover:text-zinc-200 whitespace-nowrap cursor-pointer font-medium">
-          <p>{t('tabUrfStats')}</p>
+          <p>URF</p>
         </div>
 
         <div className="px-3 py-2 text-zinc-400 hover:text-zinc-200 whitespace-nowrap cursor-pointer font-medium">
-          <p>{t('tabArenaStats')}</p>
+          <p>Arena</p>
         </div>
 
         <div className="px-3 py-2 text-zinc-400 hover:text-zinc-200 whitespace-nowrap cursor-pointer font-medium">
-          <p>{t('tabArena3v3Stats')}</p>
+          <p>Arena 3v3</p>
         </div>
 
         <div className="px-3 py-2 text-zinc-400 hover:text-zinc-200 whitespace-nowrap cursor-pointer font-medium">
-          <p>{t('tabSynergiesHeader')}</p>
+          <p>Synergies</p>
         </div>
       </div>
     </div>

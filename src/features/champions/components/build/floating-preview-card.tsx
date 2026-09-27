@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react'
 import { X, Sparkles } from 'lucide-react'
-import { useLanguage } from '@/lib/i18n/language-context'
 
 export interface FloatingCardData {
   title: string
@@ -20,10 +19,9 @@ export interface FloatingCardData {
   guide?: string
   enGuide?: string
   winRate: number
-  games: number | string
+  games: string | number
   pickRate: number
   rect?: DOMRect
-  pinned?: boolean
 }
 
 interface FloatingPreviewCardProps {
@@ -33,27 +31,23 @@ interface FloatingPreviewCardProps {
 }
 
 function computeCoords(rect?: DOMRect) {
-  if (!rect) return { top: 100, left: 100 }
+  if (!rect) return { top: 120, left: 120 }
+
   const cardWidth = 360
   const cardHeight = 280
 
-  // Center horizontally above element
-  let left = rect.left + rect.width / 2 - cardWidth / 2
-  let top = rect.top - cardHeight - 12
+  // Position nicely to the right or left of element
+  let left = rect.right + 12
+  let top = rect.top - 20
 
-  // If overflowing top of screen, place below element
-  if (top < 16) {
-    top = rect.bottom + 12
-  }
-
-  const winWidth = typeof window !== 'undefined' ? window.innerWidth : 1200
+  const winWidth = typeof window !== 'undefined' ? window.innerWidth : 1440
   const winHeight = typeof window !== 'undefined' ? window.innerHeight : 800
 
   // Clamp horizontally to stay inside viewport
   if (left < 16) {
     left = 16
   } else if (left + cardWidth > winWidth - 16) {
-    left = winWidth - cardWidth - 16
+    left = Math.max(16, rect.left - cardWidth - 12)
   }
 
   // Clamp vertically
@@ -65,7 +59,6 @@ function computeCoords(rect?: DOMRect) {
 }
 
 export function FloatingPreviewCard({ data, onClose, onMouseEnter }: FloatingPreviewCardProps) {
-  const { language } = useLanguage()
   const cardRef = useRef<HTMLDivElement>(null)
   const coords = computeCoords(data?.rect)
 
@@ -80,12 +73,12 @@ export function FloatingPreviewCard({ data, onClose, onMouseEnter }: FloatingPre
 
   if (!data) return null
 
-  const title = language === 'en' ? (data.enTitle ?? data.title) : data.title
-  const desc = language === 'en' ? (data.enDesc ?? data.desc) : data.desc
-  const subDesc = language === 'en' ? (data.enSubDesc ?? data.subDesc) : data.subDesc
-  const cooldown = language === 'en' ? (data.enCooldown ?? data.cooldown) : data.cooldown
-  const guide = language === 'en' ? (data.enGuide ?? data.guide) : data.guide
-  const stats = language === 'en' ? (data.enStats ?? data.stats) : data.stats
+  const title = data.enTitle ?? data.title
+  const desc = data.enDesc ?? data.desc
+  const subDesc = data.enSubDesc ?? data.subDesc
+  const cooldown = data.enCooldown ?? data.cooldown
+  const guide = data.enGuide ?? data.guide
+  const stats = data.enStats ?? data.stats
 
   return (
     <div
@@ -98,36 +91,29 @@ export function FloatingPreviewCard({ data, onClose, onMouseEnter }: FloatingPre
     >
       {/* 1. HEADER (ICON + TITLE + TAG + CLOSE BUTTON) */}
       <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="w-12 h-12 rounded-full border-2 border-amber-400/80 p-0.5 shrink-0 bg-zinc-900 overflow-hidden shadow-lg shadow-amber-500/20">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl bg-zinc-900 border border-zinc-700 p-1 flex items-center justify-center shrink-0 shadow-md">
             <img
               src={data.icon}
               alt={title}
-              className="w-full h-full object-cover rounded-full"
+              className="w-full h-full object-contain rounded-lg"
             />
           </div>
-          <div className="min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <p className="text-base font-extrabold text-white tracking-tight truncate">
+          <div>
+            <div className="flex items-center gap-2">
+              <h4 className="font-extrabold text-sm sm:text-base text-white tracking-tight">
                 {title}
-              </p>
+              </h4>
               {data.tag && (
-                <div className="px-1.5 py-0.5 rounded bg-amber-500/20 border border-amber-500/30 text-amber-300 text-[10px] font-bold uppercase tracking-wider shrink-0">
+                <div className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold uppercase tracking-wider">
                   {data.tag}
                 </div>
               )}
             </div>
-
-            {(data.cost || data.tier) && (
-              <div className="flex items-center gap-2 text-xs text-zinc-400 font-medium mt-0.5">
-                {data.tier && (
-                  <p className="text-amber-400/90 font-semibold">{data.tier}</p>
-                )}
-                {data.tier && data.cost && <p className="text-zinc-600">•</p>}
-                {data.cost && (
-                  <p className="text-zinc-300 font-mono font-bold">{data.cost}</p>
-                )}
-              </div>
+            {data.cost && (
+              <p className="text-amber-400 font-mono text-xs font-semibold mt-0.5">
+                {data.cost} Gold
+              </p>
             )}
           </div>
         </div>
@@ -135,14 +121,14 @@ export function FloatingPreviewCard({ data, onClose, onMouseEnter }: FloatingPre
         <button
           type="button"
           onClick={onClose}
-          className="text-zinc-500 hover:text-zinc-200 p-1 rounded-md hover:bg-zinc-800/60 transition-colors"
-          title={language === 'en' ? 'Close' : 'Đóng'}
+          aria-label="Close Preview"
+          className="w-6 h-6 rounded-md hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 flex items-center justify-center transition-colors cursor-pointer"
         >
-          <X className="w-4 h-4" />
+          <X className="w-3.5 h-3.5" />
         </button>
       </div>
 
-      {/* 2. STATS PILLS (IF ANY) */}
+      {/* 2. STATS CHIPS (IF ANY) */}
       {stats && stats.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-1.5 pt-2 border-t border-zinc-800/80">
           {stats.map((stat, idx) => (
@@ -164,46 +150,40 @@ export function FloatingPreviewCard({ data, onClose, onMouseEnter }: FloatingPre
         )}
         {cooldown && (
           <p className="text-zinc-400 font-mono text-[11px] pt-1">
-            {language === 'en' ? `Cooldown: ${cooldown}` : `Hồi chiêu: ${cooldown}`}
+            Cooldown: {cooldown}
           </p>
         )}
       </div>
 
-      {/* 4. TACTICAL GUIDE / MẸO LÊN ĐỒ (IF ANY) */}
+      {/* 4. TACTICAL GUIDE */}
       {guide && (
         <div className="mt-3 p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-200/90 text-[11px] leading-snug space-y-1">
           <div className="flex items-center gap-1.5 text-amber-400 font-bold text-[10px] uppercase tracking-wider">
             <Sparkles className="w-3 h-3 text-amber-400" />
-            <p>{language === 'en' ? 'Tactical Guide' : 'Mẹo lên đồ'}</p>
+            <p>Tactical Guide</p>
           </div>
           <p className="text-zinc-300">{guide}</p>
         </div>
       )}
 
-      {/* 5. FOOTER STATS BAR (MATCHING SCREENSHOT 1) */}
+      {/* 5. FOOTER STATS BAR */}
       <div className="mt-3.5 pt-2.5 border-t border-zinc-800/90 flex items-center justify-between text-xs font-mono">
         <div className="flex items-center gap-1.5">
-          <p className="text-zinc-400 font-medium">
-            {language === 'en' ? 'WR:' : 'TL Thắng:'}
-          </p>
+          <p className="text-zinc-400 font-medium">WR:</p>
           <p className="font-black text-cyan-400 text-xs sm:text-sm">
             {data.winRate}%
           </p>
         </div>
 
         <div className="flex items-center gap-1.5">
-          <p className="text-zinc-400 font-medium">
-            {language === 'en' ? 'Games:' : 'Số trận:'}
-          </p>
+          <p className="text-zinc-400 font-medium">Games:</p>
           <p className="font-black text-white text-xs sm:text-sm">
             {data.games}
           </p>
         </div>
 
         <div className="flex items-center gap-1.5">
-          <p className="text-zinc-400 font-medium">
-            {language === 'en' ? 'PR:' : 'TL Chọn:'}
-          </p>
+          <p className="text-zinc-400 font-medium">PR:</p>
           <p className="font-black text-amber-400 text-xs sm:text-sm">
             {data.pickRate}%
           </p>

@@ -1,7 +1,6 @@
 import type { ChampionMeta } from '../../types/champion'
 import { ChampionRow } from '../champion-row'
 import { ChevronDown } from 'lucide-react'
-import { useLanguage } from '@/lib/i18n/language-context'
 
 interface ChampionsTableProps {
   champions: ChampionMeta[]
@@ -16,18 +15,16 @@ export function ChampionsTable({
   onToggleSort,
   onSelectChampion,
 }: ChampionsTableProps) {
-  const { t } = useLanguage()
-
   return (
     <div className="overflow-x-auto rounded-xl border border-zinc-800 bg-[#121620] shadow-xl select-none">
       <table className="w-full text-left border-collapse">
         <thead>
           <tr className="border-b border-zinc-800/80 bg-[#0E121A] text-[11px] text-zinc-400 font-bold uppercase tracking-wider">
             <th className="py-2.5 px-3 text-center w-12">
-              <p>{t('colRank')}</p>
+              <p>#</p>
             </th>
             <th className="py-2.5 px-3 text-center w-12">
-              <p>{t('colRole')}</p>
+              <p>ROLE</p>
             </th>
             <th className="py-2.5 px-4">
               <button
@@ -37,7 +34,7 @@ export function ChampionsTable({
                   sortBy === 'name' ? 'text-amber-400 font-black' : ''
                 }`}
               >
-                <p>{t('colChampion')}</p>
+                <p>CHAMPION</p>
                 {sortBy === 'name' && <ChevronDown className="w-3 h-3 text-amber-400" />}
               </button>
             </th>
@@ -49,7 +46,7 @@ export function ChampionsTable({
                   sortBy === 'tier' ? 'text-amber-400 font-black' : ''
                 }`}
               >
-                <p>{t('colTier')}</p>
+                <p>TIER</p>
                 {sortBy === 'tier' && <ChevronDown className="w-3 h-3 text-amber-400" />}
               </button>
             </th>
@@ -61,12 +58,12 @@ export function ChampionsTable({
                   sortBy === 'winRate' ? 'text-amber-400 font-black' : ''
                 }`}
               >
-                <p>{t('colWinRate')}</p>
+                <p>WIN RATE</p>
                 {sortBy === 'winRate' && <ChevronDown className="w-3 h-3 text-amber-400" />}
               </button>
             </th>
             <th className="py-2.5 px-4 text-center">
-              <p>{t('colPatchWrChange')}</p>
+              <p>TREND</p>
             </th>
             <th className="py-2.5 px-4 text-center">
               <button
@@ -76,7 +73,7 @@ export function ChampionsTable({
                   sortBy === 'banRate' ? 'text-amber-400 font-black' : ''
                 }`}
               >
-                <p>{t('colBanRate')}</p>
+                <p>BAN RATE</p>
                 {sortBy === 'banRate' && <ChevronDown className="w-3 h-3 text-amber-400" />}
               </button>
             </th>
@@ -88,12 +85,12 @@ export function ChampionsTable({
                   sortBy === 'pickRate' ? 'text-amber-400 font-black' : ''
                 }`}
               >
-                <p>{t('colPickRate')}</p>
+                <p>PICK RATE</p>
                 {sortBy === 'pickRate' && <ChevronDown className="w-3 h-3 text-amber-400" />}
               </button>
             </th>
             <th className="py-2.5 px-4 text-center">
-              <p>{t('colMatches')}</p>
+              <p>MATCHES</p>
             </th>
           </tr>
         </thead>

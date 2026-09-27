@@ -1,5 +1,4 @@
 import { useNavigate } from '@tanstack/react-router'
-import { useLanguage } from '@/lib/i18n/language-context'
 import type { SimilarChampion as BackendSimilarChampion } from '../../types/champion-build'
 import { getChampionAvatarUrl } from '../../data/ddragon-ids'
 
@@ -52,7 +51,6 @@ export function SimilarChampionsCard({
   similarChampions: propSimilar,
 }: SimilarChampionsCardProps) {
   const navigate = useNavigate()
-  const { language } = useLanguage()
 
   const list: SimilarChampion[] =
     propSimilar && propSimilar.length > 0
@@ -76,12 +74,10 @@ export function SimilarChampionsCard({
     <div className="rounded-xl border border-zinc-800/80 bg-[#0E121A] p-4 sm:p-5 shadow-xl select-none space-y-4 font-sans">
       <div>
         <p className="text-base sm:text-lg font-extrabold text-white tracking-wide">
-          {language === 'en' ? 'Similar Champions' : 'Tướng Tương Đồng'}
+          Similar Champions
         </p>
         <p className="text-xs text-zinc-400 mt-0.5">
-          {language === 'en'
-            ? `A few champions that are similar playstyle to ${championName}.`
-            : `Một số vị tướng có lối chơi và phong cách tương đồng với ${championName}.`}
+          A few champions that are similar playstyle to {championName}.
         </p>
       </div>
 

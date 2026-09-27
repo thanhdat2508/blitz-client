@@ -90,15 +90,15 @@ export function HomeNewsSection() {
           >
             <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent group-hover:from-black transition-all duration-300" />
             <div className="absolute bottom-5 left-5 right-5 flex flex-col z-10 transform group-hover:-translate-y-2 transition-transform duration-300">
-              <span className="text-xs font-black uppercase text-yellow-500 tracking-wider mb-1">
+              <p className="text-xs font-black uppercase text-yellow-500 tracking-wider mb-1">
                 {item.category || "Patch Notes"}
-              </span>
-              <span className="text-3xl sm:text-4xl font-black text-white line-clamp-1">
+              </p>
+              <p className="text-3xl sm:text-4xl font-black text-white line-clamp-1">
                 {item.version}
-              </span>
-              <span className="text-xs font-medium text-gray-200 mt-1 line-clamp-2">
+              </p>
+              <p className="text-xs font-medium text-gray-200 mt-1 line-clamp-2">
                 {item.description}
-              </span>
+              </p>
             </div>
           </div>
         ))}

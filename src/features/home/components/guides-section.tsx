@@ -66,9 +66,9 @@ export function GuidesSection() {
           >
             <div className="absolute inset-0 bg-linear-to-t from-[#0b0c10] via-[#0b0c10]/40 to-transparent group-hover:from-black transition-all" />
             <div className="relative z-20 p-8 transform group-hover:-translate-y-2 transition-transform duration-300">
-              <span className="bg-yellow-500 text-black font-bold px-3 py-1 rounded-md text-xs uppercase mb-3 inline-block">
+              <p className="bg-yellow-500 text-black font-bold px-3 py-1 rounded-md text-xs uppercase mb-3 inline-block">
                 In-depth
-              </span>
+              </p>
               <h3 className="text-3xl font-black mb-2 text-white group-hover:text-yellow-400 transition">
                 {featured.title}
               </h3>

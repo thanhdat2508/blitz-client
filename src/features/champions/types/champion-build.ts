@@ -128,6 +128,7 @@ export interface ChampionAbilities {
 export interface SkillPriority {
   maxOrder: string[]
   progression: string[]
+  order?: string[]
   winRate: number
   pickRate: number
 }

@@ -58,8 +58,16 @@ export const proPlayersKeys = {
 };
 
 export async function getProPlayers(): Promise<ProPlayerApiItem[]> {
-  const response = await fetchClient<ProPlayersApiResponse>("/api/pro-players");
-  return response.data || [];
+  try {
+    const response = await fetchClient<ProPlayersApiResponse>("/api/pro-players");
+    if (response?.data && Array.isArray(response.data)) {
+      return response.data;
+    }
+    return [];
+  } catch (err) {
+    console.error("Failed to fetch pro-players from backend:", err);
+    return [];
+  }
 }
 
 export function useProPlayers() {

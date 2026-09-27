@@ -3,7 +3,6 @@ import { useNavigate } from '@tanstack/react-router'
 import type { ChampionMeta, Role, RankBracket, Region } from '../types/champion'
 import { useChampions } from '../api/get-champions'
 import { useDebounce } from '@/hooks/use-debounce'
-import { useLanguage } from '@/lib/i18n/language-context'
 import { ChampionsHeader } from './overview/champions-header'
 import { ChampionsToolbar } from './overview/champions-toolbar'
 import { ChampionsTable } from './overview/champions-table'
@@ -55,8 +54,6 @@ export function ChampionsView() {
     })
   }
 
-  const { t } = useLanguage()
-
   return (
     <div className="space-y-6 select-none font-sans text-zinc-100">
       {/* 1. HERO TITLE & META HEADER */}
@@ -86,16 +83,16 @@ export function ChampionsView() {
         <div className="py-20 text-center space-y-3">
           <div className="w-10 h-10 border-4 border-rose-500/20 border-t-rose-500 rounded-full animate-spin mx-auto" />
           <p className="text-zinc-400 text-sm font-medium">
-            {t('loadingChampions')}
+            Loading champions...
           </p>
         </div>
       ) : champions.length === 0 ? (
         <div className="py-16 text-center bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-6">
           <p className="text-base font-bold text-zinc-200">
-            {t('noChampionsFound')}
+            No champions found
           </p>
           <p className="text-xs text-zinc-500 mt-1">
-            {t('noChampionsMatch').replace('{query}', searchQuery)}
+            {searchQuery ? `No champions found matching "${searchQuery}".` : 'Try adjusting your filters.'}
           </p>
           <button
             type="button"
@@ -105,7 +102,7 @@ export function ChampionsView() {
             }}
             className="mt-4 px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-xs text-zinc-200 font-semibold transition-colors cursor-pointer"
           >
-            {t('resetFilters')}
+            Reset filters
           </button>
         </div>
       ) : viewMode === 'table' ? (

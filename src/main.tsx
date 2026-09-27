@@ -2,7 +2,6 @@ import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
-import { LanguageProvider } from "./lib/i18n/language-context";
 import "./index.css";
 import { routeTree } from "./routeTree.gen";
 import NotFoundPage from "./components/page/404Page";
@@ -37,9 +36,7 @@ if (!rootElement.innerHTML) {
   root.render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>
-        <LanguageProvider>
-          <RouterProvider router={router} />
-        </LanguageProvider>
+        <RouterProvider router={router} />
       </QueryClientProvider>
     </StrictMode>,
   );

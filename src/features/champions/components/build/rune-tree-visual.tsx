@@ -7,7 +7,6 @@ import {
   RUNE_STYLE_NAME,
 } from '../../data/ddragon-ids'
 import { Trophy, Sparkles, Star } from 'lucide-react'
-import { useLanguage } from '@/lib/i18n/language-context'
 import type { FloatingCardData } from './floating-preview-card'
 import { getRunePreviewData } from '../../utils/preview-data'
 
@@ -254,7 +253,6 @@ function BlitzRuneTreeGrid({
   onSelectPreview?: (data: FloatingCardData) => void
   onClosePreview?: () => void
 }) {
-  const { language } = useLanguage()
   const primaryStyle = RUNE_STYLE_NAME[setup.primaryStyleId]
   const subStyle = RUNE_STYLE_NAME[setup.subStyleId]
 
@@ -264,8 +262,8 @@ function BlitzRuneTreeGrid({
   const primaryStruct = STYLE_PERK_STRUCTURE[setup.primaryStyleId] ?? STYLE_PERK_STRUCTURE[8000]
   const subStruct = STYLE_PERK_STRUCTURE[setup.subStyleId] ?? STYLE_PERK_STRUCTURE[8400]
 
-  const primaryName = language === 'vi' ? (primaryStyle?.vi || primaryStyle?.en) : primaryStyle?.en
-  const subName = language === 'vi' ? (subStyle?.vi || subStyle?.en) : subStyle?.en
+  const primaryName = primaryStyle?.en || 'Primary'
+  const subName = subStyle?.en || 'Secondary'
 
   // Season 14 3x3 Stat Shards Matrix from backend API with fallback
   const shardRows = setup.statShards?.rows && setup.statShards.rows.length === 3
@@ -421,7 +419,7 @@ function BlitzRuneTreeGrid({
         {/* Divider / Stat Shards Section (Season 14 3x3 Grid matching Screenshot 1) */}
         <div className="pt-3 border-t border-zinc-800/70 space-y-2.5">
           <p className="text-xs font-black uppercase tracking-wider text-cyan-400 text-center">
-            {language === 'en' ? 'STAT SHARDS' : 'MẢNH CHỈ SỐ'}
+            STAT SHARDS
           </p>
 
           <div className="space-y-2">
@@ -453,7 +451,6 @@ export function RuneTreeVisual({
   onSelectPreview,
   onClosePreview,
 }: RuneTreeVisualProps) {
-  const { t, language } = useLanguage()
   const [activePreset, setActivePreset] = useState<PresetKey>('mostPopular')
 
   const currentRunes = runes[activePreset]
@@ -467,14 +464,14 @@ export function RuneTreeVisual({
   }[] = [
     {
       key: 'mostPopular',
-      label: t('mostPopular') || 'Most Popular',
+      label: 'Most Popular',
       icon: <Trophy className="w-3 h-3" />,
       winRate: runes.mostPopular.winRate,
       pickRate: runes.mostPopular.pickRate,
     },
     {
       key: 'highestWinRate',
-      label: t('highestWinRate') || 'Highest Win Rate',
+      label: 'Highest Win Rate',
       icon: <Star className="w-3 h-3" />,
       winRate: runes.highestWinRate.winRate,
       pickRate: runes.highestWinRate.pickRate,
@@ -484,8 +481,8 @@ export function RuneTreeVisual({
   const primaryStyle = RUNE_STYLE_NAME[currentRunes.primaryStyleId]
   const subStyle = RUNE_STYLE_NAME[currentRunes.subStyleId]
 
-  const primaryName = language === 'vi' ? (primaryStyle?.vi || primaryStyle?.en) : primaryStyle?.en
-  const subName = language === 'vi' ? (subStyle?.vi || subStyle?.en) : subStyle?.en
+  const primaryName = primaryStyle?.en || 'Primary'
+  const subName = subStyle?.en || 'Secondary'
 
   return (
     <div className="relative overflow-hidden rounded-xl bg-[#0E121A] border border-zinc-800/80 p-4 sm:p-5 select-none shadow-2xl space-y-4">
@@ -502,7 +499,7 @@ export function RuneTreeVisual({
         <div className="flex items-center gap-2">
           <Sparkles className="w-3.5 h-3.5 text-amber-400" />
           <p className="text-xs font-bold text-zinc-200 uppercase tracking-wider">
-            {t('runesTitle') || 'Runes'}
+            Runes
           </p>
         </div>
 

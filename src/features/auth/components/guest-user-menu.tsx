@@ -68,7 +68,7 @@ export function GuestUserMenu() {
             <User className="w-3.5 h-3.5" />
           </div>
         )}
-        <span className="truncate max-w-32.5">{user.name}</span>
+        <p className="truncate max-w-32.5">{user.name}</p>
       </Button>
 
       {isOpen && (

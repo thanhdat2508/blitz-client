@@ -127,17 +127,16 @@ export function getRunePreviewData(
   if (perkId >= 5000 && perkId <= 5015) {
     const shardInfo = getStatShardInfo(perkId)
     const matched = STAT_SHARD_INFO[perkId]
-    const foundShardDesc = matched?.desc ?? '+9 Sức mạnh Thích ứng hoặc chỉ số phòng thủ'
     const foundShardEnDesc = matched?.enDesc ?? '+9 Adaptive Force or defensive resistance'
 
     return {
       title: shardInfo.name,
       enTitle: shardInfo.name,
       icon: shardInfo.iconUrl,
-      tag: 'Stat Shard (Mảnh Chỉ Số)',
-      desc: foundShardDesc,
+      tag: 'Stat Shard',
+      desc: foundShardEnDesc,
       enDesc: foundShardEnDesc,
-      guide: 'Chọn chỉ số phù hợp với tướng đối đầu cùng đường để tối ưu hóa giai đoạn đầu trận.',
+      guide: 'Choose shard stats that counter your lane opponent for maximum early advantages.',
       enGuide: 'Choose shard stats that counter your lane opponent for maximum early advantages.',
       winRate: extra?.winRate ?? 51.8,
       pickRate: extra?.pickRate ?? 48.2,
@@ -153,17 +152,17 @@ export function getRunePreviewData(
   if (indexed) {
     const { rune, isKeystone, treeName } = indexed
     return {
-      title: rune.name,
-      enTitle: rune.enName,
+      title: rune.enName || rune.name,
+      enTitle: rune.enName || rune.name,
       icon: perkInfo.iconUrl || rune.icon,
       tag: isKeystone ? `Keystone (${treeName})` : `Rune (${treeName})`,
-      desc: rune.desc,
+      desc: rune.enDesc || rune.desc,
       enDesc: rune.enDesc || rune.desc,
       cooldown: rune.cooldown,
       enCooldown: rune.cooldown,
       guide: isKeystone
-        ? 'Ngọc siêu cấp chủ lực - tạo lợi thế trao đổi sát thương và hồi phục trong suốt trận đấu.'
-        : 'Ngọc bổ trợ quan trọng giúp tối ưu hóa lối chơi và chỉ số sức mạnh của tướng.',
+        ? 'Primary keystone delivering crucial trade bursts and combat sustain throughout the match.'
+        : 'Essential minor perk augmenting core gameplay loops and champion power curves.',
       enGuide: isKeystone
         ? 'Primary keystone delivering crucial trade bursts and combat sustain throughout the match.'
         : 'Essential minor perk augmenting core gameplay loops and champion power curves.',
@@ -180,7 +179,7 @@ export function getRunePreviewData(
     enTitle: perkInfo.name,
     icon: perkInfo.iconUrl,
     tag: 'Rune',
-    desc: 'Tăng cường sức mạnh và hiệu ứng chiến đấu đặc biệt cho vị tướng.',
+    desc: 'Grants enhanced combat power and specialized tactical bonuses.',
     enDesc: 'Grants enhanced combat power and specialized tactical bonuses.',
     winRate: extra?.winRate ?? 51.5,
     pickRate: extra?.pickRate ?? 35.0,
@@ -199,22 +198,24 @@ export function getItemPreviewData(itemId: number, rect?: DOMRect): FloatingCard
 
   if (itemDef) {
     return {
-      title: itemDef.name,
-      enTitle: itemDef.enName,
+      title: itemDef.enName || itemDef.name,
+      enTitle: itemDef.enName || itemDef.name,
       icon: itemDef.iconUrl || iconUrl,
       tag: itemDef.tier || 'Item',
       cost: itemDef.cost,
       tier: itemDef.tier,
-      stats: itemDef.stats,
-      enStats: itemDef.enStats,
+      stats: itemDef.enStats || itemDef.stats,
+      enStats: itemDef.enStats || itemDef.stats,
       desc:
+        itemDef.enPassive ||
         itemDef.passive ||
-        'Gia tăng sức mạnh công kích, phòng thủ và khả năng đa dụng trong giao tranh.',
+        'Enhances offensive burst, defensive survivability, and utility in fights.',
       enDesc:
         itemDef.enPassive ||
+        itemDef.passive ||
         'Enhances offensive burst, defensive survivability, and utility in fights.',
-      guide: itemDef.guide,
-      enGuide: itemDef.enGuide,
+      guide: itemDef.enGuide || itemDef.guide,
+      enGuide: itemDef.enGuide || itemDef.guide,
       winRate: itemDef.winRate ?? 53.4,
       pickRate: itemDef.pickRate ?? 31.2,
       games: itemDef.matches ?? '11,250',
@@ -223,21 +224,20 @@ export function getItemPreviewData(itemId: number, rect?: DOMRect): FloatingCard
   }
 
   // Fallback using ITEM_NAMES
-  const title = names?.vi || `Trang Bị #${itemId}`
   const enTitle = names?.en || `Item #${itemId}`
 
   return {
-    title,
+    title: enTitle,
     enTitle,
     icon: iconUrl,
-    tag: 'Trang Bị LMHT',
+    tag: 'LoL Item',
     cost: '2,900g',
     tier: 'Legendary',
-    stats: ['+Sức mạnh thích ứng', '+Khả năng sinh tồn'],
+    stats: ['+Adaptive Force', '+Survivability'],
     enStats: ['+Adaptive Force', '+Survivability'],
-    desc: 'Trang bị hoàn chỉnh cung cấp chỉ số vượt trội và các hiệu ứng nội tại kích hoạt mạnh mẽ.',
+    desc: 'Completed item providing superior combat stats and impactful unique passive effects.',
     enDesc: 'Completed item providing superior combat stats and impactful unique passive effects.',
-    guide: 'Lên trang bị theo đúng lộ trình để tối đa hóa ngưỡng sức mạnh tại từng thời điểm trận đấu.',
+    guide: 'Build in optimal sequence to spike in power at key game timings.',
     enGuide: 'Build in optimal sequence to spike in power at key game timings.',
     winRate: 52.8,
     pickRate: 27.4,

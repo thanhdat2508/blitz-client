@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { ChevronDown, Globe, Shield, Swords } from 'lucide-react'
 import type { Role } from '../../types/champion'
 import { RoleIcon } from '../role-icons'
-import { useLanguage } from '@/lib/i18n/language-context'
 
 interface ChampionFilterToolbarProps {
   selectedRole: Role
@@ -52,15 +51,13 @@ export function ChampionFilterToolbar({
   selectedMatchup,
   onSelectMatchup,
 }: ChampionFilterToolbarProps) {
-  const { t } = useLanguage()
-
   const [openRank, setOpenRank] = useState(false)
   const [openRegion, setOpenRegion] = useState(false)
   const [openMatchup, setOpenMatchup] = useState(false)
 
   const currentRankLabel = RANKS.find((r) => r.id === selectedRank)?.label ?? 'Emerald+'
   const currentRegionLabel = REGIONS.find((r) => r.id === selectedRegion)?.label ?? 'World'
-  const currentMatchupLabel = MATCHUPS.find((m) => m.id === selectedMatchup)?.label ?? t('selectMatchup')
+  const currentMatchupLabel = MATCHUPS.find((m) => m.id === selectedMatchup)?.label ?? 'Select Matchup'
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 py-2 text-xs select-none">
@@ -202,7 +199,7 @@ export function ChampionFilterToolbar({
 
       {/* Right: Patch Label */}
       <div className="text-zinc-500 font-mono text-xs">
-        <p>{t('patchLabel')}</p>
+        <p>Patch 26.19</p>
       </div>
     </div>
   )

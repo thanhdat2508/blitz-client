@@ -3,7 +3,6 @@ import type { ChampionMeta } from '../types/champion'
 import { TierBadge } from './tier-badge'
 import { RoleIcon } from './role-icons'
 import { ChevronRight } from 'lucide-react'
-import { useLanguage } from '@/lib/i18n/language-context'
 
 interface ChampionCardProps {
   champion: ChampionMeta
@@ -12,7 +11,6 @@ interface ChampionCardProps {
 
 export function ChampionCard({ champion, onSelect }: ChampionCardProps) {
   const [imgError, setImgError] = useState(false)
-  const { language } = useLanguage()
 
   return (
     <section
@@ -54,31 +52,25 @@ export function ChampionCard({ champion, onSelect }: ChampionCardProps) {
 
         <div className="grid grid-cols-3 gap-2 py-2 px-2.5 rounded-lg bg-zinc-950/60 border border-zinc-800/60 mb-3 text-center">
           <div>
-            <p className="text-[11px] text-zinc-500 font-medium">
-              {language === 'en' ? 'Win' : 'Thắng'}
-            </p>
+            <p className="text-[11px] text-zinc-500 font-medium">Win</p>
             <p
               className={`text-xs font-bold ${
                 champion.winRate >= 51.5
                   ? 'text-emerald-400'
                   : champion.winRate <= 48.8
-                  ? 'text-rose-400'
-                  : 'text-zinc-200'
+                    ? 'text-rose-400'
+                    : 'text-zinc-200'
               }`}
             >
               {champion.winRate.toFixed(1)}%
             </p>
           </div>
           <div>
-            <p className="text-[11px] text-zinc-500 font-medium">
-              {language === 'en' ? 'Pick' : 'Chọn'}
-            </p>
+            <p className="text-[11px] text-zinc-500 font-medium">Pick</p>
             <p className="text-xs font-semibold text-zinc-300">{champion.pickRate.toFixed(1)}%</p>
           </div>
           <div>
-            <p className="text-[11px] text-zinc-500 font-medium">
-              {language === 'en' ? 'Ban' : 'Cấm'}
-            </p>
+            <p className="text-[11px] text-zinc-500 font-medium">Ban</p>
             <p className="text-xs font-semibold text-zinc-400">{champion.banRate.toFixed(1)}%</p>
           </div>
         </div>
@@ -86,13 +78,13 @@ export function ChampionCard({ champion, onSelect }: ChampionCardProps) {
 
       <div className="flex items-center justify-between pt-2 border-t border-zinc-800/70 text-xs text-zinc-400">
         <p className="font-mono text-[11px]">
-          {champion.matches.toLocaleString()} {language === 'en' ? 'matches' : 'trận'}
+          {champion.matches.toLocaleString()} matches
         </p>
         <button
           type="button"
           className="flex items-center gap-1 text-rose-400 group-hover:text-rose-300 font-medium cursor-pointer"
         >
-          <p>{language === 'en' ? 'View Build' : 'Xem Build'}</p>
+          <p>View Build</p>
           <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
         </button>
       </div>

@@ -1,14 +1,13 @@
 import { useState } from 'react'
 import { Flame, ChevronLeft, ChevronRight } from 'lucide-react'
-import { useLanguage } from '@/lib/i18n/language-context'
 import { useProPlayers, type ProPlayer } from '../../api/get-pro-players'
 
 interface ProBuildsCardProps {
   championName: string
 }
 
-function TeamLogo({ team }: { team: string }) {
-  const upper = team.toUpperCase()
+function TeamLogo({ team }: { team?: string }) {
+  const upper = team ? team.toUpperCase() : ''
   if (upper.includes('T1')) {
     return (
       <svg
@@ -50,12 +49,11 @@ function TeamLogo({ team }: { team: string }) {
 }
 
 export function ProBuildsCard({ championName }: ProBuildsCardProps) {
-  const { language } = useLanguage()
-  const { data: proPlayers = [] } = useProPlayers()
+  const { data: proPlayers = [], isLoading } = useProPlayers()
   const [selectedIndex, setSelectedIndex] = useState(0)
 
-  // Purely dataset-driven: no hardcoded external cards
-  const current: ProPlayer = proPlayers[selectedIndex] || proPlayers[0]
+  // Purely server dataset-driven: fetched from /api/pro-players
+  const current: ProPlayer | undefined = proPlayers[selectedIndex] || proPlayers[0]
 
   const handlePrev = () => {
     if (proPlayers.length <= 1) return
@@ -67,10 +65,19 @@ export function ProBuildsCard({ championName }: ProBuildsCardProps) {
     setSelectedIndex((prev) => (prev < proPlayers.length - 1 ? prev + 1 : 0))
   }
 
+  if (isLoading) {
+    return (
+      <div className="bg-[#0E121A] border border-zinc-800/80 rounded-xl p-4 shadow-xl animate-pulse min-h-[200px] flex flex-col justify-center items-center gap-3">
+        <div className="w-10 h-10 rounded-full bg-zinc-800" />
+        <div className="w-32 h-4 bg-zinc-800 rounded" />
+      </div>
+    )
+  }
+
   if (!current) return null
 
-  const isRed = current.themeColor === 'red' || current.team.toUpperCase().includes('T1')
-  const isGold = current.themeColor === 'gold' || current.team.toUpperCase().includes('GEN')
+  const isRed = current.themeColor === 'red' || (current.team && current.team.toUpperCase().includes('T1'))
+  const isGold = current.themeColor === 'gold' || (current.team && current.team.toUpperCase().includes('GEN'))
   const accentColorClass = isRed
     ? 'text-rose-500'
     : isGold
@@ -93,8 +100,8 @@ export function ProBuildsCard({ championName }: ProBuildsCardProps) {
       : 'from-[#061216] via-[#0E0E14] to-[#07090E] border-cyan-950/60'
 
   const winRateText = current.winRate != null ? `${current.winRate.toFixed(1)}%` : '83.0%'
-  const titleText = current.title || (language === 'en' ? 'Player of the week' : 'Player of the week')
-  const playerImage = current.playerImageUrl || current.avatar || 'https://res.cloudinary.com/vptfaug1/image/upload/player1.png'
+  const titleText = current.title || 'Player of the week'
+  const playerImage = current.playerImageUrl || current.avatar
 
   return (
     <div className="bg-[#0E121A] border border-zinc-800/80 rounded-xl p-3.5 space-y-3 shadow-xl select-none overflow-hidden group">
@@ -103,7 +110,7 @@ export function ProBuildsCard({ championName }: ProBuildsCardProps) {
         <div className="flex items-center gap-1.5">
           <Flame className={`w-3.5 h-3.5 ${accentColorClass}`} />
           <p className="font-bold text-xs text-zinc-200 uppercase tracking-wide">
-            {language === 'en' ? `Pro Spotlight (${championName})` : `Tuyển Thủ (${championName})`}
+            Pro Spotlight ({championName})
           </p>
         </div>
 
@@ -112,7 +119,7 @@ export function ProBuildsCard({ championName }: ProBuildsCardProps) {
             type="button"
             onClick={handlePrev}
             aria-label="Previous pro player"
-            title="Tuyển thủ trước"
+            title="Previous pro player"
             className="w-5 h-5 rounded flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
           >
             <ChevronLeft className="w-3.5 h-3.5" />
@@ -128,9 +135,8 @@ export function ProBuildsCard({ championName }: ProBuildsCardProps) {
                   onClick={() => setSelectedIndex(idx)}
                   title={`${displayName} (${player.team})`}
                   aria-label={`View ${displayName}`}
-                  className={`h-2 rounded-full transition-all cursor-pointer ${
-                    selectedIndex === idx ? `w-5 ${activeDotClass}` : 'w-2 bg-zinc-700 hover:bg-zinc-500'
-                  }`}
+                  className={`h-2 rounded-full transition-all cursor-pointer ${selectedIndex === idx ? `w-5 ${activeDotClass}` : 'w-2 bg-zinc-700 hover:bg-zinc-500'
+                    }`}
                 />
               )
             })}
@@ -140,7 +146,7 @@ export function ProBuildsCard({ championName }: ProBuildsCardProps) {
             type="button"
             onClick={handleNext}
             aria-label="Next pro player"
-            title="Tuyển thủ kế tiếp"
+            title="Next pro player"
             className="w-5 h-5 rounded flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
           >
             <ChevronRight className="w-3.5 h-3.5" />
@@ -148,14 +154,14 @@ export function ProBuildsCard({ championName }: ProBuildsCardProps) {
         </div>
       </div>
 
-      {/* ── POSTER HERO CARD (100% DATASET DRIVEN + DIRECT ARROWS) ── */}
+      {/* ── POSTER HERO CARD (100% SERVER DATASET DRIVEN) ── */}
       <div className={`relative rounded-xl overflow-hidden bg-gradient-to-br ${glowGradient} border shadow-2xl p-4 flex items-center justify-between min-h-[200px]`}>
         {/* Left Arrow Button on Poster */}
         <button
           type="button"
           onClick={handlePrev}
           aria-label="Previous pro player"
-          title="Tuyển thủ trước"
+          title="Previous pro player"
           className="absolute left-2 top-1/2 -translate-y-1/2 z-20 w-7 h-7 rounded-full bg-black/65 hover:bg-black/90 border border-zinc-750 hover:border-zinc-400 text-zinc-200 hover:text-white flex items-center justify-center transition-all cursor-pointer shadow-xl backdrop-blur-md hover:scale-110 active:scale-95"
         >
           <ChevronLeft className="w-4 h-4" />
@@ -166,7 +172,7 @@ export function ProBuildsCard({ championName }: ProBuildsCardProps) {
           type="button"
           onClick={handleNext}
           aria-label="Next pro player"
-          title="Tuyển thủ kế tiếp"
+          title="Next pro player"
           className="absolute right-2 top-1/2 -translate-y-1/2 z-20 w-7 h-7 rounded-full bg-black/65 hover:bg-black/90 border border-zinc-750 hover:border-zinc-400 text-zinc-200 hover:text-white flex items-center justify-center transition-all cursor-pointer shadow-xl backdrop-blur-md hover:scale-110 active:scale-95"
         >
           <ChevronRight className="w-4 h-4" />
@@ -174,12 +180,11 @@ export function ProBuildsCard({ championName }: ProBuildsCardProps) {
 
         {/* Ambient Radial Glow */}
         <div
-          className={`absolute top-0 right-0 w-44 h-44 rounded-full filter blur-3xl pointer-events-none opacity-20 ${
-            isRed ? 'bg-rose-600' : isGold ? 'bg-amber-500' : 'bg-cyan-500'
-          }`}
+          className={`absolute top-0 right-0 w-44 h-44 rounded-full filter blur-3xl pointer-events-none opacity-20 ${isRed ? 'bg-rose-600' : isGold ? 'bg-amber-500' : 'bg-cyan-500'
+            }`}
         />
 
-        {/* ── LEFT: PRO PLAYER PORTRAIT (FROM DATASET) ── */}
+        {/* ── LEFT: PRO PLAYER PORTRAIT (FROM SERVER DATASET) ── */}
         <div className="relative w-1/2 flex items-center justify-center z-10 pl-2">
           <div className="relative w-36 h-44 sm:w-40 sm:h-48 flex items-center justify-center">
             {/* Background Geometric Polygon */}
@@ -193,14 +198,11 @@ export function ProBuildsCard({ championName }: ProBuildsCardProps) {
               src={playerImage}
               alt={current.name}
               className="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.85)] relative z-10 transition-transform duration-300"
-              onError={(e) => {
-                ;(e.target as HTMLImageElement).src = 'https://res.cloudinary.com/vptfaug1/image/upload/player1.png'
-              }}
             />
           </div>
         </div>
 
-        {/* ── RIGHT: DATASET INFO (TEAM LOGO, TEAM NAME, TITLE, WINRATE, NICKNAME) ── */}
+        {/* ── RIGHT: SERVER DATA (TEAM LOGO, TEAM NAME, TITLE, WINRATE, NICKNAME) ── */}
         <div className="w-1/2 pl-3 pr-2 flex flex-col justify-center items-end text-right z-10 space-y-1">
           {/* Team Emblem SVG */}
           <div className="flex items-center justify-end mb-1">
@@ -237,16 +239,13 @@ export function ProBuildsCard({ championName }: ProBuildsCardProps) {
         </div>
       </div>
 
-      {/* ── LATEST MATCH STATS PILL (IF DATASET HAS lastMatch) ── */}
+      {/* ── LATEST MATCH STATS PILL (FROM SERVER DATASET) ── */}
       {current.lastMatch && (
         <div className="p-2 rounded-lg bg-zinc-950/70 border border-zinc-850 flex items-center justify-between text-[11px]">
           <div className="flex items-center gap-2">
             <img
               src={current.lastMatch.championIcon}
               alt={current.lastMatch.championName}
-              onError={(e) => {
-                ;(e.target as HTMLImageElement).src = `https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/${current.lastMatch?.championName}.png`
-              }}
               className="w-6 h-6 rounded-md border border-zinc-700 object-cover"
             />
             <div>
@@ -269,7 +268,7 @@ export function ProBuildsCard({ championName }: ProBuildsCardProps) {
               </p>
             </div>
             <div className="flex items-center gap-0.5">
-              {current.lastMatch.items.slice(0, 4).map((it, idx) => (
+              {current.lastMatch.items?.slice(0, 4).map((it, idx) => (
                 <img
                   key={idx}
                   src={it.icon}

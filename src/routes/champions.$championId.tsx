@@ -8,7 +8,6 @@ import { ChampionFilterToolbar } from '@/features/champions/components/detail/ch
 import { ChampionMetaStatsBar } from '@/features/champions/components/detail/champion-meta-stats-bar'
 import { TabRunesItems } from '@/features/champions/components/modal/tab-runes-items'
 import { ArrowLeft } from 'lucide-react'
-import { useLanguage } from '@/lib/i18n/language-context'
 import type { Role, ChampionMeta } from '@/features/champions/types/champion'
 import { getChampionAvatarUrl, getChampionSplashUrl } from '@/features/champions/data/ddragon-ids'
 
@@ -30,7 +29,6 @@ function toBackendRole(role: Role): BuildRole {
 
 function ChampionDetailPage() {
   const navigate = useNavigate()
-  const { t, language } = useLanguage()
   const { championId } = useParams({ from: '/champions/$championId' })
 
   // Champion meta from backend or local catalog
@@ -57,12 +55,12 @@ function ChampionDetailPage() {
   // Robust champion resolution combining tier-list catalog and live build overview
   const resolvedChampion: ChampionMeta | undefined = champion
     ? {
-        ...champion,
-        avatarUrl: buildData?.overview?.avatarUrl || champion.avatarUrl,
-        splashUrl: buildData?.overview?.splashUrl || champion.splashUrl,
-      }
+      ...champion,
+      avatarUrl: buildData?.overview?.avatarUrl || champion.avatarUrl,
+      splashUrl: buildData?.overview?.splashUrl || champion.splashUrl,
+    }
     : buildData?.overview
-    ? {
+      ? {
         id: buildData.overview.key || buildData.overview.id || championId,
         name: buildData.overview.name || championId,
         title: buildData.overview.title || championId,
@@ -98,7 +96,7 @@ function ChampionDetailPage() {
           keyTips: [],
         },
       }
-    : undefined
+      : undefined
 
   const isLoading = (isLoadingMeta || isLoadingBuild) && !resolvedChampion
 
@@ -107,7 +105,7 @@ function ChampionDetailPage() {
       <div className="py-24 text-center space-y-3 select-none">
         <div className="w-10 h-10 border-4 border-amber-400/20 border-t-amber-400 rounded-full animate-spin mx-auto" />
         <p className="text-zinc-400 text-sm font-medium">
-          {language === 'en' ? 'Loading champion data...' : 'Đang tải dữ liệu vị tướng...'}
+          Loading champion data...
         </p>
       </div>
     )
@@ -117,7 +115,7 @@ function ChampionDetailPage() {
     return (
       <div className="py-20 text-center space-y-4 select-none">
         <p className="text-lg font-bold text-zinc-200">
-          {language === 'en' ? 'Champion not found' : 'Không tìm thấy vị tướng'}
+          Champion not found
         </p>
         <button
           type="button"
@@ -125,7 +123,7 @@ function ChampionDetailPage() {
           className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
-          <p>{t('allChampions')}</p>
+          <p>All Champions</p>
         </button>
       </div>
     )
@@ -146,7 +144,7 @@ function ChampionDetailPage() {
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
             <p className="text-xs font-bold uppercase tracking-wider text-amber-300">
-              {language === 'en' ? 'Champion Build & Meta Guide' : 'Cẩm Nang Build Tướng & Lên Đồ Meta'}
+              Champion Build &amp; Meta Guide
             </p>
           </div>
           <p className="text-[11px] text-zinc-500 font-mono">
@@ -174,9 +172,7 @@ function ChampionDetailPage() {
           <div className="py-12 text-center space-y-3">
             <div className="w-8 h-8 border-4 border-amber-400/20 border-t-amber-400 rounded-full animate-spin mx-auto" />
             <p className="text-zinc-500 text-xs font-medium">
-              {language === 'en'
-                ? 'Fetching latest build data from server...'
-                : 'Đang tải dữ liệu build đồ từ máy chủ...'}
+              Fetching latest build data from server...
             </p>
           </div>
         )}
