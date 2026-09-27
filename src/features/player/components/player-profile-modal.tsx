@@ -339,19 +339,28 @@ function RankCard({
   }
 
   const tierName = rankInfo.tier?.toUpperCase() || "UNRANKED";
-  const tierIconLetter = tierName.charAt(0);
+
+  const getRankBadgeSvg = (t: string) => {
+    const upper = t.toUpperCase();
+    if (upper.includes("CHALLENGER") || upper.includes("GRANDMASTER"))
+      return "/tier_s.svg";
+    if (upper.includes("MASTER") || upper.includes("DIAMOND"))
+      return "/tier_a.svg";
+    if (upper.includes("EMERALD") || upper.includes("PLATINUM"))
+      return "/tier_b.svg";
+    if (upper.includes("GOLD") || upper.includes("SILVER"))
+      return "/tier_c.svg";
+    return "/tier_d.svg";
+  };
 
   return (
     <div className="p-5 rounded-2xl bg-[#141522] border border-gray-800 flex flex-wrap items-center justify-between gap-4 shadow-lg">
       <div className="flex items-center gap-4">
         <div className="w-14 h-14 rounded-2xl bg-[#090a0f] border border-gray-700/60 flex items-center justify-center shadow-inner">
           <img
-            src={`/tier_${tierIconLetter.toLowerCase()}.svg`}
+            src={getRankBadgeSvg(tierName)}
             alt={tierName}
             className="w-9 h-9 object-contain drop-shadow"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = "/tier_s.svg";
-            }}
           />
         </div>
 
