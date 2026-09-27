@@ -7,7 +7,7 @@ export const Route = createFileRoute("/news")({
 
 function NewsPage() {
   return (
-    <div className="container mx-auto max-w-6xl px-4 py-8">
+    <div className="container mx-auto max-w-6xl py-4">
       <NewsList />
     </div>
   );

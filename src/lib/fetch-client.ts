@@ -51,11 +51,18 @@ export async function fetchClient<T = unknown>(
     headers.set("Content-Type", "application/json");
   }
 
-  // Attach JWT Bearer token if present
+  // Attach JWT Bearer token and session if present
   if (typeof window !== "undefined") {
-    const token = localStorage.getItem("access_token");
+    const token =
+      localStorage.getItem("blitz_access_token") ||
+      localStorage.getItem("access_token");
     if (token && !headers.has("Authorization")) {
       headers.set("Authorization", `Bearer ${token}`);
+    }
+
+    const sessionId = localStorage.getItem("blitz_session_id");
+    if (sessionId && !headers.has("x-session-id")) {
+      headers.set("x-session-id", sessionId);
     }
   }
 

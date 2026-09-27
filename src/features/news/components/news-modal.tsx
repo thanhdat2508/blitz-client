@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from "react";
 import {
   Share2,
   Check,
@@ -8,43 +8,42 @@ import {
   TrendingDown,
   RefreshCw,
   ShieldAlert,
-} from 'lucide-react'
-import type { NewsArticle, ChampionChange } from '../types/news'
-import { formatRelativeTime } from '../utils/date'
-import { formatDate } from '@/utils/format'
+} from "lucide-react";
+import type { NewsArticle, ChampionChange } from "../types/news";
+import { formatRelativeTime } from "../utils/date";
+import { formatDate } from "@/utils/format";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface NewsModalProps {
-  article: NewsArticle | null
-  onClose: () => void
+  article: NewsArticle | null;
+  onClose: () => void;
 }
 
 export function NewsModal({ article, onClose }: NewsModalProps) {
-  const [copied, setCopied] = useState(false)
+  const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
-    if (!article) return
-    const shareUrl = `${window.location.origin}/news#${article.slug}`
-    await navigator.clipboard.writeText(shareUrl)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
+    if (!article) return;
+    const shareUrl = `${window.location.origin}/news#${article.slug}`;
+    await navigator.clipboard.writeText(shareUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
-  const renderChangeBadge = (type: ChampionChange['type']) => {
+  const renderChangeBadge = (type: ChampionChange["type"]) => {
     switch (type) {
-      case 'buff':
+      case "buff":
         return (
           <Badge
             variant="outline"
@@ -53,8 +52,8 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
             <TrendingUp className="size-3" />
             Tăng sức mạnh (Buff)
           </Badge>
-        )
-      case 'nerf':
+        );
+      case "nerf":
         return (
           <Badge
             variant="outline"
@@ -63,8 +62,8 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
             <TrendingDown className="size-3" />
             Giảm sức mạnh (Nerf)
           </Badge>
-        )
-      case 'rework':
+        );
+      case "rework":
         return (
           <Badge
             variant="outline"
@@ -73,7 +72,7 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
             <RefreshCw className="size-3" />
             Làm lại (Rework)
           </Badge>
-        )
+        );
       default:
         return (
           <Badge
@@ -83,15 +82,15 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
             <ShieldAlert className="size-3" />
             Điều chỉnh (Adjust)
           </Badge>
-        )
+        );
     }
-  }
+  };
 
   return (
     <Dialog
       open={!!article}
       onOpenChange={(isOpen) => {
-        if (!isOpen) onClose()
+        if (!isOpen) onClose();
       }}
     >
       {article && (
@@ -106,9 +105,8 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
               alt={article.title}
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-black/55 to-black/30" />
+            <div className="absolute inset-0 bg-linear-to-t from-background via-black/55 to-black/30" />
 
-            {/* Banner info overlay */}
             <div className="absolute bottom-4 left-4 right-4 z-10 space-y-1">
               <div className="flex items-center gap-2">
                 {article.patchVersion && (
@@ -144,7 +142,10 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
                     {article.readTimeMinutes} phút đọc
                   </span>
                   <span>
-                    Tác giả: <strong className="text-foreground">{article.author}</strong>
+                    Tác giả:{" "}
+                    <strong className="text-foreground">
+                      {article.author}
+                    </strong>
                   </span>
                 </div>
 
@@ -157,7 +158,9 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
                   {copied ? (
                     <>
                       <Check className="size-3.5 text-emerald-400" />
-                      <span className="text-emerald-400 font-medium">Đã copy link!</span>
+                      <span className="text-emerald-400 font-medium">
+                        Đã copy link!
+                      </span>
                     </>
                   ) : (
                     <>
@@ -204,7 +207,10 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
                         className="p-3 rounded-xl bg-card/60 border border-border/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-border transition-colors"
                       >
                         <div className="flex items-center gap-3">
-                          <Avatar size="lg" className="rounded-lg shrink-0 border border-border/60">
+                          <Avatar
+                            size="lg"
+                            className="rounded-lg shrink-0 border border-border/60"
+                          >
                             <AvatarImage
                               src={item.avatarUrl}
                               alt={item.champion}
@@ -234,20 +240,8 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
               )}
             </div>
           </ScrollArea>
-
-          {/* Dialog Footer */}
-          <DialogFooter className="p-3 sm:p-4 bg-muted/30 border-t border-border/40 flex items-center justify-end">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onClose}
-              className="cursor-pointer"
-            >
-              Đóng
-            </Button>
-          </DialogFooter>
         </DialogContent>
       )}
     </Dialog>
-  )
+  );
 }
