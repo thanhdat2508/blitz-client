@@ -15,60 +15,62 @@ export interface OtpPlayer {
 interface OtpBuildsCardProps {
   championName: string
   players?: OtpPlayer[]
+  coreItemIds?: number[]
 }
 
-const DEFAULT_OTPS: OtpPlayer[] = [
-  {
-    id: 'otp-1',
-    name: 'QuinnAD',
-    server: 'NA',
-    rank: 'Grandmaster',
-    rankBadgeColor: 'bg-rose-950/80 border-rose-700/80 text-rose-300',
-    winRate: 59.4,
-    games: 412,
-    kda: '3.4',
-    items: [
-      'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3142.png',
-      'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3078.png',
-      'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3031.png',
-    ],
-  },
-  {
-    id: 'otp-2',
-    name: 'ValorInFlight',
-    server: 'KR',
-    rank: 'Master',
-    rankBadgeColor: 'bg-purple-950/80 border-purple-700/80 text-purple-300',
-    winRate: 57.8,
-    games: 298,
-    kda: '3.1',
-    items: [
-      'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3158.png',
-      'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3814.png',
-      'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3026.png',
-    ],
-  },
-  {
-    id: 'otp-3',
-    name: 'HarrierHawk',
-    server: 'EUW',
-    rank: 'Grandmaster',
-    rankBadgeColor: 'bg-rose-950/80 border-rose-700/80 text-rose-300',
-    winRate: 56.5,
-    games: 340,
-    kda: '2.9',
-    items: [
-      'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3006.png',
-      'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3094.png',
-      'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3036.png',
-    ],
-  },
-]
+function getDynamicOtps(championName: string, coreItemIds?: number[]): OtpPlayer[] {
+  const itemIcons = coreItemIds && coreItemIds.length >= 3
+    ? coreItemIds.slice(0, 3).map((id) => `https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/${id}.png`)
+    : [
+        'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3089.png',
+        'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/6655.png',
+        'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3157.png',
+      ]
+
+  return [
+    {
+      id: 'otp-1',
+      name: `${championName} King`,
+      server: 'KR',
+      rank: 'Challenger',
+      rankBadgeColor: 'bg-amber-950/80 border-amber-700/80 text-amber-300',
+      winRate: 61.4,
+      games: 482,
+      kda: '3.6',
+      items: itemIcons,
+    },
+    {
+      id: 'otp-2',
+      name: `Hide on ${championName}`,
+      server: 'KR',
+      rank: 'Grandmaster',
+      rankBadgeColor: 'bg-rose-950/80 border-rose-700/80 text-rose-300',
+      winRate: 58.2,
+      games: 345,
+      kda: '3.2',
+      items: itemIcons,
+    },
+    {
+      id: 'otp-3',
+      name: `Best ${championName} NA`,
+      server: 'NA',
+      rank: 'Master',
+      rankBadgeColor: 'bg-purple-950/80 border-purple-700/80 text-purple-300',
+      winRate: 56.8,
+      games: 290,
+      kda: '2.9',
+      items: itemIcons,
+    },
+  ]
+}
 
 export function OtpBuildsCard({
   championName,
-  players = DEFAULT_OTPS,
+  players,
+  coreItemIds,
 }: OtpBuildsCardProps) {
+  const effectivePlayers = players || getDynamicOtps(championName, coreItemIds)
+
   return (
     <div className="bg-[#0E121A] border border-zinc-800/80 rounded-xl p-3.5 space-y-2.5 shadow-lg select-none">
       <div className="flex items-center justify-between pb-2 border-b border-zinc-800/80">
@@ -82,7 +84,7 @@ export function OtpBuildsCard({
       </div>
 
       <div className="space-y-2">
-        {players.map((p) => (
+        {effectivePlayers.map((p) => (
           <div
             key={p.id}
             className="p-2.5 rounded-lg bg-zinc-950/60 border border-zinc-800/80 hover:border-zinc-700 transition-colors space-y-1.5"
@@ -122,6 +124,9 @@ export function OtpBuildsCard({
                     src={itemUrl}
                     alt="Core Item"
                     className="w-5 h-5 rounded border border-zinc-700/80 bg-zinc-900"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none'
+                    }}
                   />
                 ))}
               </div>

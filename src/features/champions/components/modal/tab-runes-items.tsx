@@ -73,30 +73,27 @@ export function TabRunesItems({
         onMouseEnter={handleCancelClose}
       />
 
-      {/* 1. 3-COLUMN CHAMPION BUILD LAYOUT */}
+      {/* 1. TOP BUILD MATRIX: ARCHETYPES/OTP, RUNE TREE & ITEM PATH */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
-        {/* LEFT COLUMN: ARCHETYPES & PRO/OTP BUILDS (Cols 1 to 3) */}
+        {/* LEFT COLUMN: ARCHETYPES & OTP BUILDS (Cols 1 to 3) */}
         <div className="lg:col-span-3 space-y-3.5">
           <ArchetypeSelector
             selectedId={selectedArchetype}
             onSelect={setSelectedArchetype}
           />
-          <OtpBuildsCard championName={championName} />
-          <ProBuildsCard championName={championName} />
+          <OtpBuildsCard
+            championName={championName}
+            coreItemIds={activeBuild.items?.core?.[0]?.itemIds}
+          />
         </div>
 
-        {/* CENTER COLUMN: VISUAL RUNE TREE & SKILL PRIORITY MATRIX (Cols 4 to 8) */}
+        {/* CENTER COLUMN: VISUAL RUNE TREE (Cols 4 to 8) */}
         <div className="lg:col-span-5 space-y-3.5">
           <RuneTreeVisual
             runes={activeBuild.runes}
             splashUrl={splashUrl}
             onSelectPreview={handleOpenPreview}
             onClosePreview={() => handleClosePreview(100)}
-          />
-
-          <SkillOrderMatrix
-            skills={activeBuild.skills}
-            abilities={activeBuild.abilities}
           />
         </div>
 
@@ -109,6 +106,19 @@ export function TabRunesItems({
             role={backendRole}
             onSelectPreview={handleOpenPreview}
             onClosePreview={() => handleClosePreview(100)}
+          />
+        </div>
+      </div>
+
+      {/* 2. PRO SPOTLIGHT & SKILL PRIORITY MATRIX (PERFECTLY ALIGNED ROW) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+        <div className="lg:col-span-4">
+          <ProBuildsCard championName={championName} />
+        </div>
+        <div className="lg:col-span-8">
+          <SkillOrderMatrix
+            skills={activeBuild.skills}
+            abilities={activeBuild.abilities}
           />
         </div>
       </div>

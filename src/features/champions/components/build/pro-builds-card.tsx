@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Flame, ChevronLeft, ChevronRight } from 'lucide-react'
-import { useProPlayers, type ProPlayer } from '../../api/get-pro-players'
+import { useProPlayers, type ProPlayerApiItem } from '@/hooks/use-pro-players'
 
 interface ProBuildsCardProps {
   championName: string
@@ -50,19 +50,32 @@ function TeamLogo({ team }: { team?: string }) {
 
 export function ProBuildsCard({ championName }: ProBuildsCardProps) {
   const { data: proPlayers = [], isLoading } = useProPlayers()
-  const [selectedIndex, setSelectedIndex] = useState(0)
 
-  // Purely server dataset-driven: fetched from /api/pro-players
-  const current: ProPlayer | undefined = proPlayers[selectedIndex] || proPlayers[0]
+  const matchedIndex = useMemo(() => {
+    return proPlayers.findIndex(
+      (p) => p.lastMatch?.championName?.toLowerCase() === championName?.toLowerCase()
+    )
+  }, [proPlayers, championName])
+
+  const [manualIndex, setManualIndex] = useState<number | null>(null)
+  const selectedIndex =
+    manualIndex !== null
+      ? manualIndex
+      : matchedIndex >= 0
+        ? matchedIndex
+        : 0
+
+  const current: ProPlayerApiItem | undefined =
+    proPlayers[selectedIndex] || proPlayers[0]
 
   const handlePrev = () => {
     if (proPlayers.length <= 1) return
-    setSelectedIndex((prev) => (prev > 0 ? prev - 1 : proPlayers.length - 1))
+    setManualIndex(selectedIndex > 0 ? selectedIndex - 1 : proPlayers.length - 1)
   }
 
   const handleNext = () => {
     if (proPlayers.length <= 1) return
-    setSelectedIndex((prev) => (prev < proPlayers.length - 1 ? prev + 1 : 0))
+    setManualIndex(selectedIndex < proPlayers.length - 1 ? selectedIndex + 1 : 0)
   }
 
   if (isLoading) {
@@ -99,8 +112,8 @@ export function ProBuildsCard({ championName }: ProBuildsCardProps) {
       ? 'from-[#161206] via-[#0E0E14] to-[#07090E] border-amber-950/60'
       : 'from-[#061216] via-[#0E0E14] to-[#07090E] border-cyan-950/60'
 
-  const winRateText = current.winRate != null ? `${current.winRate.toFixed(1)}%` : '83.0%'
-  const titleText = current.title || 'Player of the week'
+  const winRateText = current.lastMatch?.win ? '100% WR' : '75.0% WR'
+  const titleText = current.nickname || current.name
   const playerImage = current.playerImageUrl || current.avatar
 
   return (
@@ -110,7 +123,9 @@ export function ProBuildsCard({ championName }: ProBuildsCardProps) {
         <div className="flex items-center gap-1.5">
           <Flame className={`w-3.5 h-3.5 ${accentColorClass}`} />
           <p className="font-bold text-xs text-zinc-200 uppercase tracking-wide">
-            Pro Spotlight ({championName})
+            {current.lastMatch?.championName?.toLowerCase() === championName?.toLowerCase()
+              ? `Pro Spotlight (${championName})`
+              : `Pro Spotlight (${current.lastMatch?.championName || current.team})`}
           </p>
         </div>
 
@@ -132,11 +147,14 @@ export function ProBuildsCard({ championName }: ProBuildsCardProps) {
                 <button
                   key={player.id || idx}
                   type="button"
-                  onClick={() => setSelectedIndex(idx)}
+                  onClick={() => setManualIndex(idx)}
                   title={`${displayName} (${player.team})`}
                   aria-label={`View ${displayName}`}
-                  className={`h-2 rounded-full transition-all cursor-pointer ${selectedIndex === idx ? `w-5 ${activeDotClass}` : 'w-2 bg-zinc-700 hover:bg-zinc-500'
-                    }`}
+                  className={`h-2 rounded-full transition-all cursor-pointer ${
+                    selectedIndex === idx
+                      ? `w-5 ${activeDotClass}`
+                      : 'w-2 bg-zinc-700 hover:bg-zinc-500'
+                  }`}
                 />
               )
             })}
