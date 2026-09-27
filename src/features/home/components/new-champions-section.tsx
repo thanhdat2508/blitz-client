@@ -1,4 +1,5 @@
 import { ChevronRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 interface ChampionAbility {
   key: string;
@@ -117,12 +118,12 @@ export function NewChampionsSection() {
           </p>
         </div>
 
-        <a
-          href="#"
+        <Link
+          to="/champions"
           className="text-sm font-semibold text-gray-400 hover:text-yellow-400 flex items-center gap-1 transition"
         >
           View All <ChevronRight size={16} />
-        </a>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -143,9 +144,9 @@ export function NewChampionsSection() {
                 <div className="flex items-center gap-2 mb-3">
                   <h3 className="text-2xl font-black text-white">{champ.name}</h3>
                   {champ.isNew && (
-                    <span className="bg-green-500 text-black text-xs font-black px-2 py-1 rounded-md">
+                    <div className="bg-green-500 text-black text-xs font-black px-2 py-1 rounded-md">
                       New
-                    </span>
+                    </div>
                   )}
                 </div>
 
@@ -153,9 +154,9 @@ export function NewChampionsSection() {
                   {champ.description}
                 </p>
 
-                <span className="inline-block mt-3 text-sm font-bold text-white group-hover:text-yellow-400 transition">
+                <p className="mt-3 text-sm font-bold text-white group-hover:text-yellow-400 transition">
                   View {champ.name} →
-                </span>
+                </p>
               </div>
 
               {/* Champion abilities */}

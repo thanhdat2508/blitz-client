@@ -19,14 +19,14 @@ export function RiotLoginButton({ isLoading, onClick }: RiotLoginButtonProps) {
       {isLoading ? (
         <>
           <Loader2 className="w-5 h-5 animate-spin" />
-          <span>Đang kết nối Riot Games...</span>
+          <p>Đang kết nối Riot Games...</p>
         </>
       ) : (
         <>
           <div className="w-6 h-6 rounded-md bg-white flex items-center justify-center text-[#e60026] shrink-0 shadow-sm transition-transform group-hover:scale-105">
             <RiotIcon className="w-3.5 h-3.5 fill-current" />
           </div>
-          <span>Đăng nhập bằng Riot Games</span>
+          <p>Đăng nhập bằng Riot Games</p>
         </>
       )}
     </Button>

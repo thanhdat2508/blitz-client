@@ -31,9 +31,9 @@ export function NewsHeader() {
           {/* LoL Hextech Crest with ShadCN Avatar */}
           <Avatar size="lg" className="border-2 border-amber-500/50 shadow-md shadow-amber-500/10 ring-2 ring-amber-500/20">
             <AvatarFallback className="bg-gradient-to-tr from-amber-600 via-amber-400 to-cyan-500 text-black font-black text-xl">
-              <span className="w-full h-full rounded-full bg-[#0a0c10] flex items-center justify-center border border-amber-300/30 text-transparent bg-clip-text bg-gradient-to-b from-amber-200 to-amber-500 font-extrabold text-lg select-none">
+              <div className="w-full h-full rounded-full bg-[#0a0c10] flex items-center justify-center border border-amber-300/30 text-transparent bg-clip-text bg-gradient-to-b from-amber-200 to-amber-500 font-extrabold text-lg select-none">
                 L
-              </span>
+              </div>
             </AvatarFallback>
             <AvatarBadge className="bg-emerald-500 ring-background" />
           </Avatar>

@@ -11,9 +11,12 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as ChampionsRouteImport } from './routes/champions'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
+import { Route as ChampionsIndexRouteImport } from './routes/champions.index'
+import { Route as ChampionsChampionIdRouteImport } from './routes/champions.$championId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -23,6 +26,11 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChampionsRoute = ChampionsRouteImport.update({
+  id: '/champions',
+  path: '/champions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LeaderboardRoute = LeaderboardRouteImport.update({
@@ -40,13 +48,26 @@ const AuthCallbackRoute = AuthCallbackRouteImport.update({
   path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ChampionsIndexRoute = ChampionsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ChampionsRoute,
+} as any)
+const ChampionsChampionIdRoute = ChampionsChampionIdRouteImport.update({
+  id: '/$championId',
+  path: '/$championId',
+  getParentRoute: () => ChampionsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/champions': typeof ChampionsRouteWithChildren
   '/leaderboard': typeof LeaderboardRoute
   '/news': typeof NewsRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/champions/$championId': typeof ChampionsChampionIdRoute
+  '/champions/': typeof ChampionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,26 +75,56 @@ export interface FileRoutesByTo {
   '/leaderboard': typeof LeaderboardRoute
   '/news': typeof NewsRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/champions/$championId': typeof ChampionsChampionIdRoute
+  '/champions': typeof ChampionsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/champions': typeof ChampionsRouteWithChildren
   '/leaderboard': typeof LeaderboardRoute
   '/news': typeof NewsRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/champions/$championId': typeof ChampionsChampionIdRoute
+  '/champions/': typeof ChampionsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/leaderboard' | '/news' | '/auth/callback'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/champions'
+    | '/leaderboard'
+    | '/news'
+    | '/auth/callback'
+    | '/champions/$championId'
+    | '/champions/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/leaderboard' | '/news' | '/auth/callback'
-  id: '__root__' | '/' | '/about' | '/leaderboard' | '/news' | '/auth/callback'
+  to:
+    | '/'
+    | '/about'
+    | '/leaderboard'
+    | '/news'
+    | '/auth/callback'
+    | '/champions/$championId'
+    | '/champions'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/champions'
+    | '/leaderboard'
+    | '/news'
+    | '/auth/callback'
+    | '/champions/$championId'
+    | '/champions/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  ChampionsRoute: typeof ChampionsRouteWithChildren
   LeaderboardRoute: typeof LeaderboardRoute
   NewsRoute: typeof NewsRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
@@ -93,6 +144,13 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/champions': {
+      id: '/champions'
+      path: '/champions'
+      fullPath: '/champions'
+      preLoaderRoute: typeof ChampionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/leaderboard': {
@@ -116,12 +174,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/champions/': {
+      id: '/champions/'
+      path: '/'
+      fullPath: '/champions/'
+      preLoaderRoute: typeof ChampionsIndexRouteImport
+      parentRoute: typeof ChampionsRoute
+    }
+    '/champions/$championId': {
+      id: '/champions/$championId'
+      path: '/$championId'
+      fullPath: '/champions/$championId'
+      preLoaderRoute: typeof ChampionsChampionIdRouteImport
+      parentRoute: typeof ChampionsRoute
+    }
   }
 }
+
+interface ChampionsRouteChildren {
+  ChampionsChampionIdRoute: typeof ChampionsChampionIdRoute
+  ChampionsIndexRoute: typeof ChampionsIndexRoute
+}
+
+const ChampionsRouteChildren: ChampionsRouteChildren = {
+  ChampionsChampionIdRoute: ChampionsChampionIdRoute,
+  ChampionsIndexRoute: ChampionsIndexRoute,
+}
+
+const ChampionsRouteWithChildren = ChampionsRoute._addFileChildren(
+  ChampionsRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  ChampionsRoute: ChampionsRouteWithChildren,
   LeaderboardRoute: LeaderboardRoute,
   NewsRoute: NewsRoute,
   AuthCallbackRoute: AuthCallbackRoute,

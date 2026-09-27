@@ -253,7 +253,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 
           {/* Resend OTP button with 60s countdown */}
           <div className="flex items-center justify-between text-xs text-neutral-400 pt-1">
-            <span>Chưa nhận được mã?</span>
+            <p>Chưa nhận được mã?</p>
             <Button
               type="button"
               variant="link"
@@ -265,12 +265,12 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
               {isResending ? (
                 <>
                   <RotateCw className="w-3 h-3 animate-spin mr-1" />
-                  <span>Đang gửi...</span>
+                  <p>Đang gửi...</p>
                 </>
               ) : countdown > 0 ? (
-                <span>Gửi lại sau ({countdown}s)</span>
+                <p>Gửi lại sau ({countdown}s)</p>
               ) : (
-                <span>Gửi lại mã</span>
+                <p>Gửi lại mã</p>
               )}
             </Button>
           </div>
@@ -283,12 +283,12 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                <span>Đang xác thực...</span>
+                <p>Đang xác thực...</p>
               </>
             ) : (
               <>
                 <CheckCircle2 className="w-4 h-4 mr-2" />
-                <span>Xác nhận & Hoàn tất</span>
+                <p>Xác nhận & Hoàn tất</p>
               </>
             )}
           </Button>
@@ -342,7 +342,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                <span>Đang cập nhật...</span>
+                <p>Đang cập nhật...</p>
               </>
             ) : (
               "Lưu mật khẩu mới"
@@ -385,7 +385,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                <span>Đang gửi mã...</span>
+                <p>Đang gửi mã...</p>
               </>
             ) : (
               "Gửi mã xác nhận qua Email"
@@ -501,7 +501,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                    <span>Đang đăng ký...</span>
+                    <p>Đang đăng ký...</p>
                   </>
                 ) : (
                   "Đăng ký tài khoản"
@@ -595,7 +595,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                     onCheckedChange={(checked) => setRememberMe(!!checked)}
                     className="data-checked:bg-rose-600 data-checked:border-rose-600"
                   />
-                  <span>Ghi nhớ đăng nhập</span>
+                  <p>Ghi nhớ đăng nhập</p>
                 </label>
               </div>
 
@@ -607,7 +607,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                    <span>Đang đăng nhập...</span>
+                    <p>Đang đăng nhập...</p>
                   </>
                 ) : (
                   "Đăng nhập"
@@ -620,7 +620,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           <div className="mt-4 text-xs text-neutral-400 pt-2 border-t border-neutral-800/60">
             {mode === "login" ? (
               <div className="flex items-center justify-center gap-1">
-                <span>Chưa có tài khoản?</span>
+                <p>Chưa có tài khoản?</p>
                 <Button
                   type="button"
                   variant="link"
@@ -633,7 +633,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
               </div>
             ) : (
               <div className="flex items-center justify-center gap-1">
-                <span>Đã có tài khoản?</span>
+                <p>Đã có tài khoản?</p>
                 <Button
                   type="button"
                   variant="link"
@@ -652,13 +652,19 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       {/* Footer Legal Terms */}
       <p className="text-[11px] text-neutral-500 mt-4 leading-relaxed">
         Khi đăng nhập, bạn đồng ý với{" "}
-        <span className="text-neutral-400 hover:text-white underline cursor-pointer">
+        <button
+          type="button"
+          className="text-neutral-400 hover:text-white underline cursor-pointer inline bg-transparent p-0 border-0 text-[11px]"
+        >
           Điều khoản dịch vụ
-        </span>{" "}
+        </button>{" "}
         và{" "}
-        <span className="text-neutral-400 hover:text-white underline cursor-pointer">
+        <button
+          type="button"
+          className="text-neutral-400 hover:text-white underline cursor-pointer inline bg-transparent p-0 border-0 text-[11px]"
+        >
           Chính sách bảo mật
-        </span>
+        </button>
         .
       </p>
     </div>

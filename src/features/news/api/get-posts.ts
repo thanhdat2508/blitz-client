@@ -95,8 +95,17 @@ export function usePosts(params: GetPostsParams = {}) {
 }
 
 export async function getPostBySlug(slug: string): Promise<PostApiItem> {
-  const res = await fetchClient<{ message?: string; data: PostApiItem }>(`/api/posts/${slug}`);
-  return res.data;
+  const endpoint = `/api/posts/${slug}`;
+  const url =
+    typeof window !== "undefined" ? endpoint : `${ENV.BACKEND_URL}${endpoint}`;
+
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Failed to fetch post: ${res.status} ${res.statusText}`);
+  }
+
+  const json: { message?: string; data: PostApiItem } = await res.json();
+  return json.data;
 }
 
 export function usePostDetail(slug: string | undefined) {

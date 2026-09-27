@@ -78,9 +78,9 @@ export function NewsCard({ article, onClick }: NewsCardProps) {
 
       {/* Card Info using ShadCN CardHeader, CardTitle, CardDescription */}
       <CardHeader className="p-4 pb-2 space-y-1.5 flex-1">
-        <span className="text-[11px] font-bold tracking-wider uppercase text-muted-foreground">
+        <p className="text-[11px] font-bold tracking-wider uppercase text-muted-foreground">
           {formatRelativeTime(article.publishedAt)}
-        </span>
+        </p>
         <CardTitle className="text-sm sm:text-base font-bold text-foreground group-hover:text-amber-400 transition-colors line-clamp-1 leading-snug">
           {article.title}
         </CardTitle>
@@ -99,7 +99,7 @@ export function NewsCard({ article, onClick }: NewsCardProps) {
             {article.changes.length} tướng cân bằng
           </Badge>
         ) : (
-          <span />
+          <div />
         )}
         <p className="text-xs text-muted-foreground">
           {article.readTimeMinutes} phút đọc
