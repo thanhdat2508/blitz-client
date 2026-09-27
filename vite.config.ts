@@ -14,6 +14,9 @@ export default defineConfig({
   server: {
     host: true,
   },
+  css: {
+    postcss: {},
+  },
   resolve: {
     alias: {
       '@': path.resolve(import.meta.dirname, './src'),
