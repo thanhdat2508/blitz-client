@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchClient } from "@/lib/fetch-client";
+import { fetchPlayerProfile } from "@/lib/player";
 
 export interface CleanRankInfo {
   queueType: "RANKED_SOLO_5x5" | "RANKED_FLEX_SR";
@@ -101,27 +101,23 @@ export interface PlayerApiResponse {
 export const playerQueryKeys = {
   all: ["player"] as const,
   profile: (params: GetPlayerProfileParams) =>
-    [...playerQueryKeys.all, params.region || "vn2", params.gameName, params.tagLine] as const,
+    [
+      ...playerQueryKeys.all,
+      params.region || "vn2",
+      params.gameName,
+      params.tagLine,
+    ] as const,
 };
 
 export async function getPlayerProfile(
-  params: GetPlayerProfileParams
+  params: GetPlayerProfileParams,
 ): Promise<PlayerProfileResponse> {
-  const response = await fetchClient<PlayerApiResponse>("/api/player", {
-    params: {
-      gameName: params.gameName,
-      tagLine: params.tagLine,
-      region: params.region || "vn2",
-      refresh: params.refresh,
-    },
-  });
-
-  return response.data;
+  return fetchPlayerProfile(params);
 }
 
 export function usePlayerProfile(
   params: GetPlayerProfileParams,
-  options?: { enabled?: boolean }
+  options?: { enabled?: boolean },
 ) {
   return useQuery({
     queryKey: playerQueryKeys.profile(params),
