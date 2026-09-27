@@ -6,7 +6,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { useProPlayers, type ProPlayerApiItem } from "../api/get-pro-players";
+import { useProPlayers, type ProPlayerApiItem } from "@/hooks/use-pro-players";
 
 export function ProBuildsSection() {
   const { data, isLoading } = useProPlayers();
@@ -82,7 +82,6 @@ export function ProBuildsSection() {
                       "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/Ahri.png";
                   }}
                 />
-
                 <div>
                   <p className="font-bold text-base text-white">{build.name}</p>
                   <p className="text-xs font-semibold text-gray-400 mt-1">

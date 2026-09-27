@@ -1,8 +1,9 @@
 import { useState, type FormEvent } from "react";
 import LolIcon from "@/components/icon/lol";
 import { Input } from "@/components/ui/input";
-import { Search, Globe, Sparkles } from "lucide-react";
+import { Search, Globe } from "lucide-react";
 import { PlayerProfileModal } from "@/features/player/components/player-profile-modal";
+import { Button } from "@/components/ui/button";
 
 const REGION_OPTIONS = [
   { id: "vn2", label: "VN" },
@@ -129,22 +130,19 @@ export function HeroSection() {
             </div>
 
             {/* Search Submit Button */}
-            <button
+            <Button
               type="submit"
               className="mr-2 px-5 py-2.5 rounded-xl bg-linear-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-black font-black text-sm transition-all shadow-lg cursor-pointer"
             >
               Search
-            </button>
+            </Button>
           </div>
         </form>
 
         {/* Quick Suggestions Chips */}
         <div className="flex flex-wrap items-center justify-center gap-2 mt-4 text-xs">
-          <span className="text-gray-400 font-medium flex items-center gap-1">
-            <Sparkles size={13} className="text-yellow-400" /> Try searching:
-          </span>
           {SUGGESTED_PLAYERS.map((player) => (
-            <button
+            <Button
               key={player.riotId}
               type="button"
               onClick={() => {
@@ -155,7 +153,7 @@ export function HeroSection() {
               className="px-2.5 py-1 rounded-lg bg-gray-800/80 hover:bg-yellow-500/20 hover:text-yellow-400 border border-gray-700/60 text-gray-300 font-semibold transition cursor-pointer"
             >
               {player.riotId}
-            </button>
+            </Button>
           ))}
         </div>
       </div>

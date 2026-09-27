@@ -24,7 +24,6 @@ import type {
 } from "../types/leaderboard.types";
 import {
   Flame,
-  Sparkles,
   SlidersHorizontal,
   Table as TableIcon,
   LayoutGrid,
@@ -65,9 +64,20 @@ export function LeaderboardPage() {
       page: viewMode === "table" ? page : undefined,
       limit: viewMode === "table" ? pageSize : 200,
     };
-  }, [role, tier, rank, debouncedSearch, sortBy, order, page, pageSize, viewMode]);
+  }, [
+    role,
+    tier,
+    rank,
+    debouncedSearch,
+    sortBy,
+    order,
+    page,
+    pageSize,
+    viewMode,
+  ]);
 
-  const { data, isLoading, isError, error, refetch } = useLeaderboardTierList(queryParams);
+  const { data, isLoading, isError, error, refetch } =
+    useLeaderboardTierList(queryParams);
 
   // Reset to page 1 on filter changes
   const handleRoleChange = (newRole: LeaderboardRole) => {
@@ -148,7 +158,7 @@ export function LeaderboardPage() {
               variant="secondary"
               className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-neutral-900 border border-neutral-800 text-neutral-300"
             >
-              <Sparkles className="w-3 h-3 text-amber-400 mr-1" /> Bậc {rank === "all" ? "Mọi Rank" : rank.toUpperCase()}
+              Bậc {rank === "all" ? "Mọi Rank" : rank.toUpperCase()}
             </Badge>
           </div>
 
@@ -156,7 +166,9 @@ export function LeaderboardPage() {
             Bảng xếp hạng Tier List Tướng LMHT
           </h1>
           <p className="text-xs sm:text-sm text-neutral-400 max-w-2xl leading-relaxed">
-            Dữ liệu phân tích meta trực tiếp từ hàng triệu trận đấu xếp hạng. Xem tỷ lệ thắng, tỷ lệ chọn, tỷ lệ cấm và phân hạng sức mạnh cho từng vị trí.
+            Dữ liệu phân tích meta trực tiếp từ hàng triệu trận đấu xếp hạng.
+            Xem tỷ lệ thắng, tỷ lệ chọn, tỷ lệ cấm và phân hạng sức mạnh cho
+            từng vị trí.
           </p>
         </div>
 
@@ -166,7 +178,11 @@ export function LeaderboardPage() {
             variant="outline"
             className="border-neutral-800 bg-[#12141f] text-neutral-400 font-mono text-xs py-1 px-3"
           >
-            Tổng cộng: <span className="font-bold text-white text-sm ml-1">{totalItems}</span> tướng
+            Tổng cộng:{" "}
+            <span className="font-bold text-white text-sm ml-1">
+              {totalItems}
+            </span>{" "}
+            tướng
           </Badge>
         </div>
       </div>
@@ -200,26 +216,31 @@ export function LeaderboardPage() {
             {/* Mobile Filter Button (Sheet Drawer) */}
             <div className="flex items-center gap-2">
               <div className="lg:hidden">
-                <Sheet open={isMobileSheetOpen} onOpenChange={setIsMobileSheetOpen}>
-                  <SheetTrigger render={
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="h-8 gap-2 bg-[#171924] border-neutral-800 text-white rounded-xl"
-                    >
-                      <SlidersHorizontal className="w-3.5 h-3.5 text-rose-500" />
-                      <span>Bộ lọc</span>
-                      {activeFiltersCount > 0 && (
-                        <Badge
-                          variant="secondary"
-                          className="bg-rose-600 text-white text-[10px] h-4 px-1.5"
-                        >
-                          {activeFiltersCount}
-                        </Badge>
-                      )}
-                    </Button>
-                  } />
+                <Sheet
+                  open={isMobileSheetOpen}
+                  onOpenChange={setIsMobileSheetOpen}
+                >
+                  <SheetTrigger
+                    render={
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="h-8 gap-2 bg-[#171924] border-neutral-800 text-white rounded-xl"
+                      >
+                        <SlidersHorizontal className="w-3.5 h-3.5 text-rose-500" />
+                        <span>Bộ lọc</span>
+                        {activeFiltersCount > 0 && (
+                          <Badge
+                            variant="secondary"
+                            className="bg-rose-600 text-white text-[10px] h-4 px-1.5"
+                          >
+                            {activeFiltersCount}
+                          </Badge>
+                        )}
+                      </Button>
+                    }
+                  />
                   <SheetContent
                     side="left"
                     className="bg-[#10121a] border-neutral-800 text-white w-80 p-5 overflow-y-auto no-scrollbar"
@@ -259,16 +280,25 @@ export function LeaderboardPage() {
               {/* Active Filter summary pill */}
               <div className="flex items-center gap-1.5 text-xs text-neutral-400">
                 <span className="hidden sm:inline">Đang xem:</span>
-                <Badge variant="outline" className="border-neutral-800 bg-[#171924] text-neutral-200 text-xs">
+                <Badge
+                  variant="outline"
+                  className="border-neutral-800 bg-[#171924] text-neutral-200 text-xs"
+                >
                   {roleLabels[role]}
                 </Badge>
                 {tier !== "all" && (
-                  <Badge variant="outline" className="border-amber-500/30 bg-amber-500/10 text-amber-300 text-xs">
+                  <Badge
+                    variant="outline"
+                    className="border-amber-500/30 bg-amber-500/10 text-amber-300 text-xs"
+                  >
                     Tier {tier}
                   </Badge>
                 )}
                 {search && (
-                  <Badge variant="outline" className="border-neutral-800 bg-[#171924] text-neutral-300 text-xs truncate max-w-32">
+                  <Badge
+                    variant="outline"
+                    className="border-neutral-800 bg-[#171924] text-neutral-300 text-xs truncate max-w-32"
+                  >
                     "{search}"
                   </Badge>
                 )}
@@ -331,7 +361,10 @@ export function LeaderboardPage() {
                 <Skeleton className="h-6 w-24 bg-neutral-800" />
               </div>
               {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="flex items-center justify-between gap-4 py-2">
+                <div
+                  key={i}
+                  className="flex items-center justify-between gap-4 py-2"
+                >
                   <div className="flex items-center gap-3">
                     <Skeleton className="h-9 w-9 rounded-xl bg-neutral-800 shrink-0" />
                     <div className="space-y-1">
@@ -348,9 +381,12 @@ export function LeaderboardPage() {
             </div>
           ) : isError ? (
             <div className="py-16 text-center bg-destructive/10 border border-destructive/30 rounded-2xl p-6 text-neutral-200">
-              <p className="text-sm font-semibold text-rose-400">Không thể tải dữ liệu bảng xếp hạng.</p>
+              <p className="text-sm font-semibold text-rose-400">
+                Không thể tải dữ liệu bảng xếp hạng.
+              </p>
               <p className="text-xs text-neutral-400 mt-1">
-                {(error as any)?.message || "Vui lòng kiểm tra lại kết nối backend."}
+                {(error as any)?.message ||
+                  "Vui lòng kiểm tra lại kết nối backend."}
               </p>
               <Button
                 type="button"
@@ -361,14 +397,10 @@ export function LeaderboardPage() {
               </Button>
             </div>
           ) : viewMode === "grouped" ? (
-            /* Chia và hiển thị theo từng Tier S / A / B / C / D */
             <LeaderboardGrouped items={champions} />
           ) : (
-            /* Hiển thị dạng bảng đầy đủ có phân trang */
             <div className="space-y-4">
               <LeaderboardTable items={champions} />
-
-              {/* Pagination Controls */}
               <LeaderboardPagination
                 currentPage={page}
                 totalPages={totalPages}

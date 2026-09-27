@@ -3,7 +3,7 @@ import type {
   GetPlayerProfileParams,
   PlayerApiResponse,
   PlayerProfileResponse,
-} from "@/features/player/api/get-player-profile";
+} from "@/hooks/use-player-profile";
 
 export async function fetchPlayerProfile(
   params: GetPlayerProfileParams,
