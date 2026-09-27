@@ -11,6 +11,19 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    host: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
+  css: {
+    postcss: {},
+  },
   resolve: {
     alias: {
       '@': path.resolve(import.meta.dirname, './src'),

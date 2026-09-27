@@ -1,9 +1,6 @@
-import { createFileRoute, Navigate } from '@tanstack/react-router'
+import { createFileRoute } from "@tanstack/react-router";
+import { HomePage } from "@/features/home";
 
-export const Route = createFileRoute('/')({
-  component: IndexComponent,
-})
-
-function IndexComponent() {
-  return <Navigate to="/champions" replace />
-}
+export const Route = createFileRoute("/")({
+  component: HomePage,
+});

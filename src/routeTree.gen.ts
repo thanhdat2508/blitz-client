@@ -12,8 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as ChampionsRouteImport } from './routes/champions'
-import { Route as DemoRouteImport } from './routes/demo'
-import { Route as ProductsRouteImport } from './routes/products'
+import { Route as NewsRouteImport } from './routes/news'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as ChampionsIndexRouteImport } from './routes/champions.index'
 import { Route as ChampionsChampionIdRouteImport } from './routes/champions.$championId'
 
@@ -32,14 +32,14 @@ const ChampionsRoute = ChampionsRouteImport.update({
   path: '/champions',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DemoRoute = DemoRouteImport.update({
-  id: '/demo',
-  path: '/demo',
+const NewsRoute = NewsRouteImport.update({
+  id: '/news',
+  path: '/news',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProductsRoute = ProductsRouteImport.update({
-  id: '/products',
-  path: '/products',
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChampionsIndexRoute = ChampionsIndexRouteImport.update({
@@ -57,16 +57,16 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/champions': typeof ChampionsRouteWithChildren
-  '/demo': typeof DemoRoute
-  '/products': typeof ProductsRoute
+  '/news': typeof NewsRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/champions/$championId': typeof ChampionsChampionIdRoute
   '/champions/': typeof ChampionsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/demo': typeof DemoRoute
-  '/products': typeof ProductsRoute
+  '/news': typeof NewsRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/champions/$championId': typeof ChampionsChampionIdRoute
   '/champions': typeof ChampionsIndexRoute
 }
@@ -75,8 +75,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/champions': typeof ChampionsRouteWithChildren
-  '/demo': typeof DemoRoute
-  '/products': typeof ProductsRoute
+  '/news': typeof NewsRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/champions/$championId': typeof ChampionsChampionIdRoute
   '/champions/': typeof ChampionsIndexRoute
 }
@@ -86,16 +86,16 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/champions'
-    | '/demo'
-    | '/products'
+    | '/news'
+    | '/auth/callback'
     | '/champions/$championId'
     | '/champions/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/demo'
-    | '/products'
+    | '/news'
+    | '/auth/callback'
     | '/champions/$championId'
     | '/champions'
   id:
@@ -103,8 +103,8 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/champions'
-    | '/demo'
-    | '/products'
+    | '/news'
+    | '/auth/callback'
     | '/champions/$championId'
     | '/champions/'
   fileRoutesById: FileRoutesById
@@ -113,8 +113,8 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ChampionsRoute: typeof ChampionsRouteWithChildren
-  DemoRoute: typeof DemoRoute
-  ProductsRoute: typeof ProductsRoute
+  NewsRoute: typeof NewsRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -140,18 +140,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ChampionsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/demo': {
-      id: '/demo'
-      path: '/demo'
-      fullPath: '/demo'
-      preLoaderRoute: typeof DemoRouteImport
+    '/news': {
+      id: '/news'
+      path: '/news'
+      fullPath: '/news'
+      preLoaderRoute: typeof NewsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/products': {
-      id: '/products'
-      path: '/products'
-      fullPath: '/products'
-      preLoaderRoute: typeof ProductsRouteImport
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/champions/': {
@@ -189,8 +189,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ChampionsRoute: ChampionsRouteWithChildren,
-  DemoRoute: DemoRoute,
-  ProductsRoute: ProductsRoute,
+  NewsRoute: NewsRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
