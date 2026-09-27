@@ -8,7 +8,6 @@ export function GuestUserMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Close on outside click
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -23,7 +22,6 @@ export function GuestUserMenu() {
     };
   }, [isOpen]);
 
-  // Close on Escape key
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
       if (e.key === "Escape") {
@@ -38,7 +36,6 @@ export function GuestUserMenu() {
     };
   }, [isOpen]);
 
-  // When not logged in: show clean Log In button that opens login modal (Image 2)
   if (!isAuthenticated || !user) {
     return (
       <Button
@@ -55,8 +52,7 @@ export function GuestUserMenu() {
   // When logged in: show clean user dropdown with name, email and sign out
   return (
     <div className="relative" ref={menuRef}>
-      <button
-        type="button"
+      <Button
         onClick={() => setIsOpen((prev) => !prev)}
         className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-sm font-semibold text-neutral-200 hover:text-white bg-[#141622] hover:bg-[#1a1d2e] transition-all cursor-pointer select-none border border-neutral-800"
         aria-expanded={isOpen}
@@ -73,29 +69,44 @@ export function GuestUserMenu() {
           </div>
         )}
         <span className="truncate max-w-32.5">{user.name}</span>
-      </button>
+      </Button>
 
       {isOpen && (
         <div
           role="menu"
-          className="absolute right-0 mt-2 w-56 rounded-2xl bg-[#11131c] border border-neutral-800 shadow-2xl p-2 z-50 text-neutral-200 animate-in fade-in-0 zoom-in-95 duration-100"
+          className="absolute right-0 mt-2 w-64 rounded-2xl bg-[#11131c] border border-neutral-800 shadow-2xl p-2 z-50 text-neutral-200 animate-in fade-in-0 zoom-in-95 duration-100"
         >
           <div className="px-3 py-2 border-b border-neutral-800/80 mb-1">
             <p className="font-bold text-sm text-white truncate">{user.name}</p>
             <p className="text-xs text-neutral-400 truncate">{user.email}</p>
           </div>
 
-          <button
-            type="button"
-            onClick={() => {
-              logout();
-              setIsOpen(false);
-            }}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors cursor-pointer text-left"
-          >
-            <LogOut className="w-4 h-4" />
-            <span>Sign Out</span>
-          </button>
+          <div className="flex flex-col gap-2 items-center justify-center">
+            <Button
+              type="button"
+              onClick={() => {
+                logout(false);
+                setIsOpen(false);
+              }}
+              className="w-full justify-start"
+              variant="destructive"
+            >
+              <LogOut className="w-4 h-4" />
+              <p>Sign Out Current Device</p>
+            </Button>
+
+            <Button
+              type="button"
+              onClick={() => {
+                logout(true);
+                setIsOpen(false);
+              }}
+              className="w-full justify-start"
+              variant="ghost"
+            >
+              <p>Sign Out All Devices</p>
+            </Button>
+          </div>
         </div>
       )}
     </div>

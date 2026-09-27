@@ -279,40 +279,38 @@ export function CommandSearch() {
               <>
                 {/* 1. Champions Category */}
                 {filteredChampions.length && (
-                  <div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mt-1">
-                      {filteredChampions.map((champ) => (
-                        <Button
-                          key={champ.name}
-                          type="button"
-                          onClick={() => handleSelectLink("/")}
-                          variant="ghost"
-                          className="flex items-center gap-3 py-8 rounded-xl hover:bg-[#181a26] border border-transparent hover:border-neutral-800 transition-all text-left group cursor-pointer"
-                        >
-                          <img
-                            src={champ.avatarUrl}
-                            alt={champ.name}
-                            className="w-9 h-9 rounded-lg object-cover border border-neutral-700 shrink-0"
-                          />
-                          <div className="min-w-0 flex-1">
-                            <p className="text-sm font-bold text-white group-hover:text-amber-400 transition-colors truncate">
-                              {champ.name}
-                            </p>
-                            <p className="text-[11px] text-neutral-400 truncate">
-                              {champ.role}
-                            </p>
-                          </div>
-                          {champ.badge && (
-                            <Badge
-                              variant="outline"
-                              className="text-xs font-medium px-1.5 py-0"
-                            >
-                              {champ.badge}
-                            </Badge>
-                          )}
-                        </Button>
-                      ))}
-                    </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 mt-1">
+                    {filteredChampions.map((champ) => (
+                      <Button
+                        key={champ.name}
+                        type="button"
+                        onClick={() => handleSelectLink("/")}
+                        variant="ghost"
+                        className="flex items-center gap-3 py-8 rounded-xl hover:bg-[#181a26] border border-transparent hover:border-neutral-800 transition-all text-left group cursor-pointer"
+                      >
+                        <img
+                          src={champ.avatarUrl}
+                          alt={champ.name}
+                          className="w-9 h-9 rounded-lg object-cover border border-neutral-700 shrink-0"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-bold text-white group-hover:text-amber-400 transition-colors truncate">
+                            {champ.name}
+                          </p>
+                          <p className="text-[11px] text-neutral-400 truncate">
+                            {champ.role}
+                          </p>
+                        </div>
+                        {champ.badge && (
+                          <Badge
+                            variant="outline"
+                            className="text-xs font-medium px-1.5 py-0"
+                          >
+                            {champ.badge}
+                          </Badge>
+                        )}
+                      </Button>
+                    ))}
                   </div>
                 )}
 
@@ -349,18 +347,19 @@ export function CommandSearch() {
                 {/* 3. Quick Links Navigation */}
                 {filteredLinks.length && (
                   <div>
-                    <div className="flex items-center gap-1.5 px-2 py-1 text-[11px] font-bold uppercase tracking-wider text-neutral-400">
+                    <div className="flex items-center gap-1.5 px-2 py-1 text-xs font-bold uppercase tracking-wider">
                       <TrendingUp className="w-3 h-3" /> Điều hướng nhanh
                     </div>
                     <div className="space-y-1 mt-1">
                       {filteredLinks.map((link) => {
                         const Icon = link.icon;
                         return (
-                          <button
+                          <Button
                             key={link.href}
                             type="button"
                             onClick={() => handleSelectLink(link.href)}
-                            className="w-full flex items-center justify-between p-2.5 rounded-xl hover:bg-[#181a26] border border-transparent hover:border-neutral-800 transition-all text-left group cursor-pointer"
+                            variant="ghost"
+                            className="flex w-full items-center justify-between gap-3 py-8 rounded-xl hover:bg-[#181a26] border border-transparent hover:border-neutral-800 transition-all text-left group cursor-pointer"
                           >
                             <div className="flex items-center gap-3">
                               <div className="p-1.5 rounded-lg bg-neutral-800 text-neutral-300 group-hover:text-amber-400 group-hover:bg-amber-400/10 transition-colors">
@@ -375,10 +374,10 @@ export function CommandSearch() {
                                 </p>
                               </div>
                             </div>
-                            <span className="text-[10px] text-neutral-500 font-mono">
+                            <p className="text-[10px] text-neutral-500 font-mono">
                               {link.href}
-                            </span>
-                          </button>
+                            </p>
+                          </Button>
                         );
                       })}
                     </div>

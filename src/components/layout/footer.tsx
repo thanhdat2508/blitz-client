@@ -34,7 +34,7 @@ const FOOTER_COLUMNS = [
 
 export function Footer() {
   return (
-    <footer className="w-full border-t border-neutral-800/80 bg-[#090a0e] text-neutral-400 text-xs">
+    <div className="w-full border-t border-neutral-800/80 bg-[#090a0e] text-neutral-400 text-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 lg:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand & Mission Column */}
@@ -47,12 +47,12 @@ export function Footer() {
                 <LolIcon />
               </div>
               <div className="flex flex-col">
-                <span className="font-black text-xl tracking-wider text-white">
+                <p className="font-black text-xl tracking-wider text-white">
                   BLITZ
-                </span>
-                <span className="text-[10px] text-neutral-400 font-medium">
+                </p>
+                <p className="text-[10px] text-neutral-400 font-medium">
                   League of Legends Meta & Stats
-                </span>
+                </p>
               </div>
             </Link>
 
@@ -130,7 +130,7 @@ export function Footer() {
           </div>
         </div>
       </div>
-    </footer>
+    </div>
   );
 }
 
