@@ -41,30 +41,33 @@ export function GuestUserMenu() {
       <Button
         type="button"
         onClick={() => openLoginModal()}
-        className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-sm font-semibold bg-rose-600 hover:bg-rose-500 text-white shadow-sm transition-all cursor-pointer select-none"
+        className="flex items-center gap-2 h-9 px-3.5 rounded-xl text-sm font-semibold bg-rose-600 hover:bg-rose-500 text-white shadow-sm transition-colors cursor-pointer select-none shrink-0"
       >
         <LogIn className="w-4 h-4" />
-        <p>Log In</p>
+        <span>Log In</span>
       </Button>
     );
   }
 
   // When logged in: show clean user dropdown with name, email and sign out
   return (
-    <div className="relative" ref={menuRef}>
+    <div className="relative shrink-0" ref={menuRef}>
       <Button
+        type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-sm font-semibold text-neutral-200 hover:text-white bg-[#141622] hover:bg-[#1a1d2e] transition-all cursor-pointer select-none border border-neutral-800"
+        className="flex items-center gap-2 h-9 px-3 rounded-xl text-sm font-semibold text-neutral-200 hover:text-white bg-[#141622] hover:bg-[#1a1d2e] transition-colors cursor-pointer select-none border border-neutral-800"
         aria-expanded={isOpen}
       >
         {user.avatar ? (
           <img
             src={user.avatar}
             alt={user.name}
-            className="w-6 h-6 rounded-full bg-neutral-800 object-cover"
+            width={24}
+            height={24}
+            className="w-6 h-6 rounded-full bg-neutral-800 object-cover shrink-0"
           />
         ) : (
-          <div className="w-6 h-6 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-400">
+          <div className="w-6 h-6 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-400 shrink-0">
             <User className="w-3.5 h-3.5" />
           </div>
         )}

@@ -45,16 +45,30 @@ export function HomeNewsSection() {
 
   const newsItems: NewsItem[] =
     data && data.items && data.items.length > 0
-      ? data.items.map((post) => ({
-          id: post.id,
-          version: post.title.slice(0, 15),
-          description: post.content ? post.content.slice(0, 80) + "..." : post.title,
-          image:
-            post.coverImageUrl ||
-            "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/janna/skins/skin67/images/janna_splash_centered_67.skins_janna_skin67.jpg",
-          category: post.tags?.[0]?.tag?.name || "News",
-          slug: post.slug,
-        }))
+      ? data.items.map((post) => {
+          const rawTag = post.tags?.[0];
+          const tagLabel =
+            rawTag?.name ||
+            rawTag?.tag?.name ||
+            rawTag?.slug ||
+            "Patch Notes";
+
+          const patchMatch = post.title.match(/Patch\s+([\d.]+)/i);
+          const versionDisplay = patchMatch ? patchMatch[1] : post.title.slice(0, 24);
+
+          return {
+            id: post.id,
+            version: versionDisplay,
+            description: post.content
+              ? post.content.slice(0, 85) + (post.content.length > 85 ? "..." : "")
+              : post.title,
+            image:
+              post.coverImageUrl ||
+              "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/janna/skins/skin67/images/janna_splash_centered_67.skins_janna_skin67.jpg",
+            category: tagLabel,
+            slug: post.slug,
+          };
+        })
       : FALLBACK_NEWS_ITEMS;
 
   return (

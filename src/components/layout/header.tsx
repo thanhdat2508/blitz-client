@@ -2,12 +2,6 @@ import { Link } from "@tanstack/react-router";
 import LolIcon from "@/components/icon/lol";
 import { CommandSearch } from "./command-search";
 import { GuestUserMenu } from "@/features/auth";
-import {
-  NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
-  NavigationMenuLink,
-} from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import { Home, Newspaper, Flame, Swords } from "lucide-react";
 
@@ -27,7 +21,7 @@ const NAV_ITEMS: NavItem[] = [
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-neutral-800/80 bg-[#0b0c10]/90 backdrop-blur-md transition-all">
+    <header className="sticky top-0 z-50 w-full border-b border-neutral-800/80 bg-[#0b0c10]/95 backdrop-blur-md">
       {/* 1. Top Bar: Logo, Search Command, User Login */}
       <div className="border-b border-neutral-800/50">
         <div className="max-w-6xl mx-auto h-16 flex items-center justify-between gap-4 lg:px-0 md:px-4 sm:px-6">
@@ -59,42 +53,34 @@ export function Header() {
         </div>
       </div>
 
-      {/* 2. Bottom Bar: Navigation items using ShadCN NavigationMenu with active red line */}
+      {/* 2. Bottom Bar: Navigation items with active red line */}
       <div className="bg-[#0f1118]/80 border-t border-neutral-800/40">
         <div className="max-w-6xl mx-auto lg:px-0 md:px-4 sm:px-6">
-          <NavigationMenu className="max-w-full justify-start py-0">
-            <NavigationMenuList className="flex-wrap justify-start gap-1">
-              {NAV_ITEMS.map((item) => {
-                const Icon = item.icon;
-                return (
-                  <NavigationMenuItem key={item.name}>
-                    <NavigationMenuLink
-                      render={
-                        <Link
-                          to={item.href}
-                          activeOptions={{ exact: item.href === "/" }}
-                        />
-                      }
-                      className={cn(
-                        "relative flex items-center gap-2 h-10 px-3.5 text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors outline-none cursor-pointer bg-transparent border-b-2 border-transparent rounded-none select-none",
-                        "focus:bg-transparent focus-visible:ring-0 focus:outline-none",
-                        "[&.active]:text-white [&.active]:font-semibold [&.active]:border-red-500 [&.active]:bg-transparent",
-                      )}
-                    >
-                      <Icon className="w-3.5 h-3.5" />
-                      <p>{item.name}</p>
-                      {item.isNew && (
-                        <div className="relative flex h-1.5 w-1.5 ml-0.5">
-                          <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
-                          <div className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500" />
-                        </div>
-                      )}
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                );
-              })}
-            </NavigationMenuList>
-          </NavigationMenu>
+          <nav
+            aria-label="Main Navigation"
+            className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0"
+          >
+            {NAV_ITEMS.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  activeOptions={{ exact: item.href === "/" }}
+                  className={cn(
+                    "relative flex items-center gap-2 h-10 px-3.5 text-xs font-medium text-neutral-400 hover:text-white hover:bg-white/5 transition-colors outline-none cursor-pointer border-b-2 border-transparent select-none shrink-0",
+                    "[&.active]:text-white [&.active]:font-semibold [&.active]:border-rose-500 [&.active]:bg-transparent",
+                  )}
+                >
+                  <Icon className="w-3.5 h-3.5" />
+                  <span>{item.name}</span>
+                  {item.isNew && (
+                    <span className="flex h-1.5 w-1.5 rounded-full bg-rose-500 ml-0.5" />
+                  )}
+                </Link>
+              );
+            })}
+          </nav>
         </div>
       </div>
     </header>

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { fetchClient } from '@/lib/fetch-client'
+import { ENV } from '@/config/env'
 
 export interface ProPlayerSpell {
   name: string
@@ -57,9 +57,15 @@ export interface ProPlayer {
 
 export async function fetchProPlayers(): Promise<ProPlayer[]> {
   try {
-    const res = await fetchClient<{ success: boolean; count: number; data: ProPlayer[] }>('/api/pro-players')
-    if (res?.data && Array.isArray(res.data)) {
-      return res.data
+    const endpoint = '/api/pro-players'
+    const url = typeof window !== 'undefined' ? endpoint : `${ENV.BACKEND_URL}${endpoint}`
+    const res = await fetch(url)
+    if (!res.ok) {
+      throw new Error(`Failed to fetch pro players: ${res.status} ${res.statusText}`)
+    }
+    const json: { success: boolean; count: number; data: ProPlayer[] } = await res.json()
+    if (json?.data && Array.isArray(json.data)) {
+      return json.data
     }
     return []
   } catch (err) {

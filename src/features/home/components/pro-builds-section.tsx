@@ -6,17 +6,16 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { useProPlayers, type ProPlayerApiItem } from "../api/get-pro-players";
+import { useProPlayers, type ProPlayerApiItem } from "@/hooks/use-pro-players";
+
+const BORDER_COLORS: Record<string, string> = {
+  blue: "border-blue-500/60",
+  gold: "border-yellow-500/60",
+  red: "border-red-500/60",
+};
 
 export function ProBuildsSection() {
   const { data = [], isLoading } = useProPlayers();
-
-  const borderColors: Record<string, string> = {
-    blue: "border-blue-500/60",
-    gold: "border-yellow-500/60",
-    red: "border-red-500/60",
-  };
 
   return (
     <Card className="group bg-[#12131c] border-gray-800 transition-all duration-300 shadow-xl rounded-2xl p-0 gap-0">
@@ -24,19 +23,14 @@ export function ProBuildsSection() {
         <div className="space-y-1">
           <CardTitle className="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
             Latest Pro Builds
-            {isLoading && <Loader2 className="w-4 h-4 animate-spin text-gray-400" />}
+            {isLoading && (
+              <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
+            )}
           </CardTitle>
           <CardDescription className="text-xs text-gray-400">
             Real matches from professional LoL players fetched directly from backend server.
           </CardDescription>
         </div>
-
-        <Badge
-          variant="outline"
-          className="hidden sm:inline-flex text-[10px] font-bold text-green-400 bg-green-500/10 border-green-500/20 px-3 py-1 rounded-full tracking-wider"
-        >
-          LIVE PRO
-        </Badge>
       </CardHeader>
 
       <CardContent className="p-5 lg:p-6 pt-0">
@@ -94,8 +88,9 @@ export function ProBuildsSection() {
                     <img
                       src={champIcon}
                       alt={champName}
-                      className={`w-12 h-12 rounded-full border-2 ${borderColors[player.themeColor] || "border-purple-500/60"
-                        } object-cover shadow-md`}
+                      className={`w-12 h-12 rounded-full border-2 ${
+                        BORDER_COLORS[player.themeColor] || "border-purple-500/60"
+                      } object-cover shadow-md`}
                       onError={(e) => {
                         (e.target as HTMLImageElement).src =
                           "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/Ahri.png";

@@ -9,57 +9,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useTierList, type TierChampionApiItem } from "../api/get-tier-list";
-
-// Fallback champions in case backend is offline
-const FALLBACK_CHAMPIONS: Array<{
-  rank: number;
-  name: string;
-  role: string;
-  avatarUrl: string;
-  tier: "S" | "A" | "B";
-  winRate: number;
-}> = [
-  {
-    rank: 1,
-    name: "Ahri",
-    role: "Mid",
-    avatarUrl: "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/Ahri.png",
-    tier: "S",
-    winRate: 53.4,
-  },
-  {
-    rank: 2,
-    name: "Rammus",
-    role: "Jungle",
-    avatarUrl: "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/Rammus.png",
-    tier: "S",
-    winRate: 53.3,
-  },
-  {
-    rank: 3,
-    name: "Sejuani",
-    role: "Jungle",
-    avatarUrl: "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/Sejuani.png",
-    tier: "S",
-    winRate: 52.8,
-  },
-  {
-    rank: 4,
-    name: "Hwei",
-    role: "Mid",
-    avatarUrl: "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/Hwei.png",
-    tier: "S",
-    winRate: 53.6,
-  },
-  {
-    rank: 5,
-    name: "Lee Sin",
-    role: "Jungle",
-    avatarUrl: "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/LeeSin.png",
-    tier: "A",
-    winRate: 49.8,
-  },
-];
+import { Link } from "@tanstack/react-router";
 
 export function TierListSection() {
   const { data, isLoading } = useTierList({
@@ -68,9 +18,9 @@ export function TierListSection() {
     limit: 5,
   });
 
-  const displayList = (data && data.length > 0 ? data : FALLBACK_CHAMPIONS) as Array<
-    TierChampionApiItem | (typeof FALLBACK_CHAMPIONS)[0]
-  >;
+  const displayList = (
+    data && data.length > 0 ? data : []
+  ) as TierChampionApiItem[];
 
   return (
     <Card className="group bg-[#12131c] border-gray-800 transition-all duration-300 shadow-xl rounded-2xl p-0 gap-0">
@@ -78,7 +28,9 @@ export function TierListSection() {
         <div className="space-y-1">
           <CardTitle className="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
             LoL Champion Tier List
-            {isLoading && <Loader2 className="w-4 h-4 animate-spin text-gray-400" />}
+            {isLoading && (
+              <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
+            )}
           </CardTitle>
           <CardDescription className="text-xs text-gray-400">
             League of Legends's biggest winners for patch 14.24 for every role.
@@ -108,7 +60,7 @@ export function TierListSection() {
               const winRateNumber = Number(champ.winRate) || 50;
               const barPercentage = Math.min(
                 100,
-                Math.max(25, Math.round(((winRateNumber - 46) / 8) * 100))
+                Math.max(25, Math.round(((winRateNumber - 46) / 8) * 100)),
               );
 
               return (
@@ -156,7 +108,8 @@ export function TierListSection() {
                         isTierS ? "text-green-400" : "text-gray-200"
                       }`}
                     >
-                      {isTierS && <TrendingUp size={14} />} {winRateNumber.toFixed(1)}%
+                      {isTierS && <TrendingUp size={14} />}{" "}
+                      {winRateNumber.toFixed(1)}%
                     </div>
                     <div className="w-20 h-1 rounded-full bg-gray-800 overflow-hidden">
                       <div
@@ -173,16 +126,18 @@ export function TierListSection() {
           </div>
         </div>
 
-        <Button
-          variant="outline"
-          className="w-full mt-4 bg-[#1a1b26] hover:text-white hover:bg-[#222432] text-white font-bold h-11 rounded-xl border border-gray-700 hover:border-gray-600 transition-all duration-300 flex items-center justify-center gap-2 group/button cursor-pointer"
-        >
-          View Full Tier List
-          <ArrowRight
-            size={18}
-            className="group-hover/button:translate-x-1 transition-transform"
-          />
-        </Button>
+        <Link to="/leaderboard">
+          <Button
+            variant="outline"
+            className="w-full mt-4 bg-[#1a1b26] hover:text-white hover:bg-[#222432] text-white font-bold h-11 rounded-xl border border-gray-700 hover:border-gray-600 transition-all duration-300 flex items-center justify-center gap-2 group/button cursor-pointer"
+          >
+            View Full Tier List
+            <ArrowRight
+              size={18}
+              className="group-hover/button:translate-x-1 transition-transform"
+            />
+          </Button>
+        </Link>
       </CardContent>
     </Card>
   );

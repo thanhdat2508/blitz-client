@@ -1,5 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
-import { fetchClient } from "@/lib/fetch-client";
+import { ENV } from "@/config/env";
 
 export interface ProPlayerItemSpell {
   name: string;
@@ -53,27 +52,18 @@ export interface ProPlayersApiResponse {
   data: ProPlayerApiItem[];
 }
 
-export const proPlayersKeys = {
-  all: ["pro-players"] as const,
-};
-
 export async function getProPlayers(): Promise<ProPlayerApiItem[]> {
-  try {
-    const response = await fetchClient<ProPlayersApiResponse>("/api/pro-players");
-    if (response?.data && Array.isArray(response.data)) {
-      return response.data;
-    }
-    return [];
-  } catch (err) {
-    console.error("Failed to fetch pro-players from backend:", err);
-    return [];
-  }
-}
+  const endpoint = "/api/pro-players";
+  const url =
+    typeof window !== "undefined" ? endpoint : `${ENV.BACKEND_URL}${endpoint}`;
 
-export function useProPlayers() {
-  return useQuery({
-    queryKey: proPlayersKeys.all,
-    queryFn: getProPlayers,
-    staleTime: 1000 * 60 * 5,
-  });
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(
+      `Failed to fetch pro players: ${res.status} ${res.statusText}`,
+    );
+  }
+
+  const json: ProPlayersApiResponse = await res.json();
+  return json.data || [];
 }

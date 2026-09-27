@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as ChampionsRouteImport } from './routes/champions'
+import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as ChampionsIndexRouteImport } from './routes/champions.index'
@@ -30,6 +31,11 @@ const AboutRoute = AboutRouteImport.update({
 const ChampionsRoute = ChampionsRouteImport.update({
   id: '/champions',
   path: '/champions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LeaderboardRoute = LeaderboardRouteImport.update({
+  id: '/leaderboard',
+  path: '/leaderboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NewsRoute = NewsRouteImport.update({
@@ -57,6 +63,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/champions': typeof ChampionsRouteWithChildren
+  '/leaderboard': typeof LeaderboardRoute
   '/news': typeof NewsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/champions/$championId': typeof ChampionsChampionIdRoute
@@ -65,6 +72,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/news': typeof NewsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/champions/$championId': typeof ChampionsChampionIdRoute
@@ -75,6 +83,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/champions': typeof ChampionsRouteWithChildren
+  '/leaderboard': typeof LeaderboardRoute
   '/news': typeof NewsRoute
   '/auth/callback': typeof AuthCallbackRoute
   '/champions/$championId': typeof ChampionsChampionIdRoute
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/champions'
+    | '/leaderboard'
     | '/news'
     | '/auth/callback'
     | '/champions/$championId'
@@ -94,6 +104,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/leaderboard'
     | '/news'
     | '/auth/callback'
     | '/champions/$championId'
@@ -103,6 +114,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/champions'
+    | '/leaderboard'
     | '/news'
     | '/auth/callback'
     | '/champions/$championId'
@@ -113,6 +125,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ChampionsRoute: typeof ChampionsRouteWithChildren
+  LeaderboardRoute: typeof LeaderboardRoute
   NewsRoute: typeof NewsRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
 }
@@ -138,6 +151,13 @@ declare module '@tanstack/react-router' {
       path: '/champions'
       fullPath: '/champions'
       preLoaderRoute: typeof ChampionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/leaderboard': {
+      id: '/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/leaderboard'
+      preLoaderRoute: typeof LeaderboardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/news': {
@@ -189,6 +209,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ChampionsRoute: ChampionsRouteWithChildren,
+  LeaderboardRoute: LeaderboardRoute,
   NewsRoute: NewsRoute,
   AuthCallbackRoute: AuthCallbackRoute,
 }
