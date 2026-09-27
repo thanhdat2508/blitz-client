@@ -1,54 +1,55 @@
-import * as React from 'react'
-import { useAuth } from '../hooks/use-auth'
-import { LogIn, LogOut, User } from 'lucide-react'
+import { useAuth } from "../hooks/use-auth";
+import { LogIn, LogOut, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useEffect, useRef, useState } from "react";
 
 export function GuestUserMenu() {
-  const { user, isAuthenticated, openLoginModal, logout } = useAuth()
-  const [isOpen, setIsOpen] = React.useState(false)
-  const menuRef = React.useRef<HTMLDivElement>(null)
+  const { user, isAuthenticated, openLoginModal, logout } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   // Close on outside click
-  React.useEffect(() => {
+  useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setIsOpen(false)
+        setIsOpen(false);
       }
     }
     if (isOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener("mousedown", handleClickOutside);
     }
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isOpen])
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
 
   // Close on Escape key
-  React.useEffect(() => {
+  useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
-        setIsOpen(false)
+      if (e.key === "Escape") {
+        setIsOpen(false);
       }
     }
     if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown)
+      document.addEventListener("keydown", handleKeyDown);
     }
     return () => {
-      document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [isOpen])
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen]);
 
   // When not logged in: show clean Log In button that opens login modal (Image 2)
   if (!isAuthenticated || !user) {
     return (
-      <button
+      <Button
         type="button"
         onClick={() => openLoginModal()}
         className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-sm font-semibold bg-rose-600 hover:bg-rose-500 text-white shadow-sm transition-all cursor-pointer select-none"
       >
         <LogIn className="w-4 h-4" />
-        <span>Log In</span>
-      </button>
-    )
+        <p>Log In</p>
+      </Button>
+    );
   }
 
   // When logged in: show clean user dropdown with name, email and sign out
@@ -71,7 +72,7 @@ export function GuestUserMenu() {
             <User className="w-3.5 h-3.5" />
           </div>
         )}
-        <span className="truncate max-w-[130px]">{user.name}</span>
+        <span className="truncate max-w-32.5">{user.name}</span>
       </button>
 
       {isOpen && (
@@ -87,8 +88,8 @@ export function GuestUserMenu() {
           <button
             type="button"
             onClick={() => {
-              logout()
-              setIsOpen(false)
+              logout();
+              setIsOpen(false);
             }}
             className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium text-rose-400 hover:text-rose-300 hover:bg-rose-500/10 transition-colors cursor-pointer text-left"
           >
@@ -98,5 +99,5 @@ export function GuestUserMenu() {
         </div>
       )}
     </div>
-  )
+  );
 }
