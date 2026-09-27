@@ -65,6 +65,9 @@ export function ChampionHeroHeader({ champion, selectedRole }: ChampionHeroHeade
                   src={avatarSrc}
                   alt={champion.name}
                   loading="eager"
+                  fetchPriority="high"
+                  width={80}
+                  height={80}
                   onError={() => {
                     if (!imgErr) {
                       setImgErr(true)

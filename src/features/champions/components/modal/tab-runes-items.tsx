@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import type { ChampionBuildPayload, BuildRole } from '../../types/champion-build'
 import type { ChampionMeta, Role } from '../../types/champion'
 import { RuneTreeVisual } from '../build/rune-tree-visual'
@@ -61,6 +61,15 @@ export function TabRunesItems({
     }
   }
 
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current)
+        closeTimerRef.current = null
+      }
+    }
+  }, [])
+
   return (
     <div className="space-y-5 select-none relative font-sans">
       {/* FLOATING PREVIEW CARD (Rune & Item intro, guide, stats) */}
@@ -84,9 +93,9 @@ export function TabRunesItems({
         )}
 
         {/* 3-Column Balanced Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 relative z-10 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 relative z-10 items-stretch">
           {/* ── COLUMN 1: SIDEBAR (ARCHETYPES, OTP & PRO BUILDS FEED) - Cols 1 to 3 ── */}
-          <div className="lg:col-span-3 space-y-3">
+          <div className="lg:col-span-3 flex flex-col space-y-3 h-full">
             <ArchetypeSelector
               selectedId={selectedArchetype}
               onSelect={setSelectedArchetype}
@@ -94,12 +103,13 @@ export function TabRunesItems({
             <OtpBuildsCard
               championName={championName}
               coreItemIds={activeBuild.items?.core?.[0]?.itemIds}
+              keystoneId={activeBuild.runes?.mostPopular?.keystoneId}
             />
             <ProBuildsCard championName={championName} />
           </div>
 
           {/* ── COLUMN 2: RUNES & INTEGRATED SKILL MATRIX - Cols 4 to 8 ── */}
-          <div className="lg:col-span-5 space-y-3.5">
+          <div className="lg:col-span-5 space-y-3.5 self-start">
             <RuneTreeVisual
               runes={activeBuild.runes}
               splashUrl={splashUrl}
@@ -113,7 +123,7 @@ export function TabRunesItems({
           </div>
 
           {/* ── COLUMN 3: SUMMONERS & SEQUENTIAL ITEMS - Cols 9 to 12 ── */}
-          <div className="lg:col-span-4 space-y-3">
+          <div className="lg:col-span-4 flex flex-col h-full">
             <ItemBuildPath
               items={activeBuild.items}
               spells={activeBuild.spells}

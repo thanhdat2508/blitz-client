@@ -47,6 +47,7 @@ export interface ProPlayerApiItem {
   team: string;
   themeColor: string;
   displayOrder: number;
+  winRate?: number;
   lastMatch?: ProPlayerLastMatch;
 }
 
