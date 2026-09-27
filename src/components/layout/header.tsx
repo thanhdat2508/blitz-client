@@ -38,16 +38,13 @@ export function Header() {
             </div>
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5">
-                <span className="font-black text-lg tracking-wider text-white">
+                <h1 className="font-black text-lg tracking-wider text-white">
                   BLITZ
-                </span>
-                <span className="text-[10px] font-black uppercase px-1.5 py-0.5 rounded bg-amber-400/15 border border-amber-400/30 text-amber-300 tracking-wider">
-                  BUILD
-                </span>
+                </h1>
               </div>
-              <span className="text-[10px] text-neutral-400 hidden sm:inline-block font-medium">
+              <p className="text-xs text-neutral-400 hidden sm:inline-block font-medium">
                 League of Legends Meta & Stats
-              </span>
+              </p>
             </div>
           </Link>
 

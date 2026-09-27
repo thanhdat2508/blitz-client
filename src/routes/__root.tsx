@@ -4,6 +4,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthModal } from "@/features/auth";
 import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -21,6 +22,8 @@ function RootComponent() {
         <div className="flex-1 w-full">
           <Outlet />
         </div>
+
+        <Footer />
 
         <TanStackRouterDevtools position="bottom-right" />
         <ReactQueryDevtools
