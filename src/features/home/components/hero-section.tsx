@@ -33,7 +33,7 @@ export function HeroSection() {
         </div>
         <div className="relative w-full group">
           <Search
-            className="absolute left-5 top-3.5 text-gray-400 transition-colors"
+            className="absolute left-5 top-6 text-gray-400 transition-colors"
             size={22}
           />
           <Input

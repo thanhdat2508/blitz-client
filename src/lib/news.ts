@@ -1,19 +1,16 @@
 import { MOCK_NEWS_ARTICLES } from "@/features/news/data/mock-news";
 import type { GetNewsParams, NewsArticle, NewsCategory } from "@/types/news";
-import { fetchClient } from "./fetch-client";
-import type { PostsApiResponse } from "@/features/news/api/get-posts";
+import { getPosts } from "@/features/news/api/get-posts";
 
 export async function getNews({
   category = "all",
   search = "",
 }: GetNewsParams = {}): Promise<NewsArticle[]> {
   try {
-    // Attempt to fetch from backend API
-    const res = await fetchClient<PostsApiResponse>("/api/posts", {
-      params: {
-        search: search.trim() || undefined,
-        limit: 20,
-      },
+    // Attempt to fetch from backend API using simple fetch
+    const res = await getPosts({
+      search: search.trim() || undefined,
+      limit: 20,
     });
 
     if (res?.items && res.items.length > 0) {
