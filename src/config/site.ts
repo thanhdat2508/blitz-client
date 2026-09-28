@@ -8,8 +8,8 @@ export const siteConfig = {
   name: 'React Starter Kit',
   description: 'Boilerplate React 19 + Shadcn UI + TanStack Router & Query',
   navItems: [
-    { title: 'Trang chủ', href: '/' },
-    { title: 'Sản phẩm (Feature mẫu)', href: '/products' },
-    { title: 'Giới thiệu', href: '/about' },
+    { title: 'Home', href: '/' },
+    { title: 'Products', href: '/products' },
+    { title: 'About', href: '/about' },
   ] satisfies NavItem[],
 }

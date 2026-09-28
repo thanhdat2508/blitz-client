@@ -52,7 +52,7 @@ function AuthCallbackComponent() {
             window.location.href = "/";
           }, 800);
         } else {
-          throw new Error("Không thể xác thực phiên đăng nhập");
+          throw new Error("Unable to authenticate session");
         }
       } catch (err: any) {
         console.error("OAuth callback error:", err);
@@ -61,7 +61,7 @@ function AuthCallbackComponent() {
           setErrorMessage(
             err.response?.data?.error ||
               err.message ||
-              "Đăng nhập qua mạng xã hội thất bại",
+              "Social sign in failed",
           );
           setTimeout(() => {
             navigate({ to: "/" });
@@ -86,9 +86,9 @@ function AuthCallbackComponent() {
             <div className="w-14 h-14 rounded-2xl bg-rose-600/10 border border-rose-500/20 flex items-center justify-center text-rose-500">
               <Loader2 className="w-7 h-7 animate-spin" />
             </div>
-            <h2 className="text-xl font-bold text-white">Đang xử lý đăng nhập</h2>
+            <h2 className="text-xl font-bold text-white">Processing Sign In</h2>
             <p className="text-xs text-neutral-400">
-              Vui lòng đợi giây lát trong khi chúng tôi hoàn tất xác thực tài khoản...
+              Please wait while we verify your account...
             </p>
           </>
         )}
@@ -98,9 +98,9 @@ function AuthCallbackComponent() {
             <div className="w-14 h-14 rounded-2xl bg-emerald-600/10 border border-emerald-500/20 flex items-center justify-center text-emerald-500">
               <CheckCircle2 className="w-7 h-7" />
             </div>
-            <h2 className="text-xl font-bold text-white">Đăng nhập thành công!</h2>
+            <h2 className="text-xl font-bold text-white">Sign In Successful!</h2>
             <p className="text-xs text-neutral-400">
-              Đang chuyển hướng về trang chủ...
+              Redirecting to home...
             </p>
           </>
         )}
@@ -110,9 +110,9 @@ function AuthCallbackComponent() {
             <div className="w-14 h-14 rounded-2xl bg-destructive/10 border border-destructive/20 flex items-center justify-center text-destructive">
               <AlertCircle className="w-7 h-7" />
             </div>
-            <h2 className="text-xl font-bold text-white">Đăng nhập thất bại</h2>
+            <h2 className="text-xl font-bold text-white">Sign In Failed</h2>
             <p className="text-xs text-neutral-400">
-              {errorMessage || "Không thể hoàn tất xác thực."}
+              {errorMessage || "Unable to complete authentication."}
             </p>
           </>
         )}

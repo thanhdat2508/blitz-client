@@ -134,12 +134,12 @@ export function LeaderboardPage() {
     (search ? 1 : 0);
 
   const roleLabels: Record<LeaderboardRole, string> = {
-    all: "Mọi vị trí",
+    all: "All Roles",
     top: "Top",
-    jungle: "Rừng",
+    jungle: "Jungle",
     mid: "Mid",
     ad: "ADC",
-    sp: "Hỗ Trợ",
+    sp: "Support",
   };
 
   return (
@@ -152,23 +152,23 @@ export function LeaderboardPage() {
               variant="outline"
               className="px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-rose-500/10 border-rose-500/30 text-rose-400"
             >
-              <Flame className="w-3 h-3 mr-1" /> Bản vá {patchVersion}
+              <Flame className="w-3 h-3 mr-1" /> Patch {patchVersion}
             </Badge>
             <Badge
               variant="secondary"
               className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-neutral-900 border border-neutral-800 text-neutral-300"
             >
-              Bậc {rank === "all" ? "Mọi Rank" : rank.toUpperCase()}
+              Rank: {rank === "all" ? "ALL RANKS" : rank.toUpperCase()}
             </Badge>
           </div>
 
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-            Bảng xếp hạng Tier List Tướng LMHT
+            LoL Champion Tier List &amp; Leaderboard
           </h1>
           <p className="text-xs sm:text-sm text-neutral-400 max-w-2xl leading-relaxed">
-            Dữ liệu phân tích meta trực tiếp từ hàng triệu trận đấu xếp hạng.
-            Xem tỷ lệ thắng, tỷ lệ chọn, tỷ lệ cấm và phân hạng sức mạnh cho
-            từng vị trí.
+            Live meta analytics sourced from millions of ranked matches worldwide.
+            Explore win rates, pick rates, ban rates, and tier rankings for
+            every role.
           </p>
         </div>
 
@@ -178,18 +178,18 @@ export function LeaderboardPage() {
             variant="outline"
             className="border-neutral-800 bg-[#12141f] text-neutral-400 font-mono text-xs py-1 px-3"
           >
-            Tổng cộng:{" "}
+            Total:{" "}
             <span className="font-bold text-white text-sm ml-1">
               {totalItems}
             </span>{" "}
-            tướng
+            champions
           </Badge>
         </div>
       </div>
 
       {/* 2. Responsive Layout: Left Sidebar + Right Main Content */}
       <div className="flex flex-col lg:flex-row items-start gap-6">
-        {/* === CỘT TRÁI (Desktop Sidebar Filter: >= lg) === */}
+        {/* === LEFT COLUMN (Desktop Sidebar Filter: >= lg) === */}
         <aside className="hidden lg:block w-72 shrink-0">
           <Card className="bg-[#10121a] border-neutral-800 p-5 rounded-2xl shadow-xl">
             <LeaderboardSidebar
@@ -209,7 +209,7 @@ export function LeaderboardPage() {
           </Card>
         </aside>
 
-        {/* === CỘT PHẢI (Main Content Area) === */}
+        {/* === RIGHT COLUMN (Main Content Area) === */}
         <main className="flex-1 min-w-0 w-full space-y-4">
           {/* Top Control Bar for Mobile Filters & View Mode */}
           <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-2xl bg-[#12141e] border border-neutral-800/70">
@@ -229,7 +229,7 @@ export function LeaderboardPage() {
                         className="h-8 gap-2 bg-[#171924] border-neutral-800 text-white rounded-xl"
                       >
                         <SlidersHorizontal className="w-3.5 h-3.5 text-rose-500" />
-                        <span>Bộ lọc</span>
+                        <span>Filters</span>
                         {activeFiltersCount > 0 && (
                           <Badge
                             variant="secondary"
@@ -246,10 +246,10 @@ export function LeaderboardPage() {
                     className="bg-[#10121a] border-neutral-800 text-white w-80 p-5 overflow-y-auto no-scrollbar"
                   >
                     <SheetTitle className="text-white text-base font-bold">
-                      Bộ lọc bảng xếp hạng
+                      Leaderboard Filters
                     </SheetTitle>
                     <SheetDescription className="text-xs text-neutral-400 -mt-2">
-                      Chọn vị trí, bậc rank và phân hạng tier list
+                      Filter by role, rank tier, and tier list ratings
                     </SheetDescription>
                     <div className="mt-4">
                       <LeaderboardSidebar
@@ -279,7 +279,7 @@ export function LeaderboardPage() {
 
               {/* Active Filter summary pill */}
               <div className="flex items-center gap-1.5 text-xs text-neutral-400">
-                <span className="hidden sm:inline">Đang xem:</span>
+                <span className="hidden sm:inline">Viewing:</span>
                 <Badge
                   variant="outline"
                   className="border-neutral-800 bg-[#171924] text-neutral-200 text-xs"
@@ -315,7 +315,7 @@ export function LeaderboardPage() {
                   onClick={handleResetFilters}
                   className="text-neutral-400 hover:text-white h-7 text-xs hidden sm:flex"
                 >
-                  <RotateCcw className="w-3 h-3 mr-1" /> Xóa bộ lọc
+                  <RotateCcw className="w-3 h-3 mr-1" /> Reset filters
                 </Button>
               )}
 
@@ -331,7 +331,7 @@ export function LeaderboardPage() {
                       ? "bg-neutral-800 text-white"
                       : "text-neutral-400 hover:text-white"
                   }`}
-                  title="Xem dạng Bảng đầy đủ (Có phân trang)"
+                  title="Table view (paginated)"
                 >
                   <TableIcon className="w-3.5 h-3.5" />
                 </Button>
@@ -345,7 +345,7 @@ export function LeaderboardPage() {
                       ? "bg-neutral-800 text-white"
                       : "text-neutral-400 hover:text-white"
                   }`}
-                  title="Xem chia theo từng Tier (Tier S, A, B, C, D)"
+                  title="Tier group view (S, A, B, C, D)"
                 >
                   <LayoutGrid className="w-3.5 h-3.5" />
                 </Button>
@@ -382,18 +382,18 @@ export function LeaderboardPage() {
           ) : isError ? (
             <div className="py-16 text-center bg-destructive/10 border border-destructive/30 rounded-2xl p-6 text-neutral-200">
               <p className="text-sm font-semibold text-rose-400">
-                Không thể tải dữ liệu bảng xếp hạng.
+                Failed to load leaderboard data.
               </p>
               <p className="text-xs text-neutral-400 mt-1">
                 {(error as any)?.message ||
-                  "Vui lòng kiểm tra lại kết nối backend."}
+                  "Please verify your backend connection and try again."}
               </p>
               <Button
                 type="button"
                 onClick={() => refetch()}
                 className="mt-4 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-semibold"
               >
-                Thử lại
+                Try Again
               </Button>
             </div>
           ) : viewMode === "grouped" ? (

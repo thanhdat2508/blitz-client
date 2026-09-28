@@ -56,6 +56,10 @@ function ChampionDetailPage() {
   const resolvedChampion: ChampionMeta | undefined = champion
     ? {
       ...champion,
+      matches: buildData?.overview?.gamesPlayed ?? champion.matches,
+      winRate: buildData?.overview?.winRate ?? champion.winRate,
+      pickRate: buildData?.overview?.pickRate ?? champion.pickRate,
+      banRate: buildData?.overview?.banRate ?? champion.banRate,
       avatarUrl: buildData?.overview?.avatarUrl || champion.avatarUrl,
       splashUrl: buildData?.overview?.splashUrl || champion.splashUrl,
     }

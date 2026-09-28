@@ -17,56 +17,56 @@ export const RANK_THEMES: Record<
   { label: string; text: string; bg: string; border: string; glow: string }
 > = {
   Challenger: {
-    label: 'Thách Đấu',
+    label: 'Challenger',
     text: 'text-amber-300',
     bg: 'bg-amber-400/10',
     border: 'border-amber-400/40',
     glow: 'rgba(251, 191, 36, 0.2)',
   },
   Grandmaster: {
-    label: 'Đại Cao Thủ',
+    label: 'Grandmaster',
     text: 'text-rose-400',
     bg: 'bg-rose-500/10',
     border: 'border-rose-500/40',
     glow: 'rgba(244, 63, 94, 0.2)',
   },
   Master: {
-    label: 'Cao Thủ',
+    label: 'Master',
     text: 'text-purple-400',
     bg: 'bg-purple-500/10',
     border: 'border-purple-500/40',
     glow: 'rgba(168, 85, 247, 0.2)',
   },
   Diamond: {
-    label: 'Kim Cương',
+    label: 'Diamond',
     text: 'text-cyan-400',
     bg: 'bg-cyan-500/10',
     border: 'border-cyan-500/40',
     glow: 'rgba(6, 182, 212, 0.2)',
   },
   Emerald: {
-    label: 'Lục Bảo',
+    label: 'Emerald',
     text: 'text-emerald-400',
     bg: 'bg-emerald-500/10',
     border: 'border-emerald-500/40',
     glow: 'rgba(16, 185, 129, 0.2)',
   },
   Platinum: {
-    label: 'Bạch Kim',
+    label: 'Platinum',
     text: 'text-teal-400',
     bg: 'bg-teal-500/10',
     border: 'border-teal-500/40',
     glow: 'rgba(20, 184, 166, 0.2)',
   },
   Gold: {
-    label: 'Vàng',
+    label: 'Gold',
     text: 'text-yellow-400',
     bg: 'bg-yellow-500/10',
     border: 'border-yellow-500/40',
     glow: 'rgba(234, 179, 8, 0.2)',
   },
   Silver: {
-    label: 'Bạc',
+    label: 'Silver',
     text: 'text-zinc-300',
     bg: 'bg-zinc-500/10',
     border: 'border-zinc-500/40',
@@ -186,7 +186,7 @@ export function AccountCard({
           {account.isActive ? (
             <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-semibold select-none">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <p>Đang chọn</p>
+              <p>Active</p>
             </div>
           ) : (
             <button
@@ -194,7 +194,7 @@ export function AccountCard({
               onClick={() => onSwitch(account.id)}
               className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-neutral-800 hover:bg-amber-500 hover:text-black text-neutral-300 transition-colors cursor-pointer"
             >
-              Chuyển
+              Switch
             </button>
           )}
 
@@ -202,11 +202,11 @@ export function AccountCard({
             <button
               type="button"
               onClick={() => onLoginWithAccount(account)}
-              title="Đăng nhập ngay với tài khoản này"
+              title="Sign in with this account"
               className="h-8 px-2.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold flex items-center gap-1 transition-all cursor-pointer shadow-sm"
             >
               <LogIn className="w-3.5 h-3.5" />
-              <p className="hidden sm:inline">Đăng nhập</p>
+              <p className="hidden sm:inline">Sign In</p>
             </button>
           )}
 
@@ -216,7 +216,7 @@ export function AccountCard({
               type="button"
               onClick={() => setShowMenu((p) => !p)}
               className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
-              title="Tùy chọn tài khoản"
+              title="Account options"
             >
               <MoreVertical className="w-3.5 h-3.5" />
             </button>
@@ -235,7 +235,7 @@ export function AccountCard({
                   className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-white/10 text-left text-neutral-300 hover:text-white transition-colors cursor-pointer"
                 >
                   <Star className="w-3.5 h-3.5 text-amber-400" />
-                  <p>Đặt làm mặc định</p>
+                  <p>Set as Primary</p>
                 </button>
 
                 <button
@@ -248,7 +248,7 @@ export function AccountCard({
                 >
                   <div className="flex items-center gap-2">
                     <Zap className="w-3.5 h-3.5 text-amber-400" />
-                    <p>Auto Bảng ngọc</p>
+                    <p>Auto Runes</p>
                   </div>
                   <div
                     className={`w-2 h-2 rounded-full ${
@@ -267,7 +267,7 @@ export function AccountCard({
                 >
                   <div className="flex items-center gap-2">
                     <Layers className="w-3.5 h-3.5 text-cyan-400" />
-                    <p>Lớp phủ Overlay</p>
+                    <p>In-Game Overlay</p>
                   </div>
                   <div
                     className={`w-2 h-2 rounded-full ${
@@ -286,7 +286,7 @@ export function AccountCard({
                 >
                   <div className="flex items-center gap-2">
                     <Crosshair className="w-3.5 h-3.5 text-rose-400" />
-                    <p>Tự chấp nhận trận</p>
+                    <p>Auto Accept Match</p>
                   </div>
                   <div
                     className={`w-2 h-2 rounded-full ${
@@ -306,7 +306,7 @@ export function AccountCard({
                   className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-rose-500/10 text-left text-rose-400 hover:text-rose-300 transition-colors cursor-pointer"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
-                  <p>Xóa tài khoản</p>
+                  <p>Remove Account</p>
                 </button>
               </div>
             )}

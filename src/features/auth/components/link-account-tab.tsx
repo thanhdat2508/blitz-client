@@ -47,7 +47,7 @@ export function LinkAccountTab({ onAddAccount, onCancel }: LinkAccountTabProps) 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!summonerName.trim()) {
-      setError('Vui lòng nhập Riot ID hoặc Tên tài khoản')
+      setError('Please enter a Riot ID or Summoner name')
       return
     }
 
@@ -70,11 +70,11 @@ export function LinkAccountTab({ onAddAccount, onCancel }: LinkAccountTabProps) 
           className="text-xs text-neutral-400 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <p>Quay lại danh sách</p>
+          <p>Back to list</p>
         </button>
         <div className="text-[11px] font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1">
           <Sparkles className="w-3 h-3" />
-          <p>Liên kết Riot Games</p>
+          <p>Link Riot Games</p>
         </div>
       </div>
 
@@ -87,7 +87,7 @@ export function LinkAccountTab({ onAddAccount, onCancel }: LinkAccountTabProps) 
       {/* Game Selector */}
       <div className="space-y-1.5">
         <label className="text-xs font-semibold text-neutral-300">
-          Chọn tựa game
+          Select Game
         </label>
         <div className="grid grid-cols-3 gap-2">
           <button
@@ -126,7 +126,7 @@ export function LinkAccountTab({ onAddAccount, onCancel }: LinkAccountTabProps) 
             }`}
           >
             <TftIcon className="w-3.5 h-3.5" />
-            <p>Đấu Trường Chân Lý</p>
+            <p>Teamfight Tactics</p>
           </button>
         </div>
       </div>
@@ -135,13 +135,13 @@ export function LinkAccountTab({ onAddAccount, onCancel }: LinkAccountTabProps) 
       <div className="grid grid-cols-3 gap-2">
         <div className="col-span-2 space-y-1.5">
           <label htmlFor="summoner-name" className="text-xs font-semibold text-neutral-300">
-            Tên Riot ID
+            Riot ID Name
           </label>
           <input
             id="summoner-name"
             type="text"
             required
-            placeholder="vd: Faker, Levi, TenZ"
+            placeholder="e.g. Faker, Doublelift, TenZ"
             value={summonerName}
             onChange={(e) => {
               setSummonerName(e.target.value)
@@ -174,7 +174,7 @@ export function LinkAccountTab({ onAddAccount, onCancel }: LinkAccountTabProps) 
       {/* Region Selector Pills */}
       <div className="space-y-1.5">
         <label className="text-xs font-semibold text-neutral-300">
-          Máy chủ / Khu vực
+          Server / Region
         </label>
         <div className="flex flex-wrap gap-1.5">
           {REGIONS.map((r) => (
@@ -197,7 +197,7 @@ export function LinkAccountTab({ onAddAccount, onCancel }: LinkAccountTabProps) 
       {/* Live Preview Card */}
       <div className="p-3 rounded-xl bg-[#12141c] border border-neutral-800 text-left space-y-1">
         <p className="text-[10px] font-bold uppercase tracking-wider text-neutral-400">
-          Xem trước hiển thị trên Blitz:
+          Blitz Display Preview:
         </p>
         <div className="flex items-center gap-3 pt-1">
           <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-500/20 to-rose-500/20 border-2 border-amber-400/60 flex items-center justify-center font-bold text-amber-300 text-sm">
@@ -222,7 +222,7 @@ export function LinkAccountTab({ onAddAccount, onCancel }: LinkAccountTabProps) 
                 <Shield className="w-2.5 h-2.5 fill-current" />
                 <p>{rankTheme.label}</p>
               </div>
-              <p className="text-[10px] text-neutral-400">75 LP • Cấp 120</p>
+              <p className="text-[10px] text-neutral-400">75 LP • Level 120</p>
             </div>
           </div>
         </div>
@@ -236,7 +236,7 @@ export function LinkAccountTab({ onAddAccount, onCancel }: LinkAccountTabProps) 
           onChange={(e) => setMakeActive(e.target.checked)}
           className="w-4 h-4 rounded bg-neutral-900 border-neutral-700 text-amber-500 focus:ring-amber-500"
         />
-        <p>Đặt làm tài khoản hoạt động ngay trên Blitz</p>
+        <p>Set as active account on Blitz immediately</p>
       </label>
 
       {/* Submit Button */}
@@ -246,14 +246,14 @@ export function LinkAccountTab({ onAddAccount, onCancel }: LinkAccountTabProps) 
           className="flex-1 h-11 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer shadow-[0_0_15px_rgba(245,158,11,0.25)]"
         >
           <Plus className="w-4 h-4 stroke-[3]" />
-          <p>Liên kết tài khoản này</p>
+          <p>Link This Account</p>
         </button>
         <button
           type="button"
           onClick={onCancel}
           className="h-11 px-4 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-sm font-semibold transition-colors cursor-pointer"
         >
-          Hủy
+          Cancel
         </button>
       </div>
     </form>

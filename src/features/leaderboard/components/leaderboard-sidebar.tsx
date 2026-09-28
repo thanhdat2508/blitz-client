@@ -48,12 +48,12 @@ const ROLES: Array<{
   label: string;
   icon: typeof Compass;
 }> = [
-  { id: "all", label: "Tất cả vị trí", icon: Compass },
-  { id: "top", label: "Đường Trên (Top)", icon: ShieldAlert },
-  { id: "jungle", label: "Đi Rừng (Jungle)", icon: Flame },
-  { id: "mid", label: "Đường Giữa (Mid)", icon: Swords },
-  { id: "ad", label: "Xạ Thủ (ADC)", icon: Crosshair },
-  { id: "sp", label: "Hỗ Trợ (SP)", icon: HeartHandshake },
+  { id: "all", label: "All Roles", icon: Compass },
+  { id: "top", label: "Top Lane", icon: ShieldAlert },
+  { id: "jungle", label: "Jungle", icon: Flame },
+  { id: "mid", label: "Mid Lane", icon: Swords },
+  { id: "ad", label: "ADC / Bot", icon: Crosshair },
+  { id: "sp", label: "Support", icon: HeartHandshake },
 ];
 
 const TIERS: Array<{
@@ -64,24 +64,24 @@ const TIERS: Array<{
 }> = [
   {
     id: "all",
-    label: "Tất cả Tier",
-    subLabel: "Mọi cấp độ",
+    label: "All Tiers",
+    subLabel: "All Ratings",
     svgName: undefined,
   },
   { id: "S", label: "Tier S", subLabel: "God Tier", svgName: "tier_s.svg" },
-  { id: "A", label: "Tier A", subLabel: "Mạnh", svgName: "tier_a.svg" },
-  { id: "B", label: "Tier B", subLabel: "Cân bằng", svgName: "tier_b.svg" },
-  { id: "C", label: "Tier C", subLabel: "Tình huống", svgName: "tier_c.svg" },
-  { id: "D", label: "Tier D", subLabel: "Yếu", svgName: "tier_d.svg" },
+  { id: "A", label: "Tier A", subLabel: "Strong", svgName: "tier_a.svg" },
+  { id: "B", label: "Tier B", subLabel: "Balanced", svgName: "tier_b.svg" },
+  { id: "C", label: "Tier C", subLabel: "Situational", svgName: "tier_c.svg" },
+  { id: "D", label: "Tier D", subLabel: "Underperforming", svgName: "tier_d.svg" },
 ];
 
 const RANKS: Array<{ id: LeaderboardRank; label: string }> = [
-  { id: "emerald", label: "Lục Bảo (Emerald+)" },
-  { id: "diamond", label: "Kim Cương (Diamond+)" },
-  { id: "master", label: "Cao Thủ (Master+)" },
-  { id: "grandmaster", label: "Đại Cao Thủ" },
-  { id: "challenger", label: "Thách Đấu" },
-  { id: "all", label: "Tất cả bậc Rank" },
+  { id: "emerald", label: "Emerald+" },
+  { id: "diamond", label: "Diamond+" },
+  { id: "master", label: "Master+" },
+  { id: "grandmaster", label: "Grandmaster" },
+  { id: "challenger", label: "Challenger" },
+  { id: "all", label: "All Ranks" },
 ];
 
 export function LeaderboardSidebar({
@@ -107,7 +107,7 @@ export function LeaderboardSidebar({
       {/* 1. Header & Reset Button */}
       <div className="flex items-center justify-between pb-1">
         <h2 className="text-sm font-bold tracking-wider uppercase text-neutral-400">
-          Bộ lọc tìm kiếm
+          Filters
         </h2>
         {hasActiveFilters && (
           <Button
@@ -117,7 +117,7 @@ export function LeaderboardSidebar({
             onClick={onResetFilters}
             className="text-[11px] text-neutral-400 hover:text-white h-7 px-2"
           >
-            <RotateCcw className="w-3 h-3 mr-1" /> Đặt lại
+            <RotateCcw className="w-3 h-3 mr-1" /> Reset
           </Button>
         )}
       </div>
@@ -125,7 +125,7 @@ export function LeaderboardSidebar({
       {/* 2. Champion Search */}
       <div className="space-y-1.5">
         <label className="text-xs font-semibold text-neutral-300">
-          Tìm kiếm tướng
+          Search Champions
         </label>
         <div className="relative">
           <Search className="w-3.5 h-3.5 text-neutral-500 absolute left-3 top-2.5 pointer-events-none z-10" />
@@ -133,7 +133,7 @@ export function LeaderboardSidebar({
             type="text"
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Nhập tên tướng (Ahri, Jinx...)"
+            placeholder="Search champion (e.g. Ahri, Jinx...)"
             className="h-9 pl-8 pr-7 text-xs bg-[#141622] border-neutral-800 text-white rounded-xl w-full"
           />
           {search && (
@@ -155,7 +155,7 @@ export function LeaderboardSidebar({
       {/* 3. Role / Lane Filter */}
       <div className="space-y-2">
         <label className="text-xs font-semibold text-neutral-300">
-          Vị trí thi đấu
+          Role / Position
         </label>
         <div className="flex flex-col gap-1">
           {ROLES.map((r) => {
@@ -188,7 +188,7 @@ export function LeaderboardSidebar({
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <label className="text-xs font-semibold text-neutral-300">
-            Phân loại Tier List
+            Tier Classification
           </label>
           <span className="text-[10px] text-neutral-500 font-mono">Meta</span>
         </div>
@@ -259,7 +259,7 @@ export function LeaderboardSidebar({
       {/* 5. Rank Selector */}
       <div className="space-y-1.5">
         <label className="text-xs font-semibold text-neutral-300">
-          Bậc xếp hạng
+          Rank Tier
         </label>
         <Select
           value={rank}
@@ -281,7 +281,7 @@ export function LeaderboardSidebar({
       {/* 6. Sort By Selector */}
       <div className="space-y-1.5">
         <label className="text-xs font-semibold text-neutral-300">
-          Sắp xếp danh sách
+          Sort By
         </label>
         <Select
           value={sortBy}
@@ -293,11 +293,11 @@ export function LeaderboardSidebar({
             <SelectValue />
           </SelectTrigger>
           <SelectContent className="bg-[#141622] border-neutral-800 text-neutral-200">
-            <SelectItem value="winRate">Tỷ lệ thắng (Win Rate)</SelectItem>
-            <SelectItem value="pickRate">Tỷ lệ chọn (Pick Rate)</SelectItem>
-            <SelectItem value="banRate">Tỷ lệ cấm (Ban Rate)</SelectItem>
-            <SelectItem value="matches">Số trận đấu (Matches)</SelectItem>
-            <SelectItem value="rank">Thứ hạng meta (Rank)</SelectItem>
+            <SelectItem value="winRate">Win Rate</SelectItem>
+            <SelectItem value="pickRate">Pick Rate</SelectItem>
+            <SelectItem value="banRate">Ban Rate</SelectItem>
+            <SelectItem value="matches">Matches</SelectItem>
+            <SelectItem value="rank">Meta Rank</SelectItem>
           </SelectContent>
         </Select>
       </div>

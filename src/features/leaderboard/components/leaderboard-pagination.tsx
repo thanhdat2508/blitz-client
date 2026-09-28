@@ -62,17 +62,17 @@ export function LeaderboardPagination({
       {/* Item Range info & Page Size Selector using ShadCN Select */}
       <div className="flex items-center gap-3">
         <span>
-          Hiển thị{" "}
+          Showing{" "}
           <span className="text-white font-semibold">
             {startItem} - {endItem}
           </span>{" "}
-          trên <span className="text-white font-semibold">{totalItems}</span>{" "}
-          tướng
+          of <span className="text-white font-semibold">{totalItems}</span>{" "}
+          champions
         </span>
 
         {onPageSizeChange && (
           <div className="flex items-center gap-1.5 ml-2">
-            <span className="text-neutral-500">Mỗi trang:</span>
+            <span className="text-neutral-500">Per page:</span>
             <Select
               value={String(pageSize)}
               onValueChange={(val) => val && onPageSizeChange(Number(val))}

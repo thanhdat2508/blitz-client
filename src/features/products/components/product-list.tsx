@@ -21,9 +21,9 @@ export function ProductList() {
 
   const handleAddSample = () => {
     createProductMutation.mutate({
-      title: `Sản phẩm mẫu mới #${Date.now().toString().slice(-4)}`,
+      title: `New Sample Product #${Date.now().toString().slice(-4)}`,
       price: Math.floor(Math.random() * 100) + 10,
-      description: 'Sản phẩm được tạo mẫu để test tính năng cache mutation của TanStack Query.',
+      description: 'Sample product created to test TanStack Query cache mutations.',
       category: 'electronics',
     })
   }
@@ -37,7 +37,7 @@ export function ProductList() {
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Tìm theo tên sản phẩm..."
+            placeholder="Search by product name..."
             className="pl-9"
           />
         </div>
@@ -51,7 +51,7 @@ export function ProductList() {
             className="gap-2"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isFetching ? 'animate-spin' : ''}`} />
-            Làm mới
+            Refresh
           </Button>
 
           <Button
@@ -61,22 +61,22 @@ export function ProductList() {
             className="gap-2"
           >
             <Plus className="w-3.5 h-3.5" />
-            Thêm SP Mẫu (Mutation)
+            Add Sample (Mutation)
           </Button>
         </div>
       </div>
 
       {/* Loading State */}
-      {isLoading && <LoadingSpinner text="Đang tải danh sách sản phẩm..." />}
+      {isLoading && <LoadingSpinner text="Loading products..." />}
 
       {/* Error State */}
       {isError && (
         <EmptyState
-          title="Không thể tải sản phẩm"
-          description={error instanceof Error ? error.message : 'Có lỗi không xác định xảy ra.'}
+          title="Failed to load products"
+          description={error instanceof Error ? error.message : 'An unexpected error occurred.'}
           action={
             <Button variant="outline" size="sm" onClick={() => refetch()}>
-              Thử lại
+              Retry
             </Button>
           }
         />
@@ -87,11 +87,11 @@ export function ProductList() {
         <>
           {filteredProducts.length === 0 ? (
             <EmptyState
-              title="Không tìm thấy sản phẩm"
-              description={`Không có kết quả nào phù hợp với từ khoá "${debouncedSearch}".`}
+              title="No products found"
+              description={`No results match the keyword "${debouncedSearch}".`}
               action={
                 <Button variant="outline" size="sm" onClick={() => setSearch('')}>
-                  Xoá bộ lọc
+                  Clear filter
                 </Button>
               }
             />
@@ -101,7 +101,7 @@ export function ProductList() {
                 <ProductCard
                   key={product.id}
                   product={product}
-                  onAddToCart={(p) => alert(`Đã thêm: ${p.title}`)}
+                  onAddToCart={(p) => alert(`Added: ${p.title}`)}
                 />
               ))}
             </div>

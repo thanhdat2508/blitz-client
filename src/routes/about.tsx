@@ -10,7 +10,7 @@ function AboutComponent() {
   const structure = [
     {
       path: "src/routes/__root.tsx",
-      desc: "Root layour",
+      desc: "Root layout",
     },
     {
       path: "src/routes/index.tsx",
@@ -18,29 +18,28 @@ function AboutComponent() {
     },
     {
       path: "src/components/ui/*",
-      desc: "Các components Shadcn UI (Button, Card, Input, Badge...)",
+      desc: "Shadcn UI components (Button, Card, Input, Badge...)",
     },
     {
       path: "src/lib/utils.ts",
-      desc: "Hàm tiện ích cn (clsx + tailwind-merge)",
+      desc: "Utility helper cn (clsx + tailwind-merge)",
     },
     {
       path: "src/main.tsx",
-      desc: "Khởi tạo QueryClient, RouterProvider và mount React",
+      desc: "Initialize QueryClient, RouterProvider and mount React",
     },
     {
       path: "vite.config.ts",
-      desc: "Cấu hình TanStackRouterVite + Tailwind v4 + React",
+      desc: "Configured TanStackRouterVite + Tailwind v4 + React",
     },
   ];
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Cấu trúc dự án</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Project Architecture</h1>
         <p className="text-muted-foreground text-sm">
-          Tổng quan kiến trúc và các quy ước thư mục được thiết lập trong
-          template này.
+          Overview of architecture and directory conventions established in this project.
         </p>
       </div>
 
@@ -49,18 +48,17 @@ function AboutComponent() {
           <div className="flex items-center gap-2">
             <FolderTree className="w-5 h-5 text-primary" />
             <CardTitle className="text-xl">
-              Quy ước File-based Routing
+              File-based Routing Conventions
             </CardTitle>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            Bất kỳ file nào được tạo trong thư mục{" "}
+            Any file created in the{" "}
             <code className="bg-muted px-1.5 py-0.5 rounded font-mono text-xs">
               src/routes
             </code>{" "}
-            sẽ được TanStack Router theo dõi và sinh ra định nghĩa typesafe
-            tương ứng trong{" "}
+            directory is automatically tracked by TanStack Router to generate type-safe route trees in{" "}
             <code className="bg-muted px-1.5 py-0.5 rounded font-mono text-xs">
               src/routeTree.gen.ts
             </code>
@@ -90,7 +88,7 @@ function AboutComponent() {
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
               <Terminal className="w-4 h-4 text-primary" />
-              <CardTitle className="text-base">Các lệnh hữu ích</CardTitle>
+              <CardTitle className="text-base">Useful Commands</CardTitle>
             </div>
           </CardHeader>
           <CardContent className="space-y-2 text-xs font-mono">
@@ -107,15 +105,15 @@ function AboutComponent() {
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-4 h-4 text-primary" />
               <CardTitle className="text-base">
-                Đặc điểm bảo đảm chất lượng
+                Engineering Standards
               </CardTitle>
             </div>
           </CardHeader>
           <CardContent className="space-y-2 text-xs text-muted-foreground">
             <p>✓ 100% Type-safe routes & params</p>
-            <p>✓ Tối ưu hóa bundle với Auto Code Splitting</p>
-            <p>✓ TanStack Query Cache tái sử dụng dữ liệu</p>
-            <p>✓ Dark mode ready với CSS Variables</p>
+            <p>✓ Bundle optimization with Auto Code Splitting</p>
+            <p>✓ TanStack Query cache for instant data reuse</p>
+            <p>✓ Dark mode ready with CSS variables</p>
           </CardContent>
         </Card>
       </div>

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import type { Product } from '../types/product'
 
-// Query keys factory - Best practice của TanStack Query
+// Query keys factory - TanStack Query best practices
 export const productKeys = {
   all: ['products'] as const,
   lists: () => [...productKeys.all, 'list'] as const,
@@ -20,6 +20,6 @@ export function useProducts() {
   return useQuery({
     queryKey: productKeys.lists(),
     queryFn: getProducts,
-    staleTime: 1000 * 60 * 5, // 5 phút
+    staleTime: 1000 * 60 * 5, // 5 minutes
   })
 }

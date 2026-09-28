@@ -50,12 +50,12 @@ const ROLES: Array<{
   label: string;
   icon: typeof Compass;
 }> = [
-  { id: "all", label: "Tất cả vị trí", icon: Compass },
-  { id: "top", label: "Top", icon: ShieldAlert },
-  { id: "jungle", label: "Rừng", icon: Flame },
-  { id: "mid", label: "Đường Giữa", icon: Swords },
-  { id: "ad", label: "Xạ Thủ", icon: Crosshair },
-  { id: "sp", label: "Hỗ Trợ", icon: HeartHandshake },
+  { id: "all", label: "All Roles", icon: Compass },
+  { id: "top", label: "Top Lane", icon: ShieldAlert },
+  { id: "jungle", label: "Jungle", icon: Flame },
+  { id: "mid", label: "Mid Lane", icon: Swords },
+  { id: "ad", label: "ADC / Bot", icon: Crosshair },
+  { id: "sp", label: "Support", icon: HeartHandshake },
 ];
 
 const TIERS: Array<{
@@ -65,7 +65,7 @@ const TIERS: Array<{
 }> = [
   {
     id: "all",
-    label: "Tất cả Tier",
+    label: "All Tiers",
     color: "border-neutral-700 text-neutral-300",
   },
   {
@@ -96,12 +96,12 @@ const TIERS: Array<{
 ];
 
 const RANKS: Array<{ id: LeaderboardRank; label: string }> = [
-  { id: "emerald", label: "Lục Bảo (Emerald+)" },
-  { id: "diamond", label: "Kim Cương (Diamond+)" },
-  { id: "master", label: "Cao Thủ (Master+)" },
-  { id: "grandmaster", label: "Đại Cao Thủ" },
-  { id: "challenger", label: "Thách Đấu" },
-  { id: "all", label: "Tất cả bậc Rank" },
+  { id: "emerald", label: "Emerald+" },
+  { id: "diamond", label: "Diamond+" },
+  { id: "master", label: "Master+" },
+  { id: "grandmaster", label: "Grandmaster" },
+  { id: "challenger", label: "Challenger" },
+  { id: "all", label: "All Ranks" },
 ];
 
 export function LeaderboardFilters({
@@ -197,7 +197,7 @@ export function LeaderboardFilters({
               type="text"
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="Tìm kiếm tướng..."
+              placeholder="Search champions..."
               className="h-8 pl-8 pr-7 text-xs bg-[#171924] border-neutral-800 text-white rounded-xl w-full"
             />
             {search && (
@@ -245,11 +245,11 @@ export function LeaderboardFilters({
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="bg-[#171924] border-neutral-800 text-neutral-200">
-              <SelectItem value="winRate">Tỷ lệ thắng (Win Rate)</SelectItem>
-              <SelectItem value="pickRate">Tỷ lệ chọn (Pick Rate)</SelectItem>
-              <SelectItem value="banRate">Tỷ lệ cấm (Ban Rate)</SelectItem>
-              <SelectItem value="matches">Số trận đấu</SelectItem>
-              <SelectItem value="rank">Thứ hạng (Rank)</SelectItem>
+              <SelectItem value="winRate">Win Rate</SelectItem>
+              <SelectItem value="pickRate">Pick Rate</SelectItem>
+              <SelectItem value="banRate">Ban Rate</SelectItem>
+              <SelectItem value="matches">Matches</SelectItem>
+              <SelectItem value="rank">Meta Rank</SelectItem>
             </SelectContent>
           </Select>
 
@@ -265,7 +265,7 @@ export function LeaderboardFilters({
                   ? "bg-neutral-800 text-white"
                   : "text-neutral-400 hover:text-white"
               }`}
-              title="Xem dạng Bảng đầy đủ (Có phân trang)"
+              title="Table view (paginated)"
             >
               <TableIcon className="w-3.5 h-3.5" />
             </Button>
@@ -279,7 +279,7 @@ export function LeaderboardFilters({
                   ? "bg-neutral-800 text-white"
                   : "text-neutral-400 hover:text-white"
               }`}
-              title="Xem chia theo từng Tier (Tier S, A, B, C, D)"
+              title="Tier group view (S, A, B, C, D)"
             >
               <LayoutGrid className="w-3.5 h-3.5" />
             </Button>

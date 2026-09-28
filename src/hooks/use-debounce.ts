@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 /**
- * Hook làm trễ giá trị thay đổi liên tục (dùng cho search box, autocomplete)
+ * Hook to debounce fast-changing values (e.g. search box, autocomplete)
  */
 export function useDebounce<T>(value: T, delayMs: number = 300): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);

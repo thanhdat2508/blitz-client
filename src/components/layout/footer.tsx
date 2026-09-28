@@ -57,9 +57,8 @@ export function Footer() {
             </Link>
 
             <p className="text-neutral-400 text-xs leading-relaxed max-w-sm">
-              Nền tảng phân tích meta, dữ liệu tướng, lối lên đồ tuyển thủ và
-              cập nhật thông tin chi tiết các bản vá của Liên Minh Huyền Thoại
-              theo thời gian thực.
+              Real-time League of Legends analytics platform providing champion
+              tier lists, pro builds, runes, and in-depth patch breakdowns.
             </p>
 
             <div className="flex items-center gap-3 pt-2">

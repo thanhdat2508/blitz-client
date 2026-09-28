@@ -1,7 +1,7 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
 import type { ChampionBuildPayload, BuildRole } from '../../types/champion-build'
 import type { ChampionMeta, Role } from '../../types/champion'
-import { RuneTreeVisual } from '../build/rune-tree-visual'
+import { RuneTreeVisual, type PresetKey } from '../build/rune-tree-visual'
 import { ArchetypeSelector } from '../build/archetype-selector'
 import { OtpBuildsCard } from '../build/otp-builds-card'
 import { ProBuildsCard } from '../build/pro-builds-card'
@@ -12,6 +12,7 @@ import { ChampionInsightsCard } from '../build/champion-insights-card'
 import { SimilarChampionsCard } from '../build/similar-champions-card'
 import { FloatingPreviewCard, type FloatingCardData } from '../build/floating-preview-card'
 import { DEFAULT_BUILD_PAYLOAD } from '../../data/default-build-payload'
+import { generateChampionArchetypes } from '../../utils/archetype-generator'
 
 interface TabRunesItemsProps {
   buildData?: ChampionBuildPayload | null
@@ -30,11 +31,50 @@ export function TabRunesItems({
   role = 'MID',
   backendRole = 'mid',
 }: TabRunesItemsProps) {
-  const [selectedArchetype, setSelectedArchetype] = useState('ap')
   const [previewData, setPreviewData] = useState<FloatingCardData | null>(null)
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const activeBuild = buildData || DEFAULT_BUILD_PAYLOAD
+
+  const totalMatches =
+    buildData?.overview?.gamesPlayed ??
+    champion?.matches ??
+    activeBuild.overview?.gamesPlayed ??
+    15000
+
+  const archetypes = useMemo(() => {
+    return generateChampionArchetypes(activeBuild, totalMatches, champion, role)
+  }, [activeBuild, totalMatches, champion, role])
+
+  const [selectedArchetype, setSelectedArchetype] = useState(archetypes[0]?.id ?? 'ap')
+  const [activeRunePreset, setActiveRunePreset] = useState<PresetKey>('mostPopular')
+
+  const currentArchetypeId = archetypes.some((a) => a.id === selectedArchetype)
+    ? selectedArchetype
+    : (archetypes[0]?.id ?? 'ap')
+
+  const handleArchetypeSelect = (id: string) => {
+    setSelectedArchetype(id)
+    if (id === archetypes[0]?.id) {
+      setActiveRunePreset('mostPopular')
+    } else {
+      setActiveRunePreset('highestWinRate')
+    }
+  }
+
+  const handleRunePresetChange = (preset: PresetKey) => {
+    setActiveRunePreset(preset)
+    if (preset === 'mostPopular') {
+      setSelectedArchetype(archetypes[0]?.id ?? 'ap')
+    } else if (preset === 'highestWinRate') {
+      setSelectedArchetype(archetypes[1]?.id ?? 'utility')
+    }
+  }
+
+  const selectedKeystoneId =
+    currentArchetypeId === archetypes[1]?.id
+      ? activeBuild.runes?.highestWinRate?.keystoneId
+      : activeBuild.runes?.mostPopular?.keystoneId
 
   const handleOpenPreview = (data: FloatingCardData) => {
     if (closeTimerRef.current) {
@@ -97,13 +137,14 @@ export function TabRunesItems({
           {/* ── COLUMN 1: SIDEBAR (ARCHETYPES, OTP & PRO BUILDS FEED) - Cols 1 to 3 ── */}
           <div className="lg:col-span-3 flex flex-col space-y-3 h-full">
             <ArchetypeSelector
-              selectedId={selectedArchetype}
-              onSelect={setSelectedArchetype}
+              archetypes={archetypes}
+              selectedId={currentArchetypeId}
+              onSelect={handleArchetypeSelect}
             />
             <OtpBuildsCard
               championName={championName}
               coreItemIds={activeBuild.items?.core?.[0]?.itemIds}
-              keystoneId={activeBuild.runes?.mostPopular?.keystoneId}
+              keystoneId={selectedKeystoneId}
             />
             <ProBuildsCard championName={championName} />
           </div>
@@ -113,6 +154,8 @@ export function TabRunesItems({
             <RuneTreeVisual
               runes={activeBuild.runes}
               splashUrl={splashUrl}
+              activePreset={activeRunePreset}
+              onPresetChange={handleRunePresetChange}
               onSelectPreview={handleOpenPreview}
               onClosePreview={() => handleClosePreview(100)}
             />
