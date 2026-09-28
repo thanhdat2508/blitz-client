@@ -1,5 +1,6 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useNews } from "../api/get-news";
+import { getPostBySlug } from "../api/get-posts";
 import { NewsFilter } from "./news-filter";
 import { NewsCard } from "./news-card";
 import { NewsSkeletonGrid } from "./news-skeleton";
@@ -29,6 +30,72 @@ const NewsList = () => {
     category,
     search: debouncedSearch,
   });
+
+  // Handle opening specific article directly from search or URL query
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const searchParams = new URLSearchParams(window.location.search);
+    const slugToFind =
+      searchParams.get("article") ||
+      searchParams.get("slug") ||
+      window.location.hash.replace("#", "");
+
+    if (!slugToFind) return;
+
+    if (articles.length > 0) {
+      const match = articles.find(
+        (a) => a.slug === slugToFind || a.id === slugToFind,
+      );
+      if (match) {
+        setSelectedArticle(match);
+        return;
+      }
+    }
+
+    // Fallback: fetch article by slug directly from backend if not in loaded list
+    getPostBySlug(slugToFind)
+      .then((post) => {
+        if (post) {
+          const mapped: NewsArticle = {
+            id: post.id,
+            slug: post.slug,
+            title: post.title,
+            summary: post.content?.slice(0, 160) || post.title,
+            category: "patch-notes",
+            bannerUrl:
+              post.coverImageUrl ||
+              "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000&auto=format&fit=crop",
+            publishedAt: post.createdAt,
+            readTimeMinutes: post.readingTime || 3,
+            author: post.author?.name || post.author?.username || "Riot Games",
+            content: post.content,
+          };
+          setSelectedArticle(mapped);
+        }
+      })
+      .catch(() => {});
+  }, [articles]);
+
+  const handleCloseModal = () => {
+    setSelectedArticle(null);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      if (
+        url.searchParams.has("article") ||
+        url.searchParams.has("slug") ||
+        url.hash
+      ) {
+        url.searchParams.delete("article");
+        url.searchParams.delete("slug");
+        url.hash = "";
+        window.history.replaceState(
+          {},
+          "",
+          url.pathname + (url.search ? url.search : ""),
+        );
+      }
+    }
+  };
 
   const visibleArticles = useMemo(
     () => articles.slice(0, displayLimit),
@@ -72,8 +139,8 @@ const NewsList = () => {
         <NewsSkeletonGrid count={6} />
       ) : isError ? (
         <EmptyState
-          title="Không thể tải dữ liệu"
-          description="Có lỗi xảy ra trong quá trình nạp danh sách tin tức. Vui lòng thử lại."
+          title="Unable to load articles"
+          description="An error occurred while fetching news articles. Please try again."
           action={
             <Button
               onClick={() => refetch()}
@@ -89,11 +156,11 @@ const NewsList = () => {
       ) : !articles.length ? (
         <EmptyState
           icon={<Newspaper className="size-8 text-amber-500/80" />}
-          title="Không tìm thấy bài viết"
+          title="No articles found"
           description={
             debouncedSearch
-              ? `Không có bài viết nào khớp với từ khóa "${debouncedSearch}".`
-              : "Chưa có bài viết nào trong chuyên mục này."
+              ? `No articles match the keyword "${debouncedSearch}".`
+              : "No articles found in this category."
           }
           action={
             (category !== "all" || searchInput) && (
@@ -103,7 +170,7 @@ const NewsList = () => {
                 size="sm"
                 className="cursor-pointer"
               >
-                Đặt lại bộ lọc
+                Reset filters
               </Button>
             )
           }
@@ -121,7 +188,7 @@ const NewsList = () => {
             ))}
           </div>
 
-          {/* Load More Button using ShadCN Button */}
+          {/* Load More Button */}
           {hasMore && (
             <div className="flex justify-center pt-2 pb-6">
               <Button
@@ -130,7 +197,7 @@ const NewsList = () => {
                 onClick={handleLoadMore}
                 className="group rounded-full px-6 py-2.5 text-xs font-semibold hover:border-amber-500/40 hover:text-amber-400 transition-all cursor-pointer shadow-sm"
               >
-                <p>Tải thêm tin tức</p>
+                <p>Load more news</p>
                 <ChevronDown className="size-3.5 text-muted-foreground group-hover:text-amber-400 group-hover:translate-y-0.5 transition-transform" />
               </Button>
             </div>
@@ -139,10 +206,7 @@ const NewsList = () => {
       )}
 
       {/* Interactive Detail Modal using ShadCN Dialog */}
-      <NewsModal
-        article={selectedArticle}
-        onClose={() => setSelectedArticle(null)}
-      />
+      <NewsModal article={selectedArticle} onClose={handleCloseModal} />
     </div>
   );
 };
