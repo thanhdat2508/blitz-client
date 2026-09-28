@@ -64,7 +64,7 @@ export function NewsHeader() {
                   variant="outline"
                   size="icon"
                   onClick={handleCopyLink}
-                  aria-label="Sao chép liên kết"
+                  aria-label="Copy link"
                   className="hover:border-amber-500/40 hover:text-amber-400 transition-colors"
                 />
               }
@@ -76,7 +76,7 @@ export function NewsHeader() {
               )}
             </TooltipTrigger>
             <TooltipContent side="top" align="center">
-              {copied ? 'Đã sao chép liên kết!' : 'Sao chép liên kết trang'}
+              {copied ? 'Link copied!' : 'Copy page link'}
             </TooltipContent>
           </Tooltip>
         </div>

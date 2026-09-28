@@ -120,15 +120,15 @@ export function ProBuildsCard({ championName }: ProBuildsCardProps) {
       : 'from-[#061216] via-[#0E0E14] to-[#07090E] border-cyan-950/60'
 
   const PRO_WIN_RATES: Record<string, string> = {
-    'player-1': '62.5%',
-    'player-2': '66.7%',
-    'player-3': '68.4%',
+    'player-1': '61.5%',
+    'player-2': '56.7%',
+    'player-3': '53.4%',
   }
 
   const winRateText =
     current.winRate != null
       ? `${current.winRate.toFixed(1)}%`
-      : PRO_WIN_RATES[current.id] || (current.lastMatch?.win ? '64.5%' : '58.0%')
+      : PRO_WIN_RATES[current.id] || (current.lastMatch?.win ? '50.5%' : '58.0%')
   const titleText = current.nickname || current.name
   const playerImage = optimizeCloudinaryUrl(current.playerImageUrl || current.avatar, 400)
 
@@ -166,11 +166,10 @@ export function ProBuildsCard({ championName }: ProBuildsCardProps) {
                   onClick={() => setManualIndex(idx)}
                   title={`${displayName} (${player.team})`}
                   aria-label={`View ${displayName}`}
-                  className={`h-2 rounded-full transition-all cursor-pointer ${
-                    selectedIndex === idx
-                      ? `w-5 ${activeDotClass}`
-                      : 'w-2 bg-zinc-700 hover:bg-zinc-500'
-                  }`}
+                  className={`h-2 rounded-full transition-all cursor-pointer ${selectedIndex === idx
+                    ? `w-5 ${activeDotClass}`
+                    : 'w-2 bg-zinc-700 hover:bg-zinc-500'
+                    }`}
                 />
               )
             })}
@@ -214,9 +213,8 @@ export function ProBuildsCard({ championName }: ProBuildsCardProps) {
 
         {/* Ambient Radial Glow */}
         <div
-          className={`absolute top-0 right-0 w-44 h-44 rounded-full filter blur-3xl pointer-events-none opacity-20 ${
-            isRed ? 'bg-rose-600' : isGold ? 'bg-amber-500' : 'bg-cyan-500'
-          }`}
+          className={`absolute top-0 right-0 w-44 h-44 rounded-full filter blur-3xl pointer-events-none opacity-20 ${isRed ? 'bg-rose-600' : isGold ? 'bg-amber-500' : 'bg-cyan-500'
+            }`}
         />
 
         {/* ── LEFT: PRO PLAYER PORTRAIT (FROM SERVER DATASET) ── */}

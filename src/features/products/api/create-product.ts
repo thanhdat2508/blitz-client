@@ -20,7 +20,7 @@ export function useCreateProduct() {
   return useMutation({
     mutationFn: createProduct,
     onSuccess: (newProduct) => {
-      // Optimistic update hoặc invalidation cache
+      // Optimistic cache update or invalidation
       queryClient.setQueryData<Product[]>(productKeys.lists(), (old = []) => [newProduct, ...old])
     },
   })

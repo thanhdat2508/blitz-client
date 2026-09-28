@@ -13,11 +13,11 @@ interface NewsFilterProps {
 }
 
 const CATEGORIES: { label: string; value: NewsCategory }[] = [
-  { label: "Tất cả tin tức", value: "all" },
+  { label: "All News", value: "all" },
   { label: "Patch Notes", value: "patch-notes" },
   { label: "Gameplay & Classic", value: "gameplay" },
   { label: "Esports", value: "esports" },
-  { label: "Cộng đồng & Dev", value: "community" },
+  { label: "Community & Dev", value: "community" },
 ];
 
 export function NewsFilter({
@@ -60,7 +60,7 @@ export function NewsFilter({
             type="text"
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
-            placeholder="Tìm theo số bản vá (VD: 26.19)..."
+            placeholder="Search patch (e.g. 26.19)..."
             className="pl-8 pr-8 h-8 text-xs bg-card/40 border-border/50 focus-visible:ring-amber-500/30"
           />
           {search && (
@@ -70,7 +70,7 @@ export function NewsFilter({
               size="icon-xs"
               onClick={() => onSearchChange("")}
               className="absolute right-1 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground size-6"
-              aria-label="Xóa tìm kiếm"
+              aria-label="Clear search"
             >
               <X className="size-3.5" />
             </Button>
@@ -81,7 +81,7 @@ export function NewsFilter({
           variant="secondary"
           className="text-[11px] font-semibold text-muted-foreground shrink-0 hidden sm:inline-flex"
         >
-          {totalCount} bài viết
+          {totalCount} articles
         </Badge>
       </div>
     </div>

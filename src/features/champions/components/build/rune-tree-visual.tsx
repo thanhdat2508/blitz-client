@@ -64,14 +64,16 @@ export const STYLE_PERK_STRUCTURE: Record<
   },
 }
 
+export type PresetKey = 'mostPopular' | 'highestWinRate'
+
 interface RuneTreeVisualProps {
   runes: ChampionRunes
   splashUrl?: string
   onSelectPreview?: (data: FloatingCardData) => void
   onClosePreview?: () => void
+  activePreset?: PresetKey
+  onPresetChange?: (preset: PresetKey) => void
 }
-
-type PresetKey = 'mostPopular' | 'highestWinRate'
 
 interface RuneCircleProps {
   perkId: number
@@ -450,8 +452,16 @@ export function RuneTreeVisual({
   splashUrl,
   onSelectPreview,
   onClosePreview,
+  activePreset: controlledPreset,
+  onPresetChange,
 }: RuneTreeVisualProps) {
-  const [activePreset, setActivePreset] = useState<PresetKey>('mostPopular')
+  const [internalPreset, setInternalPreset] = useState<PresetKey>('mostPopular')
+  const activePreset = controlledPreset ?? internalPreset
+
+  const handlePresetSelect = (key: PresetKey) => {
+    setInternalPreset(key)
+    onPresetChange?.(key)
+  }
 
   const currentRunes = runes[activePreset]
 
@@ -520,7 +530,7 @@ export function RuneTreeVisual({
           <button
             key={preset.key}
             type="button"
-            onClick={() => setActivePreset(preset.key)}
+            onClick={() => handlePresetSelect(preset.key)}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
               activePreset === preset.key
                 ? 'bg-amber-500/20 border border-amber-500/40 text-amber-300'

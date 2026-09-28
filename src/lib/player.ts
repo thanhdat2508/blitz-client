@@ -21,7 +21,7 @@ export async function fetchPlayerProfile(
 
   const res = await fetch(url);
   if (!res.ok) {
-    let errorMsg = `Lỗi ${res.status}: ${res.statusText}`;
+    let errorMsg = `Error ${res.status}: ${res.statusText}`;
     try {
       const errJson = await res.json();
       if (errJson?.error) errorMsg = errJson.error;

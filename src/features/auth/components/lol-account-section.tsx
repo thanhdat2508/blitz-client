@@ -73,7 +73,7 @@ export function LolAccountSection() {
       <div className="flex items-center justify-between px-3 py-1 mb-1">
         <div className="text-[10px] font-black uppercase tracking-wider text-amber-500/90 flex items-center gap-1.5">
           <Trophy className="w-3.5 h-3.5 text-amber-400" />
-          <p>Tài khoản Riot ({accounts.length})</p>
+          <p>Riot Accounts ({accounts.length})</p>
         </div>
         <button
           type="button"
@@ -81,7 +81,7 @@ export function LolAccountSection() {
           className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/25 hover:bg-amber-500/20 transition-colors cursor-pointer flex items-center gap-1"
         >
           <Users className="w-2.5 h-2.5" />
-          <p>Quản lý</p>
+          <p>Manage</p>
         </button>
       </div>
 
@@ -92,7 +92,7 @@ export function LolAccountSection() {
             <div
               onClick={() => setShowAccountList((p) => !p)}
               className="flex items-center gap-2.5 min-w-0 cursor-pointer flex-1"
-              title="Bấm để xem các tài khoản khác"
+              title="Click to view other accounts"
             >
               {/* Profile Icon with Level */}
               <div className="relative shrink-0">
@@ -145,7 +145,7 @@ export function LolAccountSection() {
             <button
               type="button"
               onClick={handleStartEdit}
-              title="Đổi Riot ID / Máy chủ"
+              title="Change Riot ID / Server"
               className="w-7 h-7 rounded-lg bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white flex items-center justify-center shrink-0 transition-colors cursor-pointer border border-transparent hover:border-neutral-700 ml-1"
             >
               <Edit3 className="w-3.5 h-3.5" />
@@ -156,7 +156,7 @@ export function LolAccountSection() {
           {showAccountList && (
             <div className="border-t border-neutral-800/80 bg-[#0f1017] p-1.5 space-y-1 animate-in fade-in duration-100">
               <p className="px-2 text-[9px] font-bold uppercase tracking-wider text-neutral-400 block text-left">
-                Chuyển tài khoản nhanh:
+                Quick switch accounts:
               </p>
               {accounts.map((acc) => (
                 <div
@@ -204,7 +204,7 @@ export function LolAccountSection() {
                 className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-neutral-300 hover:text-white text-[11px] font-semibold transition-colors cursor-pointer mt-1"
               >
                 <Plus className="w-3 h-3 text-amber-400" />
-                <p>Thêm tài khoản Riot</p>
+                <p>Add Riot Account</p>
               </button>
             </div>
           )}
@@ -216,7 +216,7 @@ export function LolAccountSection() {
           className="mx-1 p-2.5 rounded-xl bg-[#161720] border border-amber-500/40 space-y-2 text-left"
         >
           <div className="flex items-center justify-between text-xs font-semibold text-white">
-            <p>Chỉnh sửa Riot ID</p>
+            <p>Edit Riot ID</p>
             <button
               type="button"
               onClick={() => setIsEditing(false)}
@@ -228,7 +228,7 @@ export function LolAccountSection() {
 
           <div className="grid grid-cols-3 gap-1.5">
             <div className="col-span-2 space-y-1">
-              <label htmlFor="riot-name-input" className="text-[10px] text-neutral-400 font-medium">Tên Riot</label>
+              <label htmlFor="riot-name-input" className="text-[10px] text-neutral-400 font-medium">Riot Name</label>
               <input
                 id="riot-name-input"
                 type="text"
@@ -253,7 +253,7 @@ export function LolAccountSection() {
 
           {/* Region Picker in Edit mode */}
           <div className="space-y-1">
-            <p className="text-[10px] text-neutral-400 font-medium">Khu vực:</p>
+            <p className="text-[10px] text-neutral-400 font-medium">Region:</p>
             <div className="flex items-center gap-1">
               {REGIONS.map((r) => (
                 <button
@@ -278,14 +278,14 @@ export function LolAccountSection() {
               className="flex-1 h-7 rounded-lg bg-amber-500 hover:bg-amber-400 text-black text-xs font-bold transition-colors flex items-center justify-center gap-1 cursor-pointer"
             >
               <Check className="w-3 h-3" />
-              <p>Lưu</p>
+              <p>Save</p>
             </button>
             <button
               type="button"
               onClick={() => setIsEditing(false)}
               className="h-7 px-3 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-neutral-300 text-xs font-medium transition-colors cursor-pointer"
             >
-              Hủy
+              Cancel
             </button>
           </div>
         </form>
@@ -301,10 +301,10 @@ export function LolAccountSection() {
             </div>
             <div className="text-left">
               <p className="font-semibold text-neutral-200 group-hover:text-white text-[11px] leading-tight">
-                Tự động nhập Bảng ngọc
+                Auto Import Runes
               </p>
               <p className="text-[10px] text-neutral-400">
-                {activeAccount.autoRunes ? 'Đang bật theo meta' : 'Đã tắt'}
+                {activeAccount.autoRunes ? 'Active by meta' : 'Disabled'}
               </p>
             </div>
           </div>
@@ -334,10 +334,10 @@ export function LolAccountSection() {
             </div>
             <div className="text-left">
               <p className="font-semibold text-neutral-200 group-hover:text-white text-[11px] leading-tight">
-                Lớp phủ HUD trong trận
+                In-Game HUD Overlay
               </p>
               <p className="text-[10px] text-neutral-400">
-                {activeAccount.inGameOverlay ? 'Đang bật hồi chiêu' : 'Đã tắt'}
+                {activeAccount.inGameOverlay ? 'Cooldown tracker on' : 'Disabled'}
               </p>
             </div>
           </div>
@@ -367,10 +367,10 @@ export function LolAccountSection() {
             </div>
             <div className="text-left">
               <p className="font-semibold text-neutral-200 group-hover:text-white text-[11px] leading-tight">
-                Tự động Chấp nhận trận
+                Auto Accept Match
               </p>
               <p className="text-[10px] text-neutral-400">
-                {activeAccount.autoAccept ? 'Đang kích hoạt' : 'Đã tắt'}
+                {activeAccount.autoAccept ? 'Active' : 'Disabled'}
               </p>
             </div>
           </div>
@@ -403,10 +403,10 @@ export function LolAccountSection() {
             </div>
             <div className="text-left">
               <p className="font-semibold text-neutral-200 group-hover:text-white text-[11px] leading-tight">
-                Tướng tủ & Lịch sử đấu
+                Main Champions & Match History
               </p>
               <p className="text-[10px] text-neutral-400">
-                Tỷ lệ thắng {activeAccount.winRate}% • Vị trí {activeAccount.mainRole}
+                Winrate {activeAccount.winRate}% • Role {activeAccount.mainRole}
               </p>
             </div>
           </div>

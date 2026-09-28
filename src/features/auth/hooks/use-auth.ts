@@ -211,7 +211,7 @@ export function useAuth() {
           return true;
         }
 
-        throw new Error(res.message || "Đăng nhập thất bại");
+        throw new Error(res.message || "Sign in failed");
       } catch (err: any) {
         console.error("Login error:", err);
 
@@ -223,7 +223,7 @@ export function useAuth() {
             status: "otp_required",
             flowType: "register",
             pendingEmail: email,
-            error: "Tài khoản chưa xác thực email. Vui lòng kiểm tra email để lấy mã OTP.",
+            error: "Email not verified. Please check your email for the OTP verification code.",
           }));
           return false;
         }
@@ -232,7 +232,7 @@ export function useAuth() {
           err.response?.data?.error ||
           err.response?.data?.message ||
           err.message ||
-          "Đăng nhập thất bại. Vui lòng kiểm tra lại email hoặc mật khẩu.";
+          "Sign in failed. Please check your email or password.";
 
         updateStore((prev) => ({
           ...prev,
@@ -274,7 +274,7 @@ export function useAuth() {
           err.response?.data?.error ||
           err.response?.data?.message ||
           err.message ||
-          "Đăng ký thất bại. Vui lòng thử lại.";
+          "Sign up failed. Please try again.";
 
         updateStore((prev) => ({
           ...prev,
@@ -319,7 +319,7 @@ export function useAuth() {
         updateStore((prev) => ({
           ...prev,
           status: "otp_required",
-          error: "Không tìm thấy email cần xác thực.",
+          error: "No email found for verification.",
         }));
         return false;
       }
@@ -374,14 +374,14 @@ export function useAuth() {
           return true;
         }
 
-        throw new Error(res.message || "Xác thực OTP thất bại");
+        throw new Error(res.message || "OTP verification failed");
       } catch (err: any) {
         console.error("OTP verification error:", err);
         const msg =
           err.response?.data?.error ||
           err.response?.data?.message ||
           err.message ||
-          "Mã OTP không đúng hoặc đã hết hạn.";
+          "Invalid or expired OTP code.";
 
         updateStore((prev) => ({
           ...prev,
@@ -415,7 +415,7 @@ export function useAuth() {
         const msg =
           err.response?.data?.error ||
           err.message ||
-          "Không thể gửi yêu cầu đặt lại mật khẩu.";
+          "Unable to send password reset request.";
         updateStore((prev) => ({
           ...prev,
           status: "idle",
@@ -456,7 +456,7 @@ export function useAuth() {
         const msg =
           err.response?.data?.error ||
           err.message ||
-          "Mã OTP xác thực mật khẩu không đúng.";
+          "Invalid password reset OTP code.";
         updateStore((prev) => ({
           ...prev,
           status: "otp_required",
@@ -495,7 +495,7 @@ export function useAuth() {
         const msg =
           err.response?.data?.error ||
           err.message ||
-          "Không thể cập nhật mật khẩu mới.";
+          "Unable to update new password.";
         updateStore((prev) => ({
           ...prev,
           status: "idle",

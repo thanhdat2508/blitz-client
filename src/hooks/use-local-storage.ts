@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { storage } from '@/utils/storage'
 
 /**
- * Hook quản lý state đồng bộ với localStorage
+ * Hook to synchronize state with localStorage
  */
 export function useLocalStorage<T>(key: string, initialValue: T): [T, (val: T | ((prev: T) => T)) => void] {
   const [storedValue, setStoredValue] = useState<T>(() => {

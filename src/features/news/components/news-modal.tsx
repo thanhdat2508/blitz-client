@@ -50,7 +50,7 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
             className="gap-1 border-emerald-500/40 bg-emerald-500/15 text-emerald-400 font-semibold text-[11px]"
           >
             <TrendingUp className="size-3" />
-            Tăng sức mạnh (Buff)
+            Buff
           </Badge>
         );
       case "nerf":
@@ -60,7 +60,7 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
             className="gap-1 border-rose-500/40 bg-rose-500/15 text-rose-400 font-semibold text-[11px]"
           >
             <TrendingDown className="size-3" />
-            Giảm sức mạnh (Nerf)
+            Nerf
           </Badge>
         );
       case "rework":
@@ -70,7 +70,7 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
             className="gap-1 border-purple-500/40 bg-purple-500/15 text-purple-400 font-semibold text-[11px]"
           >
             <RefreshCw className="size-3" />
-            Làm lại (Rework)
+            Rework
           </Badge>
         );
       default:
@@ -80,7 +80,7 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
             className="gap-1 border-sky-500/40 bg-sky-500/15 text-sky-400 font-semibold text-[11px]"
           >
             <ShieldAlert className="size-3" />
-            Điều chỉnh (Adjust)
+            Adjust
           </Badge>
         );
     }
@@ -139,10 +139,10 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
                   </div>
                   <div className="flex items-center gap-1.5">
                     <Clock className="size-3.5 text-amber-400" />
-                    {article.readTimeMinutes} phút đọc
+                    {article.readTimeMinutes} min read
                   </div>
                   <p>
-                    Tác giả:{" "}
+                    Author:{" "}
                     <strong className="text-foreground">
                       {article.author}
                     </strong>
@@ -159,13 +159,13 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
                     <>
                       <Check className="size-3.5 text-emerald-400" />
                       <p className="text-emerald-400 font-medium">
-                        Đã copy link!
+                        Link copied!
                       </p>
                     </>
                   ) : (
                     <>
                       <Share2 className="size-3.5" />
-                      <p>Chia sẻ</p>
+                      <p>Share</p>
                     </>
                   )}
                 </Button>
@@ -176,7 +176,7 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
               {/* Overview Section */}
               <div className="space-y-2">
                 <h4 className="text-sm sm:text-base font-bold text-foreground">
-                  Tổng quan bản cập nhật
+                  Patch Overview
                 </h4>
                 <p className="text-muted-foreground text-sm leading-relaxed">
                   {article.summary}
@@ -193,7 +193,7 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
                 <div className="space-y-3 pt-1">
                   <div className="flex items-center gap-2">
                     <h4 className="text-sm sm:text-base font-bold text-foreground">
-                      Chi tiết thay đổi Tướng & Cơ chế
+                      Champion & Systems Changes
                     </h4>
                     <Badge variant="secondary" className="text-xs">
                       {article.changes.length}

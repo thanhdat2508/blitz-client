@@ -1,5 +1,5 @@
 /**
- * Helper an toàn để thao tác với localStorage
+ * Safe helper to interact with localStorage
  */
 export const storage = {
   get<T>(key: string, defaultValue: T): T {

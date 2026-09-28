@@ -1,5 +1,5 @@
 /**
- * Format timestamp sang dạng chuỗi tương đối (VD: "2 DAYS AGO", "14 DAYS AGO")
+ * Formats timestamp into relative time string (e.g. "2 DAYS AGO", "14 DAYS AGO")
  */
 export function formatRelativeTime(dateString: string): string {
   const date = new Date(dateString)

@@ -78,39 +78,39 @@ buildItemIndex()
 
 const STAT_SHARD_INFO: Record<number, { desc: string; enDesc: string }> = {
   5001: {
-    desc: '+10 - 180 Máu tối đa (theo cấp độ tướng)',
+    desc: '+10 - 180 Maximum Health (based on level)',
     enDesc: '+10 - 180 Maximum Health (based on level)',
   },
   5002: {
-    desc: '+6 Giáp cơ bản ngay từ đầu trận',
+    desc: '+6 Bonus Armor from the start of the match',
     enDesc: '+6 Bonus Armor from the start of the match',
   },
   5003: {
-    desc: '+8 Kháng Phép cơ bản ngay từ đầu trận',
+    desc: '+8 Bonus Magic Resist from the start of the match',
     enDesc: '+8 Bonus Magic Resist from the start of the match',
   },
   5005: {
-    desc: '+10% Tốc độ Đánh cộng thêm',
+    desc: '+10% Bonus Attack Speed',
     enDesc: '+10% Bonus Attack Speed',
   },
   5007: {
-    desc: '+8 Điểm Hồi Kỹ Năng',
+    desc: '+8 Ability Haste',
     enDesc: '+8 Ability Haste',
   },
   5008: {
-    desc: '+9 Sức mạnh Công kích hoặc +15 Sức mạnh Phép thuật',
+    desc: '+9 Attack Damage or +15 Ability Power',
     enDesc: '+9 Attack Damage or +15 Ability Power',
   },
   5010: {
-    desc: '+2% Tốc độ Di chuyển cộng thêm',
+    desc: '+2% Bonus Movement Speed',
     enDesc: '+2% Bonus Movement Speed',
   },
   5011: {
-    desc: '+65 Máu cơ bản ngay từ cấp độ 1',
+    desc: '+65 Flat Base Health from level 1',
     enDesc: '+65 Flat Base Health from level 1',
   },
   5013: {
-    desc: '+10% Kháng Hiệu ứng và Kháng Làm chậm',
+    desc: '+10% Tenacity and Slow Resist',
     enDesc: '+10% Tenacity and Slow Resist',
   },
 }

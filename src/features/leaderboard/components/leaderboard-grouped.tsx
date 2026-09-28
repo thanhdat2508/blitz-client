@@ -25,35 +25,35 @@ const TIER_CONFIG: Record<
   S: {
     title: "Tier S — Meta God Tier",
     description:
-      "Những tướng thống trị meta, tỷ lệ thắng và ảnh hưởng trận đấu cao nhất hiện tại.",
+      "Meta-defining champions with dominant win rates and highest game impact.",
     accentColor: "text-amber-300",
     borderClass: "border-amber-500/30 bg-amber-500/5",
   },
   A: {
     title: "Tier A — Strong Meta Picks",
     description:
-      "Lựa chọn mạnh mẽ, ổn định và rất phù hợp để leo xếp hạng đơn/đôi.",
+      "Strong, consistent picks highly recommended for solo/duo queue climbing.",
     accentColor: "text-blue-300",
     borderClass: "border-blue-500/30 bg-blue-500/5",
   },
   B: {
     title: "Tier B — Balanced & Viable",
     description:
-      "Các tướng cân bằng, phát huy sức mạnh tối đa khi rơi vào tay người chơi thuần thục.",
+      "Balanced and viable champions that excel in skilled or OTP hands.",
     accentColor: "text-emerald-300",
     borderClass: "border-emerald-500/30 bg-emerald-500/5",
   },
   C: {
     title: "Tier C — Situational Picks",
     description:
-      "Tướng mang tính tình huống hoặc counter-pick cụ thể, phụ thuộc vào đội hình.",
+      "Situational or counter picks that rely heavily on team compositions.",
     accentColor: "text-neutral-400",
     borderClass: "border-neutral-800 bg-neutral-900/30",
   },
   D: {
     title: "Tier D — Weak / Underperforming",
     description:
-      "Cần được Riot Games tăng sức mạnh trong các bản vá tiếp theo.",
+      "Underperforming champions in need of buffs in upcoming patches.",
     accentColor: "text-rose-400",
     borderClass: "border-rose-500/30 bg-rose-500/5",
   },
@@ -111,7 +111,7 @@ export function LeaderboardGrouped({ items }: LeaderboardGroupedProps) {
                 variant="outline"
                 className="text-xs font-semibold px-3 py-1 rounded-full bg-neutral-900 border-neutral-800 text-neutral-300 self-start sm:self-auto shrink-0"
               >
-                {tierChampions.length} tướng
+                {tierChampions.length} champions
               </Badge>
             </CardHeader>
 

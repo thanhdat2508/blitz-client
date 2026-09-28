@@ -19,8 +19,8 @@ export function LeaderboardTable({ items }: LeaderboardTableProps) {
   if (items.length === 0) {
     return (
       <div className="py-16 text-center text-neutral-400 bg-[#12141e] rounded-2xl border border-neutral-800">
-        <p className="text-sm font-medium">Không tìm thấy tướng nào phù hợp với bộ lọc hiện tại.</p>
-        <p className="text-xs text-neutral-500 mt-1">Hãy thử thay đổi vị trí, tier hoặc từ khóa tìm kiếm.</p>
+        <p className="text-sm font-medium">No champions found matching the current filters.</p>
+        <p className="text-xs text-neutral-500 mt-1">Try adjusting your role, tier, or search keyword.</p>
       </div>
     );
   }
@@ -58,25 +58,25 @@ export function LeaderboardTable({ items }: LeaderboardTableProps) {
               #
             </TableHead>
             <TableHead className="py-3.5 px-3 min-w-48 text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
-              Tướng
+              Champion
             </TableHead>
             <TableHead className="py-3.5 px-3 text-center w-20 text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
               Tier
             </TableHead>
             <TableHead className="py-3.5 px-3 min-w-36 text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
-              Tỷ lệ thắng
+              Win Rate
             </TableHead>
             <TableHead className="py-3.5 px-3 text-right text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
-              Tỷ lệ chọn
+              Pick Rate
             </TableHead>
             <TableHead className="py-3.5 px-3 text-right text-[11px] font-bold text-neutral-400 uppercase tracking-wider">
-              Tỷ lệ cấm
+              Ban Rate
             </TableHead>
             <TableHead className="py-3.5 px-3 text-right text-[11px] font-bold text-neutral-400 uppercase tracking-wider hidden sm:table-cell">
-              Số trận
+              Matches
             </TableHead>
             <TableHead className="py-3.5 pr-4 pl-3 text-right text-[11px] font-bold text-neutral-400 uppercase tracking-wider hidden md:table-cell">
-              Xu hướng
+              Trend
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -130,9 +130,9 @@ export function LeaderboardTable({ items }: LeaderboardTableProps) {
                       </span>
                       <span className="text-[11px] text-neutral-500 capitalize">
                         {champ.role === "ad"
-                          ? "Xạ thủ (ADC)"
+                          ? "ADC / Bot"
                           : champ.role === "sp"
-                            ? "Hỗ trợ"
+                            ? "Support"
                             : champ.role}
                       </span>
                     </div>

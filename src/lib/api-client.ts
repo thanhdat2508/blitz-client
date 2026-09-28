@@ -33,7 +33,7 @@ const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue = [];
 };
 
-// Request Interceptor: đính kèm Bearer token và sessionId nếu có
+// Request Interceptor: attach Bearer token and sessionId if present
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const token = authStorage.getAccessToken();
@@ -52,7 +52,7 @@ apiClient.interceptors.request.use(
   (error: AxiosError) => Promise.reject(error),
 );
 
-// Response Interceptor: chuẩn hoá response và tự động refresh token khi nhận 401
+// Response Interceptor: normalize response and auto-refresh token on 401
 apiClient.interceptors.response.use(
   (response) => response.data,
   async (error: AxiosError) => {

@@ -12,8 +12,8 @@ interface EmptyStateProps {
 }
 
 export function EmptyState({
-  title = 'Không có dữ liệu',
-  description = 'Chưa có mục nào được tìm thấy hoặc danh sách đang trống.',
+  title = 'No data available',
+  description = 'No items found or the list is currently empty.',
   icon,
   action,
   className,

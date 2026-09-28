@@ -96,13 +96,13 @@ export function NewsCard({ article, onClick }: NewsCardProps) {
             variant="outline"
             className="text-xss font-medium border-border/50 text-muted-foreground bg-card/60"
           >
-            {article.changes.length} tướng cân bằng
+            {article.changes.length} balance changes
           </Badge>
         ) : (
           <div />
         )}
         <p className="text-xs text-muted-foreground">
-          {article.readTimeMinutes} phút đọc
+          {article.readTimeMinutes} min read
         </p>
       </CardFooter>
     </Card>

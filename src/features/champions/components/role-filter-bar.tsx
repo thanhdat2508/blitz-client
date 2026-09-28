@@ -7,12 +7,12 @@ interface RoleFilterBarProps {
 }
 
 const ROLES: { id: Role; tooltip: string }[] = [
-  { id: 'ALL', tooltip: 'Tất cả' },
-  { id: 'TOP', tooltip: 'Đường Trên' },
-  { id: 'JUNGLE', tooltip: 'Rừng' },
-  { id: 'MID', tooltip: 'Đường Giữa' },
-  { id: 'ADC', tooltip: 'Xạ Thủ / Bot' },
-  { id: 'SUPPORT', tooltip: 'Hỗ Trợ' },
+  { id: 'ALL', tooltip: 'All Roles' },
+  { id: 'TOP', tooltip: 'Top Lane' },
+  { id: 'JUNGLE', tooltip: 'Jungle' },
+  { id: 'MID', tooltip: 'Mid Lane' },
+  { id: 'ADC', tooltip: 'Bot / ADC' },
+  { id: 'SUPPORT', tooltip: 'Support' },
 ]
 
 export function RoleFilterBar({ activeRole, onSelectRole }: RoleFilterBarProps) {

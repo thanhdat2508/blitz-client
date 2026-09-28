@@ -89,15 +89,15 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   const handleSignupSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
-      setLocalError("Vui lòng nhập họ và tên của bạn.");
+      setLocalError("Please enter your full name.");
       return;
     }
     if (!isValidEmail) {
-      setLocalError("Email không hợp lệ.");
+      setLocalError("Invalid email address.");
       return;
     }
     if (password.length < 6) {
-      setLocalError("Mật khẩu phải có ít nhất 6 ký tự.");
+      setLocalError("Password must be at least 6 characters.");
       return;
     }
 
@@ -153,7 +153,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
   const handleNewPasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newPassword.length < 6) {
-      setLocalError("Mật khẩu mới phải có ít nhất 6 ký tự.");
+      setLocalError("New password must be at least 6 characters.");
       return;
     }
     setLocalError(null);
@@ -161,7 +161,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     if (ok) {
       setMode("login");
       setLocalError(
-        "Mật khẩu đã được cập nhật thành công! Vui lòng đăng nhập lại.",
+        "Password updated successfully! Please sign in again.",
       );
     }
   };
@@ -181,25 +181,25 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       <div className="mb-6 flex flex-col items-center">
         <h1 className="text-2xl font-bold tracking-tight text-white">
           {status === "otp_required"
-            ? "Xác thực mã bảo mật"
+            ? "Verify Security Code"
             : mode === "signup"
-              ? "Tạo tài khoản mới"
+              ? "Create New Account"
               : mode === "forgot_password"
-                ? "Quên mật khẩu"
+                ? "Forgot Password"
                 : mode === "reset_new_password"
-                  ? "Đặt lại mật khẩu mới"
-                  : "Đăng nhập"}
+                  ? "Reset Password"
+                  : "Sign In"}
         </h1>
         <p className="text-xs text-neutral-400 mt-1 max-w-70">
           {status === "otp_required"
-            ? `Nhập mã 6 chữ số đã gửi qua email tới ${pendingEmail}`
+            ? `Enter the 6-digit verification code sent to ${pendingEmail}`
             : mode === "signup"
-              ? "Tham gia Blitz để trải nghiệm dữ liệu meta Liên Minh Huyền Thoại tốt nhất"
+              ? "Join Blitz to experience the best League of Legends meta analytics"
               : mode === "forgot_password"
-                ? "Nhập email của bạn để nhận mã khôi phục mật khẩu qua Resend"
+                ? "Enter your email to receive a password reset code"
                 : mode === "reset_new_password"
-                  ? "Nhập mật khẩu mới an toàn cho tài khoản của bạn"
-                  : "Chào mừng trở lại! Điền thông tin để tiếp tục."}
+                  ? "Enter a secure new password for your account"
+                  : "Welcome back! Please enter your details to continue."}
         </p>
       </div>
 
@@ -228,7 +228,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
               }}
               className="text-neutral-400 hover:text-white text-xs h-7 px-2"
             >
-              <ArrowLeft className="w-3 h-3 mr-1" /> Đổi
+              <ArrowLeft className="w-3 h-3 mr-1" /> Change
             </Button>
           </div>
 
@@ -237,7 +237,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
               htmlFor="otp-input"
               className="text-xs text-neutral-400 font-medium"
             >
-              Mã xác thực 6 số (gửi qua Resend)
+              6-digit verification code
             </FieldLabel>
             <Input
               id="otp-input"
@@ -253,7 +253,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 
           {/* Resend OTP button with 60s countdown */}
           <div className="flex items-center justify-between text-xs text-neutral-400 pt-1">
-            <p>Chưa nhận được mã?</p>
+            <p>Didn't receive the code?</p>
             <Button
               type="button"
               variant="link"
@@ -265,12 +265,12 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
               {isResending ? (
                 <>
                   <RotateCw className="w-3 h-3 animate-spin mr-1" />
-                  <p>Đang gửi...</p>
+                  <p>Sending...</p>
                 </>
               ) : countdown > 0 ? (
-                <p>Gửi lại sau ({countdown}s)</p>
+                <p>Resend in ({countdown}s)</p>
               ) : (
-                <p>Gửi lại mã</p>
+                <p>Resend code</p>
               )}
             </Button>
           </div>
@@ -283,12 +283,12 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                <p>Đang xác thực...</p>
+                <p>Verifying...</p>
               </>
             ) : (
               <>
                 <CheckCircle2 className="w-4 h-4 mr-2" />
-                <p>Xác nhận & Hoàn tất</p>
+                <p>Verify & Complete</p>
               </>
             )}
           </Button>
@@ -304,7 +304,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
               htmlFor="new-password"
               className="text-xs font-semibold text-neutral-300"
             >
-              Mật khẩu mới
+              New Password
             </FieldLabel>
             <div className="relative">
               <KeyRound className="w-4 h-4 text-neutral-500 absolute left-3.5 top-3.5 pointer-events-none z-10" />
@@ -312,7 +312,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                 id="new-password"
                 type={showPassword ? "text" : "password"}
                 required
-                placeholder="Nhập mật khẩu mới (tối thiểu 6 ký tự)"
+                placeholder="Enter new password (min. 6 characters)"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 className="w-full h-11 pl-10 pr-10 rounded-xl bg-[#141620] border-neutral-800 text-white text-sm focus-visible:ring-rose-500/20"
@@ -342,10 +342,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                <p>Đang cập nhật...</p>
+                <p>Updating...</p>
               </>
             ) : (
-              "Lưu mật khẩu mới"
+              "Save New Password"
             )}
           </Button>
         </form>
@@ -360,7 +360,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
               htmlFor="forgot-email"
               className="text-xs font-semibold text-neutral-300"
             >
-              Email của tài khoản
+              Account Email
             </FieldLabel>
             <div className="relative">
               <Mail className="w-4 h-4 text-neutral-500 absolute left-3.5 top-3.5 pointer-events-none z-10" />
@@ -385,10 +385,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             {isSubmitting ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                <p>Đang gửi mã...</p>
+                <p>Sending code...</p>
               </>
             ) : (
-              "Gửi mã xác nhận qua Email"
+              "Send Verification Code"
             )}
           </Button>
 
@@ -400,7 +400,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
               onClick={() => handleSwitchMode("login")}
               className="text-xs text-neutral-400 hover:text-white"
             >
-              Quay lại đăng nhập
+              Back to Sign In
             </Button>
           </div>
         </form>
@@ -418,7 +418,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                     htmlFor="name"
                     className="text-xs font-semibold text-neutral-300"
                   >
-                    Họ và tên
+                    Full Name
                   </FieldLabel>
                   <div className="relative">
                     <User className="w-4 h-4 text-neutral-500 absolute left-3.5 top-3.5 pointer-events-none z-10" />
@@ -426,7 +426,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                       id="name"
                       type="text"
                       required
-                      placeholder="Nguyễn Văn A"
+                      placeholder="John Doe"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       className="w-full h-11 pl-10 pr-4 rounded-xl bg-[#141620] border-neutral-800 text-white text-sm focus-visible:ring-rose-500/20"
@@ -461,7 +461,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                     htmlFor="signup-password"
                     className="text-xs font-semibold text-neutral-300"
                   >
-                    Mật khẩu
+                    Password
                   </FieldLabel>
                   <div className="relative">
                     <Lock className="w-4 h-4 text-neutral-500 absolute left-3.5 top-3.5 pointer-events-none z-10" />
@@ -470,7 +470,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                       type={showPassword ? "text" : "password"}
                       required
                       autoComplete="new-password"
-                      placeholder="Tối thiểu 6 ký tự"
+                      placeholder="Minimum 6 characters"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="w-full h-11 pl-10 pr-10 rounded-xl bg-[#141620] border-neutral-800 text-white text-sm focus-visible:ring-rose-500/20"
@@ -501,10 +501,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                    <p>Đang đăng ký...</p>
+                    <p>Signing up...</p>
                   </>
                 ) : (
-                  "Đăng ký tài khoản"
+                  "Sign Up"
                 )}
               </Button>
             </form>
@@ -545,7 +545,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                       htmlFor="login-password"
                       className="text-xs font-semibold text-neutral-300"
                     >
-                      Mật khẩu
+                      Password
                     </FieldLabel>
                     <Button
                       type="button"
@@ -554,7 +554,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                       onClick={() => handleSwitchMode("forgot_password")}
                       className="text-[11px] text-neutral-400 hover:text-white p-0 h-auto font-normal"
                     >
-                      Quên mật khẩu?
+                      Forgot password?
                     </Button>
                   </div>
                   <div className="relative">
@@ -564,7 +564,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                       type={showPassword ? "text" : "password"}
                       required
                       autoComplete="current-password"
-                      placeholder="Nhập mật khẩu"
+                      placeholder="Enter password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className="w-full h-11 pl-10 pr-10 rounded-xl bg-[#141620] border-neutral-800 text-white text-sm focus-visible:ring-rose-500/20"
@@ -595,7 +595,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                     onCheckedChange={(checked) => setRememberMe(!!checked)}
                     className="data-checked:bg-rose-600 data-checked:border-rose-600"
                   />
-                  <p>Ghi nhớ đăng nhập</p>
+                  <p>Remember me</p>
                 </label>
               </div>
 
@@ -607,10 +607,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                    <p>Đang đăng nhập...</p>
+                    <p>Signing in...</p>
                   </>
                 ) : (
-                  "Đăng nhập"
+                  "Sign In"
                 )}
               </Button>
             </form>
@@ -620,7 +620,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
           <div className="mt-4 text-xs text-neutral-400 pt-2 border-t border-neutral-800/60">
             {mode === "login" ? (
               <div className="flex items-center justify-center gap-1">
-                <p>Chưa có tài khoản?</p>
+                <p>Don't have an account?</p>
                 <Button
                   type="button"
                   variant="link"
@@ -628,12 +628,12 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                   onClick={() => handleSwitchMode("signup")}
                   className="text-rose-500 font-semibold hover:underline p-0 h-auto"
                 >
-                  Đăng ký ngay
+                  Sign up now
                 </Button>
               </div>
             ) : (
               <div className="flex items-center justify-center gap-1">
-                <p>Đã có tài khoản?</p>
+                <p>Already have an account?</p>
                 <Button
                   type="button"
                   variant="link"
@@ -641,7 +641,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                   onClick={() => handleSwitchMode("login")}
                   className="text-rose-500 font-semibold hover:underline p-0 h-auto"
                 >
-                  Đăng nhập
+                  Sign In
                 </Button>
               </div>
             )}
@@ -651,19 +651,19 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 
       {/* Footer Legal Terms */}
       <p className="text-[11px] text-neutral-500 mt-4 leading-relaxed">
-        Khi đăng nhập, bạn đồng ý với{" "}
+        By signing in, you agree to our{" "}
         <button
           type="button"
           className="text-neutral-400 hover:text-white underline cursor-pointer inline bg-transparent p-0 border-0 text-[11px]"
         >
-          Điều khoản dịch vụ
+          Terms of Service
         </button>{" "}
-        và{" "}
+        and{" "}
         <button
           type="button"
           className="text-neutral-400 hover:text-white underline cursor-pointer inline bg-transparent p-0 border-0 text-[11px]"
         >
-          Chính sách bảo mật
+          Privacy Policy
         </button>
         .
       </p>

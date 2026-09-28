@@ -48,7 +48,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
           onClick={() => onAddToCart?.(product)}
         >
           <ShoppingCart className="w-3.5 h-3.5" />
-          Thêm vào giỏ
+          Add to Cart
         </Button>
       </CardFooter>
     </Card>

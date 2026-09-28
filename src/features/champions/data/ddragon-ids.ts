@@ -128,39 +128,39 @@ export const PERK_DATA: Record<number, PerkInfo> = {
 export const STAT_SHARD_DATA: Record<number, PerkInfo> = {
   5001: {
     iconUrl: `https://ddragon.leagueoflegends.com/cdn/img/perk-images/StatMods/StatModsHealthScalingIcon.png`,
-    name: '+10-180 HP Theo Cấp',
+    name: '+10-180 Scaling Health',
   },
   5002: {
     iconUrl: `https://ddragon.leagueoflegends.com/cdn/img/perk-images/StatMods/StatModsArmorIcon.png`,
-    name: '+6 Giáp (Armor)',
+    name: '+6 Armor',
   },
   5003: {
     iconUrl: `https://ddragon.leagueoflegends.com/cdn/img/perk-images/StatMods/StatModsMagicResIcon.MagicResist_fix.png`,
-    name: '+8 Kháng Phép (Magic Resist)',
+    name: '+8 Magic Resist',
   },
   5005: {
     iconUrl: `https://ddragon.leagueoflegends.com/cdn/img/perk-images/StatMods/StatModsAttackSpeedIcon.png`,
-    name: '+10% Tốc Độ Đánh',
+    name: '+10% Attack Speed',
   },
   5007: {
     iconUrl: `https://ddragon.leagueoflegends.com/cdn/img/perk-images/StatMods/StatModsCDRScalingIcon.png`,
-    name: '+8 Điểm Hồi Kỹ Năng',
+    name: '+8 Ability Haste',
   },
   5008: {
     iconUrl: `https://ddragon.leagueoflegends.com/cdn/img/perk-images/StatMods/StatModsAdaptiveForceIcon.png`,
-    name: '+9 Sức Mạnh Thích Ứng',
+    name: '+9 Adaptive Force',
   },
   5010: {
     iconUrl: `https://ddragon.leagueoflegends.com/cdn/img/perk-images/StatMods/StatModsMovementSpeedIcon.png`,
-    name: '+2% Tốc Độ Di Chuyển',
+    name: '+2% Movement Speed',
   },
   5011: {
     iconUrl: `https://ddragon.leagueoflegends.com/cdn/img/perk-images/StatMods/StatModsHealthPlusIcon.png`,
-    name: '+65 Máu Cơ Bản',
+    name: '+65 Base Health',
   },
   5013: {
     iconUrl: `https://ddragon.leagueoflegends.com/cdn/img/perk-images/StatMods/StatModsTenacityIcon.png`,
-    name: '+10% Kháng Hiệu Ứng',
+    name: '+10% Tenacity',
   },
 }
 
@@ -246,7 +246,7 @@ export const ITEM_NAMES: Record<number, { en: string; vi: string }> = {
   3340: { en: 'Stealth Ward', vi: 'Mắt Vật Tổ' },
 }
 
-export function getItemName(itemId: number, lang: 'en' | 'vi' = 'vi'): string {
+export function getItemName(itemId: number, lang: 'en' | 'vi' = 'en'): string {
   const item = ITEM_NAMES[itemId]
   if (item) return lang === 'en' ? item.en : item.vi
   return `Item #${itemId}`

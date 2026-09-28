@@ -52,12 +52,12 @@ export function SavedAccountsTab({
         <div>
           <div className="flex items-center gap-2">
             <p className="text-xs font-bold text-white uppercase tracking-wider">
-              Tài khoản đã lưu ({accounts.length})
+              Saved Accounts ({accounts.length})
             </p>
             <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
           </div>
           <p className="text-[11px] text-neutral-400 mt-0.5 text-left">
-            Chuyển nhanh tài khoản hoặc đăng nhập trực tiếp 1-click
+            Quick switch accounts or 1-click sign in
           </p>
         </div>
 
@@ -66,7 +66,7 @@ export function SavedAccountsTab({
           type="button"
           disabled={isScanning}
           onClick={onDetectClient}
-          title="Tự động đồng bộ với Riot Client trên máy"
+          title="Auto-sync with local Riot Client"
           className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-semibold bg-neutral-800/80 hover:bg-neutral-700 text-neutral-300 hover:text-white border border-neutral-700/60 transition-all cursor-pointer disabled:opacity-50"
         >
           <RefreshCw
@@ -74,7 +74,7 @@ export function SavedAccountsTab({
               isScanning ? 'animate-spin' : ''
             }`}
           />
-          <p>{isScanning ? 'Đang quét...' : 'Quét Client'}</p>
+          <p>{isScanning ? 'Scanning...' : 'Scan Client'}</p>
         </button>
       </div>
 
@@ -89,7 +89,7 @@ export function SavedAccountsTab({
               : 'text-neutral-400 hover:text-white'
           }`}
         >
-          Tất cả ({accounts.length})
+          All ({accounts.length})
         </button>
         <button
           type="button"
@@ -131,7 +131,7 @@ export function SavedAccountsTab({
           ))
         ) : (
           <div className="py-8 text-center text-xs text-neutral-400">
-            Chưa có tài khoản nào thuộc tựa game này.
+            No saved accounts for this game.
           </div>
         )}
       </div>
@@ -146,7 +146,7 @@ export function SavedAccountsTab({
         >
           <LogIn className="w-4 h-4" />
           <p>
-            Đăng nhập ngay với {activeAccount.summonerName} #{activeAccount.tagLine}
+            Sign in as {activeAccount.summonerName} #{activeAccount.tagLine}
           </p>
         </button>
 
@@ -158,7 +158,7 @@ export function SavedAccountsTab({
             className="h-10 rounded-xl bg-[#161824] hover:bg-[#1f2233] border border-neutral-700/70 hover:border-neutral-600 text-xs font-semibold text-neutral-200 hover:text-white flex items-center justify-center gap-1.5 transition-all cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5 text-amber-400" />
-            <p>Thêm tài khoản Riot</p>
+            <p>Add Riot Account</p>
           </button>
 
           {/* Switch to normal login */}
@@ -168,7 +168,7 @@ export function SavedAccountsTab({
             className="h-10 rounded-xl bg-neutral-900/60 hover:bg-neutral-800 border border-neutral-800 text-xs font-semibold text-neutral-400 hover:text-white flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
           >
             <ShieldCheck className="w-3.5 h-3.5" />
-            <p>Đăng nhập Email / Khác</p>
+            <p>Sign in with Email / Other</p>
           </button>
         </div>
       </div>
