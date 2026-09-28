@@ -65,6 +65,9 @@ export function ChampionHeroHeader({ champion, selectedRole }: ChampionHeroHeade
                   src={avatarSrc}
                   alt={champion.name}
                   loading="eager"
+                  fetchPriority="high"
+                  width={80}
+                  height={80}
                   onError={() => {
                     if (!imgErr) {
                       setImgErr(true)
@@ -81,7 +84,7 @@ export function ChampionHeroHeader({ champion, selectedRole }: ChampionHeroHeade
               )}
             </div>
             {/* Tier Badge Overlay */}
-            <div className="absolute -bottom-2 -left-2 scale-90 origin-bottom-left shadow-lg">
+            <div className="absolute -bottom-1 left-1.5 shadow-md">
               <TierBadge tier={champion.tier} />
             </div>
           </div>

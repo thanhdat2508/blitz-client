@@ -27,6 +27,10 @@ export interface ProPlayerLastMatch {
   gameMode?: string;
   timeAgo?: string;
   spells?: ProPlayerItemSpell[];
+  runes?: {
+    primary?: ProPlayerItemSpell;
+    secondary?: ProPlayerItemSpell;
+  };
   items?: ProPlayerItemEquip[];
 }
 
@@ -43,6 +47,7 @@ export interface ProPlayerApiItem {
   team: string;
   themeColor: string;
   displayOrder: number;
+  winRate?: number;
   lastMatch?: ProPlayerLastMatch;
 }
 

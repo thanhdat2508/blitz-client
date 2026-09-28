@@ -1,4 +1,6 @@
-import { Award } from 'lucide-react'
+import { Crown } from 'lucide-react'
+import { getPerkInfo } from '../../data/ddragon-ids'
+import { optimizeCloudinaryUrl } from '@/lib/utils'
 
 export interface OtpPlayer {
   id: string
@@ -9,119 +11,178 @@ export interface OtpPlayer {
   winRate: number
   games: number
   kda: string
+  avatarUrl: string
+  keystoneIcon: string
   items: string[]
 }
 
 interface OtpBuildsCardProps {
   championName: string
   players?: OtpPlayer[]
+  coreItemIds?: number[]
+  keystoneId?: number
 }
 
-const DEFAULT_OTPS: OtpPlayer[] = [
-  {
-    id: 'otp-1',
-    name: 'QuinnAD',
-    server: 'NA',
-    rank: 'Grandmaster',
-    rankBadgeColor: 'bg-rose-950/80 border-rose-700/80 text-rose-300',
-    winRate: 59.4,
-    games: 412,
-    kda: '3.4',
-    items: [
-      'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3142.png',
-      'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3078.png',
-      'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3031.png',
-    ],
-  },
-  {
-    id: 'otp-2',
-    name: 'ValorInFlight',
-    server: 'KR',
-    rank: 'Master',
-    rankBadgeColor: 'bg-purple-950/80 border-purple-700/80 text-purple-300',
-    winRate: 57.8,
-    games: 298,
-    kda: '3.1',
-    items: [
-      'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3158.png',
-      'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3814.png',
-      'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3026.png',
-    ],
-  },
-  {
-    id: 'otp-3',
-    name: 'HarrierHawk',
-    server: 'EUW',
-    rank: 'Grandmaster',
-    rankBadgeColor: 'bg-rose-950/80 border-rose-700/80 text-rose-300',
-    winRate: 56.5,
-    games: 340,
-    kda: '2.9',
-    items: [
-      'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3006.png',
-      'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3094.png',
-      'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3036.png',
-    ],
-  },
-]
+function getDynamicOtps(
+  championName: string,
+  coreItemIds?: number[],
+  keystoneId?: number
+): OtpPlayer[] {
+  const itemIcons =
+    coreItemIds && coreItemIds.length >= 3
+      ? coreItemIds
+          .slice(0, 3)
+          .map((id) => `https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/${id}.png`)
+      : [
+          'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3089.png',
+          'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/6655.png',
+          'https://ddragon.leagueoflegends.com/cdn/14.24.1/img/item/3157.png',
+        ]
+
+  const keystoneIcon = keystoneId
+    ? getPerkInfo(keystoneId).iconUrl
+    : 'https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png'
+
+  return [
+    {
+      id: 'otp-1',
+      name: `Findthe${championName.toLowerCase()} #TOP`,
+      server: 'EUW',
+      rank: 'CHALLENGER 1250 LP',
+      rankBadgeColor: 'text-amber-300 font-black',
+      winRate: 59.8,
+      games: 482,
+      kda: '3.6',
+      avatarUrl: optimizeCloudinaryUrl('https://res.cloudinary.com/vptfaug1/image/upload/player2.png', 100),
+      keystoneIcon,
+      items: itemIcons,
+    },
+    {
+      id: 'otp-2',
+      name: `${championName} King KR`,
+      server: 'KR',
+      rank: 'GRANDMASTER 890 LP',
+      rankBadgeColor: 'text-rose-400 font-black',
+      winRate: 58.4,
+      games: 345,
+      kda: '3.2',
+      avatarUrl: optimizeCloudinaryUrl('https://res.cloudinary.com/vptfaug1/image/upload/player3.png', 100),
+      keystoneIcon,
+      items: itemIcons,
+    },
+    {
+      id: 'otp-3',
+      name: `Best ${championName} NA`,
+      server: 'NA',
+      rank: 'MASTER 420 LP',
+      rankBadgeColor: 'text-purple-400 font-black',
+      winRate: 56.5,
+      games: 290,
+      kda: '2.9',
+      avatarUrl: optimizeCloudinaryUrl('https://res.cloudinary.com/vptfaug1/image/upload/player1.png', 100),
+      keystoneIcon,
+      items: itemIcons,
+    },
+    {
+      id: 'otp-4',
+      name: `${championName} God VN`,
+      server: 'VN',
+      rank: 'MASTER 320 LP',
+      rankBadgeColor: 'text-purple-400 font-black',
+      winRate: 57.1,
+      games: 245,
+      kda: '3.3',
+      avatarUrl: optimizeCloudinaryUrl('https://res.cloudinary.com/vptfaug1/image/upload/player2.png', 100),
+      keystoneIcon,
+      items: itemIcons,
+    },
+  ]
+}
 
 export function OtpBuildsCard({
   championName,
-  players = DEFAULT_OTPS,
+  players,
+  coreItemIds,
+  keystoneId,
 }: OtpBuildsCardProps) {
+  const otpList =
+    players && players.length > 0
+      ? players
+      : getDynamicOtps(championName, coreItemIds, keystoneId)
+
   return (
-    <div className="bg-[#0E121A] border border-zinc-800/80 rounded-xl p-3.5 space-y-2.5 shadow-lg select-none">
-      <div className="flex items-center justify-between pb-2 border-b border-zinc-800/80">
+    <div className="bg-[#12141c]/90 border border-zinc-800/80 rounded-xl p-3 space-y-2.5 shadow-lg select-none">
+      {/* Header: One Trick Master */}
+      <div className="flex items-center justify-between pb-1.5 border-b border-zinc-800/80">
         <div className="flex items-center gap-1.5">
-          <Award className="w-3.5 h-3.5 text-rose-400" />
-          <p className="font-bold text-xs text-zinc-200 uppercase tracking-wide">
-            OTP Specialists ({championName})
+          <Crown className="w-3.5 h-3.5 text-amber-400" />
+          <p className="font-bold text-xs text-amber-300 uppercase tracking-wide">
+            One Trick Master ({championName})
           </p>
         </div>
-        <p className="text-[10px] text-zinc-500 font-medium">High Elo One-Tricks</p>
+        <p className="text-[10px] text-zinc-500 font-mono">Top High Elo OTPs</p>
       </div>
 
-      <div className="space-y-2">
-        {players.map((p) => (
+      {/* List of One Trick Masters */}
+      <div className="space-y-1.5">
+        {otpList.map((otp) => (
           <div
-            key={p.id}
-            className="p-2.5 rounded-lg bg-zinc-950/60 border border-zinc-800/80 hover:border-zinc-700 transition-colors space-y-1.5"
+            key={otp.id}
+            className="p-2 rounded-lg bg-zinc-950/70 border border-zinc-850 hover:border-zinc-700 transition-colors flex items-center justify-between gap-2"
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <p className="text-xs font-bold text-zinc-200">{p.name}</p>
-                <div className="px-1.5 py-0.5 rounded bg-zinc-800 text-[9px] font-mono text-zinc-400">
-                  {p.server}
-                </div>
+            {/* Left: Avatar + Server Tag + Name & Rank LP */}
+            <div className="flex items-center gap-2 min-w-0">
+              <div className="relative shrink-0">
+                <img
+                  src={optimizeCloudinaryUrl(otp.avatarUrl, 100)}
+                  alt={otp.name}
+                  loading="lazy"
+                  className="w-7 h-7 rounded-full border border-amber-500/50 object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src =
+                      'https://res.cloudinary.com/vptfaug1/image/upload/f_auto,q_auto,w_100/player2.png'
+                  }}
+                />
+                <span className="absolute -bottom-1 -right-1 text-[7px] font-black px-0.5 rounded bg-zinc-850 border border-zinc-750 text-amber-300 leading-tight">
+                  {otp.server}
+                </span>
               </div>
-              <div
-                className={`px-1.5 py-0.5 rounded border text-[9px] font-black uppercase ${p.rankBadgeColor}`}
-              >
-                {p.rank}
-              </div>
-            </div>
 
-            <div className="flex items-center justify-between text-[11px]">
-              <div className="flex items-center gap-2">
-                <p className="font-black text-cyan-400">{p.winRate}% WR</p>
-                <p className="text-zinc-500 font-mono text-[10px]">
-                  {p.games} games
+              <div className="truncate min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <p className="font-bold text-xs text-zinc-100 truncate hover:text-amber-300">
+                    {otp.name}
+                  </p>
+                  <span className={`text-[9px] ${otp.rankBadgeColor} shrink-0`}>
+                    {otp.rank.split(' ')[0]}
+                  </span>
+                </div>
+                <p className="text-[9px] text-zinc-400 font-mono">
+                  <span className="text-cyan-400 font-bold">{otp.winRate}% WR</span> · {otp.games}g · KDA {otp.kda}
                 </p>
               </div>
-              <p className="text-[10px] text-zinc-400 font-mono">KDA: {p.kda}</p>
             </div>
 
-            <div className="flex items-center gap-1.5 pt-1 border-t border-zinc-900">
-              <p className="text-[9px] text-zinc-500 font-medium uppercase">
-                Core Items:
-              </p>
-              <div className="flex items-center gap-1">
-                {p.items.map((itemUrl, idx) => (
+            {/* Right: Keystone Rune + Core Items */}
+            <div className="flex items-center gap-1 shrink-0">
+              <div className="w-4 h-4 rounded-full overflow-hidden bg-zinc-900 border border-cyan-500/40">
+                <img
+                  src={otp.keystoneIcon}
+                  alt="Rune"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              <div className="flex items-center gap-0.5">
+                {otp.items.slice(0, 3).map((itemUrl, idx) => (
                   <img
                     key={idx}
                     src={itemUrl}
-                    alt="Core Item"
-                    className="w-5 h-5 rounded border border-zinc-700/80 bg-zinc-900"
+                    alt="Item"
+                    className="w-4 h-4 rounded border border-zinc-800 bg-zinc-900 object-cover"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none'
+                    }}
                   />
                 ))}
               </div>

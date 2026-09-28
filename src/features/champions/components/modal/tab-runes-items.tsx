@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import type { ChampionBuildPayload, BuildRole } from '../../types/champion-build'
 import type { ChampionMeta, Role } from '../../types/champion'
 import { RuneTreeVisual } from '../build/rune-tree-visual'
@@ -30,7 +30,7 @@ export function TabRunesItems({
   role = 'MID',
   backendRole = 'mid',
 }: TabRunesItemsProps) {
-  const [selectedArchetype, setSelectedArchetype] = useState('lethality')
+  const [selectedArchetype, setSelectedArchetype] = useState('ap')
   const [previewData, setPreviewData] = useState<FloatingCardData | null>(null)
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -61,8 +61,17 @@ export function TabRunesItems({
     }
   }
 
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current)
+        closeTimerRef.current = null
+      }
+    }
+  }, [])
+
   return (
-    <div className="space-y-4 select-none relative">
+    <div className="space-y-5 select-none relative font-sans">
       {/* FLOATING PREVIEW CARD (Rune & Item intro, guide, stats) */}
       <FloatingPreviewCard
         data={previewData}
@@ -73,47 +82,61 @@ export function TabRunesItems({
         onMouseEnter={handleCancelClose}
       />
 
-      {/* 1. 3-COLUMN CHAMPION BUILD LAYOUT */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
-        {/* LEFT COLUMN: ARCHETYPES & PRO/OTP BUILDS (Cols 1 to 3) */}
-        <div className="lg:col-span-3 space-y-3.5">
-          <ArchetypeSelector
-            selectedId={selectedArchetype}
-            onSelect={setSelectedArchetype}
+      {/* ── 1. UNIFIED MAIN BUILD CANVAS (BLITZ.GG ARCHITECTURE) ── */}
+      <div className="relative rounded-2xl border border-zinc-800/80 bg-[#0d0f17]/95 p-4 sm:p-5 shadow-2xl backdrop-blur-md overflow-hidden">
+        {/* Ambient background champion splash art */}
+        {splashUrl && (
+          <div
+            className="absolute inset-0 opacity-[0.06] bg-cover bg-center pointer-events-none filter blur-[1px]"
+            style={{ backgroundImage: `url(${splashUrl})` }}
           />
-          <OtpBuildsCard championName={championName} />
-          <ProBuildsCard championName={championName} />
-        </div>
+        )}
 
-        {/* CENTER COLUMN: VISUAL RUNE TREE & SKILL PRIORITY MATRIX (Cols 4 to 8) */}
-        <div className="lg:col-span-5 space-y-3.5">
-          <RuneTreeVisual
-            runes={activeBuild.runes}
-            splashUrl={splashUrl}
-            onSelectPreview={handleOpenPreview}
-            onClosePreview={() => handleClosePreview(100)}
-          />
+        {/* 3-Column Balanced Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 relative z-10 items-stretch">
+          {/* ── COLUMN 1: SIDEBAR (ARCHETYPES, OTP & PRO BUILDS FEED) - Cols 1 to 3 ── */}
+          <div className="lg:col-span-3 flex flex-col space-y-3 h-full">
+            <ArchetypeSelector
+              selectedId={selectedArchetype}
+              onSelect={setSelectedArchetype}
+            />
+            <OtpBuildsCard
+              championName={championName}
+              coreItemIds={activeBuild.items?.core?.[0]?.itemIds}
+              keystoneId={activeBuild.runes?.mostPopular?.keystoneId}
+            />
+            <ProBuildsCard championName={championName} />
+          </div>
 
-          <SkillOrderMatrix
-            skills={activeBuild.skills}
-            abilities={activeBuild.abilities}
-          />
-        </div>
+          {/* ── COLUMN 2: RUNES & INTEGRATED SKILL MATRIX - Cols 4 to 8 ── */}
+          <div className="lg:col-span-5 space-y-3.5 self-start">
+            <RuneTreeVisual
+              runes={activeBuild.runes}
+              splashUrl={splashUrl}
+              onSelectPreview={handleOpenPreview}
+              onClosePreview={() => handleClosePreview(100)}
+            />
+            <SkillOrderMatrix
+              skills={activeBuild.skills}
+              abilities={activeBuild.abilities}
+            />
+          </div>
 
-        {/* RIGHT COLUMN: SUMMONERS, STARTING & SEQUENTIAL BUILD ORDER (Cols 9 to 12) */}
-        <div className="lg:col-span-4 space-y-3.5">
-          <ItemBuildPath
-            items={activeBuild.items}
-            spells={activeBuild.spells}
-            championName={championName}
-            role={backendRole}
-            onSelectPreview={handleOpenPreview}
-            onClosePreview={() => handleClosePreview(100)}
-          />
+          {/* ── COLUMN 3: SUMMONERS & SEQUENTIAL ITEMS - Cols 9 to 12 ── */}
+          <div className="lg:col-span-4 flex flex-col h-full">
+            <ItemBuildPath
+              items={activeBuild.items}
+              spells={activeBuild.spells}
+              championName={championName}
+              role={backendRole}
+              onSelectPreview={handleOpenPreview}
+              onClosePreview={() => handleClosePreview(100)}
+            />
+          </div>
         </div>
       </div>
 
-      {/* 2. CHAMPION BUILD GUIDE SUMMARY (MATCHING SCREENSHOT 3) */}
+      {/* ── 2. CHAMPION BUILD GUIDE SUMMARY ── */}
       <ChampionBuildGuideCard
         champion={champion}
         championName={championName}
@@ -121,14 +144,14 @@ export function TabRunesItems({
         buildData={activeBuild}
       />
 
-      {/* 3. KEY INSIGHTS, STRENGTHS & WEAKNESSES (MATCHING SCREENSHOTS 2 & 3) */}
+      {/* ── 3. KEY INSIGHTS, STRENGTHS & WEAKNESSES ── */}
       <ChampionInsightsCard
         championName={championName}
         insights={activeBuild.insights}
         abilities={activeBuild.abilities}
       />
 
-      {/* 4. SIMILAR CHAMPIONS (MATCHING SCREENSHOT 2) */}
+      {/* ── 4. SIMILAR CHAMPIONS & MATCHUPS ── */}
       <SimilarChampionsCard
         championName={championName}
         similarChampions={activeBuild.similarChampions}

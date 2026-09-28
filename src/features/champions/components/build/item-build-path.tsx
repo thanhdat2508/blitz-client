@@ -120,9 +120,9 @@ export function ItemBuildPath({
   const trinketId = items.trinkets[0]?.itemIds[0]
 
   return (
-    <div className="bg-[#0E121A] border border-zinc-800/80 rounded-xl p-4 space-y-5 shadow-lg select-none">
+    <div className="bg-[#0E121A] border border-zinc-800/80 rounded-xl p-4 shadow-lg select-none h-full flex flex-col justify-between space-y-3.5">
       {/* ── Top Header ── */}
-      <div className="flex items-center justify-between pb-2 border-b border-zinc-800/80">
+      <div className="flex items-center justify-between pb-2 border-b border-zinc-800/80 shrink-0">
         <p className="font-bold text-xs text-zinc-200 uppercase tracking-wide">
           Build Path ({championName || 'Champion'})
         </p>
@@ -131,7 +131,7 @@ export function ItemBuildPath({
 
       {/* ── Summoner Spells ── */}
       {bestSpell && (
-        <div className="space-y-2">
+        <div className="space-y-2 shrink-0">
           <div className="flex items-center gap-2 pb-1.5 border-b border-zinc-800/60">
             <Shield className="w-3.5 h-3.5 text-amber-400" />
             <p className="font-bold text-xs text-zinc-200 uppercase tracking-wide">
@@ -160,7 +160,7 @@ export function ItemBuildPath({
       )}
 
       {/* ── Starting Items ── */}
-      <div className="space-y-2">
+      <div className="space-y-2 shrink-0">
         <div className="flex items-center gap-2 pb-1.5 border-b border-zinc-800/60">
           <Package className="w-3.5 h-3.5 text-cyan-400" />
           <p className="font-bold text-xs text-zinc-200 uppercase tracking-wide">
@@ -183,7 +183,7 @@ export function ItemBuildPath({
       </div>
 
       {/* ── Core Build ── */}
-      <div className="space-y-2">
+      <div className="space-y-2 shrink-0">
         <div className="flex items-center gap-2 pb-1.5 border-b border-zinc-800/60">
           <Sword className="w-3.5 h-3.5 text-rose-400" />
           <p className="font-bold text-xs text-zinc-200 uppercase tracking-wide">
@@ -207,7 +207,7 @@ export function ItemBuildPath({
 
       {/* ── Build Order ── */}
       {buildOrderIds.length > 0 && (
-        <div className="space-y-2">
+        <div className="space-y-2 shrink-0">
           <div className="flex items-center gap-2 pb-1.5 border-b border-zinc-800/60">
             <Star className="w-3.5 h-3.5 text-amber-400" />
             <p className="font-bold text-xs text-zinc-200 uppercase tracking-wide">
@@ -234,7 +234,7 @@ export function ItemBuildPath({
       )}
 
       {/* ── Full Build (6 items) ── */}
-      <div className="space-y-2">
+      <div className="space-y-2 shrink-0">
         <div className="flex items-center gap-2 pb-1.5 border-b border-zinc-800/60">
           <p className="font-bold text-xs text-zinc-200 uppercase tracking-wide">
             Full Build
@@ -270,7 +270,7 @@ export function ItemBuildPath({
       </div>
 
       {/* ── Boots ── */}
-      <div className="space-y-2">
+      <div className="space-y-2 shrink-0">
         <div className="flex items-center gap-2 pb-1.5 border-b border-zinc-800/60">
           <p className="font-bold text-xs text-zinc-200 uppercase tracking-wide">
             Boots
@@ -303,7 +303,7 @@ export function ItemBuildPath({
 
       {/* ── Situational ── */}
       {situationalIds.length > 0 && (
-        <div className="space-y-2">
+        <div className="space-y-2 shrink-0">
           <div className="flex items-center gap-2 pb-1.5 border-b border-zinc-800/60">
             <p className="font-bold text-xs text-zinc-200 uppercase tracking-wide">
               Situational

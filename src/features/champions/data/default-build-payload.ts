@@ -55,7 +55,7 @@ export const DEFAULT_BUILD_PAYLOAD: ChampionBuildPayload = {
       selectedPerkIds: [9111, 9105, 8299],
       subStyleId: 8100,
       subStyleName: 'Domination',
-      subPerkIds: [8139, 8135],
+      subPerkIds: [8139, 8105],
       statShards: { offense: 5008, flex: 5008, defense: 5013 },
       winRate: 54.1,
       pickRate: 22.3,
