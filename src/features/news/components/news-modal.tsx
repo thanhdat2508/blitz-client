@@ -177,17 +177,17 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
               <div className="space-y-3">
                 <h4 className="text-sm sm:text-base font-bold text-foreground">
                   {article.category === "patch-notes"
-                    ? "Patch Overview"
+                    ? "Patch Overview & Balance Changes"
                     : article.category === "esports"
-                    ? "Tournament Report"
+                    ? "Tournament & Meta Breakdown"
                     : article.category === "gameplay"
-                    ? "Strategy Guide"
+                    ? "Tactical Guide & Breakdown"
                     : "Community Highlights"}
                 </h4>
                 {article.content ? (
-                  <div className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line space-y-2">
+                  <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">
                     {article.content}
-                  </div>
+                  </p>
                 ) : (
                   <p className="text-muted-foreground text-sm leading-relaxed">
                     {article.summary}
