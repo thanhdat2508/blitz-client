@@ -9,7 +9,8 @@ import NotFoundPage from "./components/page/404Page";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5,
+      staleTime: 1000 * 60 * 5, // 5 minutes fresh in RAM
+      gcTime: 1000 * 60 * 30, // 30 minutes garbage collection
       refetchOnWindowFocus: false,
     },
   },

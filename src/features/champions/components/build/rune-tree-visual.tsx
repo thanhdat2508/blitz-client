@@ -9,6 +9,7 @@ import {
 import { Trophy, Sparkles, Star } from 'lucide-react'
 import type { FloatingCardData } from './floating-preview-card'
 import { getRunePreviewData } from '../../utils/preview-data'
+import { FALLBACK_PERK_ICON } from './rune-icon'
 
 export const STYLE_PERK_STRUCTURE: Record<
   number,
@@ -68,6 +69,7 @@ export type PresetKey = 'mostPopular' | 'highestWinRate'
 
 interface RuneTreeVisualProps {
   runes: ChampionRunes
+  activeSetup?: RuneSetupBackend
   splashUrl?: string
   onSelectPreview?: (data: FloatingCardData) => void
   onClosePreview?: () => void
@@ -79,6 +81,7 @@ interface RuneCircleProps {
   perkId: number
   isActive: boolean
   isKeystone?: boolean
+  isCompactKeystone?: boolean
   activeColor?: string
   onSelectPreview?: (data: FloatingCardData) => void
   onClosePreview?: () => void
@@ -90,6 +93,7 @@ function RuneCircle({
   perkId,
   isActive,
   isKeystone = false,
+  isCompactKeystone = false,
   activeColor = '#C89B3C',
   onSelectPreview,
   onClosePreview,
@@ -112,27 +116,31 @@ function RuneCircle({
   }
 
   if (isKeystone) {
+    const sizeClasses = isCompactKeystone
+      ? 'w-10 h-10 sm:w-11 sm:h-11'
+      : 'w-11 h-11 sm:w-12 sm:h-12'
+
     return (
       <div
         onClick={handleTrigger}
         onMouseEnter={handleTrigger}
         onMouseLeave={handleMouseLeave}
         title={perk.name}
-        className={`relative cursor-pointer transition-all duration-200 rounded-full flex items-center justify-center ${
+        className={`relative cursor-pointer transition-all duration-200 rounded-full flex items-center justify-center shrink-0 ${
           isActive
             ? 'scale-105 z-10'
             : 'opacity-30 grayscale hover:opacity-85 hover:grayscale-0 hover:scale-105'
         }`}
       >
         <div
-          className={`w-12 h-12 sm:w-13 sm:h-13 rounded-full p-0.5 transition-all ${
+          className={`${sizeClasses} rounded-full p-0.5 transition-all ${
             isActive
-              ? 'border-2 shadow-lg ring-2 ring-offset-2 ring-offset-zinc-950'
+              ? 'border-2 shadow-lg ring-1.5 ring-offset-1 ring-offset-zinc-950'
               : 'border border-zinc-700/60'
           }`}
           style={{
             borderColor: isActive ? activeColor : undefined,
-            boxShadow: isActive ? `0 0 14px ${activeColor}55` : undefined,
+            boxShadow: isActive ? `0 0 14px ${activeColor}60` : undefined,
           }}
         >
           <img
@@ -140,7 +148,7 @@ function RuneCircle({
             alt={perk.name}
             className="w-full h-full rounded-full object-cover"
             onError={(e) => {
-              ;(e.target as HTMLImageElement).style.opacity = '0.4'
+              ;(e.target as HTMLImageElement).src = FALLBACK_PERK_ICON
             }}
           />
         </div>
@@ -154,14 +162,14 @@ function RuneCircle({
       onMouseEnter={handleTrigger}
       onMouseLeave={handleMouseLeave}
       title={perk.name}
-      className={`relative cursor-pointer transition-all duration-200 rounded-full flex items-center justify-center ${
+      className={`relative cursor-pointer transition-all duration-200 rounded-full flex items-center justify-center shrink-0 ${
         isActive
           ? 'scale-105 z-10'
           : 'opacity-30 grayscale hover:opacity-85 hover:grayscale-0 hover:scale-105'
       }`}
     >
       <div
-        className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full p-0.5 transition-all ${
+        className={`w-8.5 h-8.5 sm:w-9 sm:h-9 rounded-full p-0.5 transition-all ${
           isActive
             ? 'border-2 shadow-md ring-1 ring-offset-1 ring-offset-zinc-950'
             : 'border border-zinc-800'
@@ -176,7 +184,7 @@ function RuneCircle({
           alt={perk.name}
           className="w-full h-full rounded-full object-cover"
           onError={(e) => {
-            ;(e.target as HTMLImageElement).style.opacity = '0.4'
+            ;(e.target as HTMLImageElement).src = FALLBACK_PERK_ICON
           }}
         />
       </div>
@@ -218,16 +226,16 @@ function StatShardCircle({
       onMouseEnter={handleTrigger}
       onMouseLeave={handleMouseLeave}
       title={`${displayName}${option.description ? `: ${option.description}` : ''}`}
-      className={`relative cursor-pointer transition-all duration-200 rounded-full flex items-center justify-center ${
+      className={`relative cursor-pointer transition-all duration-200 rounded-full flex items-center justify-center shrink-0 ${
         option.isSelected
           ? 'scale-105 z-10'
           : 'opacity-35 grayscale hover:opacity-90 hover:grayscale-0 hover:scale-105'
       }`}
     >
       <div
-        className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center p-1.5 transition-all ${
+        className={`w-7 h-7 sm:w-7.5 sm:h-7.5 rounded-full flex items-center justify-center p-1 transition-all ${
           option.isSelected
-            ? 'border-2 border-[#00C8FF] ring-2 ring-[#00C8FF]/40 bg-[#0E121A] shadow-[0_0_14px_rgba(0,200,255,0.45)]'
+            ? 'border-2 border-[#00C8FF] ring-1.5 ring-[#00C8FF]/40 bg-[#0E121A] shadow-[0_0_12px_rgba(0,200,255,0.5)]'
             : 'border border-zinc-800/80 bg-zinc-950/80 hover:border-zinc-600'
         }`}
       >
@@ -238,7 +246,8 @@ function StatShardCircle({
             option.isSelected ? 'filter drop-shadow-[0_0_4px_rgba(0,200,255,0.5)]' : ''
           }`}
           onError={(e) => {
-            ;(e.target as HTMLImageElement).style.opacity = '0.3'
+            ;(e.target as HTMLImageElement).src =
+              'https://ddragon.leagueoflegends.com/cdn/img/perk-images/StatMods/StatModsAdaptiveForceIcon.png'
           }}
         />
       </div>
@@ -313,21 +322,21 @@ function BlitzRuneTreeGrid({
       ]
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10 pt-1">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5 relative z-10 pt-1">
       {/* ── LEFT COLUMN: PRIMARY TREE ── */}
-      <div className="space-y-4 bg-zinc-950/40 border border-zinc-800/60 rounded-xl p-3.5">
+      <div className="space-y-3.5 bg-zinc-950/40 border border-zinc-800/60 rounded-xl p-3 sm:p-3.5 min-w-0 overflow-hidden">
         {/* Style Header */}
-        <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/70">
+        <div className="flex items-center gap-2 pb-1.5 border-b border-zinc-800/70">
           <img
             src={primaryIcon}
             alt={primaryName ?? 'Primary'}
-            className="w-5 h-5 object-contain"
+            className="w-5 h-5 object-contain shrink-0"
             onError={(e) => {
               ;(e.target as HTMLImageElement).style.display = 'none'
             }}
           />
           <p
-            className="text-xs font-black uppercase tracking-wider"
+            className="text-xs sm:text-sm font-black uppercase tracking-wider truncate"
             style={{ color: primaryStyle?.color ?? '#C89B3C' }}
           >
             {primaryName ?? 'Primary Tree'}
@@ -335,12 +344,19 @@ function BlitzRuneTreeGrid({
         </div>
 
         {/* Keystones Row */}
-        <div className="flex items-center justify-center gap-2 sm:gap-3 py-1">
+        <div
+          className={`flex items-center justify-center py-1 ${
+            primaryStruct.keystones.length === 4
+              ? 'gap-2 sm:gap-2.5'
+              : 'gap-3 sm:gap-3.5'
+          }`}
+        >
           {primaryStruct.keystones.map((kId) => (
             <RuneCircle
               key={kId}
               perkId={kId}
               isKeystone
+              isCompactKeystone={primaryStruct.keystones.length === 4}
               isActive={kId === setup.keystoneId}
               activeColor={primaryStyle?.color ?? '#C89B3C'}
               onSelectPreview={onSelectPreview}
@@ -352,11 +368,11 @@ function BlitzRuneTreeGrid({
         </div>
 
         {/* Primary Minor Tiers (3 rows) */}
-        <div className="space-y-3 pt-1">
+        <div className="space-y-2.5 pt-0.5">
           {primaryStruct.slots.map((slot, rowIdx) => (
             <div
               key={rowIdx}
-              className="flex items-center justify-center gap-3 sm:gap-4 py-0.5"
+              className="flex items-center justify-center gap-3 sm:gap-3.5 py-1"
             >
               {slot.map((perkId) => (
                 <RuneCircle
@@ -376,19 +392,19 @@ function BlitzRuneTreeGrid({
       </div>
 
       {/* ── RIGHT COLUMN: SECONDARY TREE & STAT SHARDS ── */}
-      <div className="space-y-4 bg-zinc-950/40 border border-zinc-800/60 rounded-xl p-3.5">
+      <div className="space-y-3.5 bg-zinc-950/40 border border-zinc-800/60 rounded-xl p-3 sm:p-3.5 min-w-0 overflow-hidden">
         {/* Secondary Style Header */}
-        <div className="flex items-center gap-2 pb-2 border-b border-zinc-800/70">
+        <div className="flex items-center gap-2 pb-1.5 border-b border-zinc-800/70">
           <img
             src={subIcon}
             alt={subName ?? 'Secondary'}
-            className="w-5 h-5 object-contain"
+            className="w-5 h-5 object-contain shrink-0"
             onError={(e) => {
               ;(e.target as HTMLImageElement).style.display = 'none'
             }}
           />
           <p
-            className="text-xs font-black uppercase tracking-wider"
+            className="text-xs sm:text-sm font-black uppercase tracking-wider truncate"
             style={{ color: subStyle?.color ?? '#6CAE3B' }}
           >
             {subName ?? 'Secondary Tree'}
@@ -400,7 +416,7 @@ function BlitzRuneTreeGrid({
           {subStruct.slots.map((slot, rowIdx) => (
             <div
               key={rowIdx}
-              className="flex items-center justify-center gap-3 sm:gap-4 py-0.5"
+              className="flex items-center justify-center gap-3 sm:gap-3.5 py-1"
             >
               {slot.map((perkId) => (
                 <RuneCircle
@@ -418,8 +434,8 @@ function BlitzRuneTreeGrid({
           ))}
         </div>
 
-        {/* Divider / Stat Shards Section (Season 14 3x3 Grid matching Screenshot 1) */}
-        <div className="pt-3 border-t border-zinc-800/70 space-y-2.5">
+        {/* Divider / Stat Shards Section (Season 14 3x3 Grid) */}
+        <div className="pt-2 border-t border-zinc-800/70 space-y-2">
           <p className="text-xs font-black uppercase tracking-wider text-cyan-400 text-center">
             STAT SHARDS
           </p>
@@ -428,7 +444,7 @@ function BlitzRuneTreeGrid({
             {shardRows.map((row) => (
               <div
                 key={`shard-row-${row.row}`}
-                className="flex items-center justify-center gap-4 sm:gap-5 py-0.5"
+                className="flex items-center justify-center gap-3 sm:gap-3.5 py-0.5"
               >
                 {row.options.map((opt, idx) => (
                   <StatShardCircle
@@ -449,6 +465,7 @@ function BlitzRuneTreeGrid({
 
 export function RuneTreeVisual({
   runes,
+  activeSetup,
   splashUrl,
   onSelectPreview,
   onClosePreview,
@@ -463,7 +480,7 @@ export function RuneTreeVisual({
     onPresetChange?.(key)
   }
 
-  const currentRunes = runes[activePreset]
+  const currentRunes = activeSetup ?? runes[activePreset]
 
   const presets: {
     key: PresetKey
@@ -495,7 +512,7 @@ export function RuneTreeVisual({
   const subName = subStyle?.en || 'Secondary'
 
   return (
-    <div className="relative overflow-hidden rounded-xl bg-[#0E121A] border border-zinc-800/80 p-4 sm:p-5 select-none shadow-2xl space-y-4">
+    <div className="relative overflow-hidden rounded-xl bg-[#0E121A] border border-zinc-800/80 p-3.5 sm:p-4 select-none shadow-2xl space-y-3.5 min-w-0">
       {/* Background Splash Watermark */}
       {splashUrl && (
         <div

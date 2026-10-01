@@ -24,7 +24,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-neutral-800/80 bg-[#0b0c10]/95 backdrop-blur-md">
       {/* 1. Top Bar: Logo, Search Command, User Login */}
       <div className="border-b border-neutral-800/50">
-        <div className="max-w-6xl mx-auto h-16 flex items-center justify-between gap-4 lg:px-0 md:px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto h-16 flex items-center justify-between gap-4 px-4 sm:px-6 lg:px-0">
           {/* Logo & Brand */}
           <Link to="/" className="flex items-center gap-3 group shrink-0">
             <div className="bg-amber-400 text-black p-1.5 rounded-lg flex items-center justify-center transition-transform group-hover:scale-105 shadow-md shadow-amber-500/20">
@@ -55,7 +55,7 @@ export function Header() {
 
       {/* 2. Bottom Bar: Navigation items with active red line */}
       <div className="bg-[#0f1118]/80 border-t border-neutral-800/40">
-        <div className="max-w-6xl mx-auto lg:px-0 md:px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-0">
           <nav
             aria-label="Main Navigation"
             className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0"

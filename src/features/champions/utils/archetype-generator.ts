@@ -1,86 +1,72 @@
-import type { ChampionBuildPayload } from '../types/champion-build'
+import type {
+  ChampionBuildPayload,
+  ChampionItems,
+  SpellPair,
+  RuneSetupBackend,
+} from '../types/champion-build'
 import type { ChampionMeta, Role } from '../types/champion'
 import type { Archetype } from '../components/build/archetype-selector'
-import { getPerkInfo, RUNE_STYLE_ICON } from '../data/ddragon-ids'
+import { getPerkInfo, RUNE_STYLE_ICON, RUNE_STYLE_NAME } from '../data/ddragon-ids'
+import {
+  CLASS_NAMES,
+  CLASS_ITEM_PRESETS,
+  CLASS_RUNE_PRESETS,
+  type ArchetypeBuildPreset,
+  type ArchetypeRunePreset,
+} from '../data/archetype-presets'
 
-interface ArchetypeTemplate {
-  name: string
-  keystoneId: number
-  subStyleId: number
-}
-
-// Class-specific third archetype options when primary & secondary are already known
-const CLASS_THIRD_ARCHETYPES: Record<string, ArchetypeTemplate> = {
-  Mage: {
-    name: 'DoT Burn',
-    keystoneId: 8214, // Summon Aery
-    subStyleId: 8400, // Resolve
-  },
-  Assassin: {
-    name: 'Duel Sustain',
-    keystoneId: 8010, // Conqueror
-    subStyleId: 8000, // Precision
-  },
-  Fighter: {
-    name: 'Lethality Burst',
-    keystoneId: 8112, // Electrocute
-    subStyleId: 8100, // Domination
-  },
-  Marksman: {
-    name: 'Lethality Poke',
-    keystoneId: 8229, // Arcane Comet
-    subStyleId: 8100, // Domination
-  },
-  Tank: {
-    name: 'Sustain Grasp',
-    keystoneId: 8437, // Grasp of the Undying
-    subStyleId: 8300, // Inspiration
-  },
-  Support: {
-    name: 'Poke Harass',
-    keystoneId: 8229, // Arcane Comet
-    subStyleId: 8300, // Inspiration
-  },
-}
-
-const CLASS_NAMES: Record<
-  string,
-  {
-    first: string
-    second: string
-    third: string
+function createArchetypeItems(
+  preset: ArchetypeBuildPreset,
+  winRate: number
+): { items: ChampionItems; spells: SpellPair[] } {
+  const items: ChampionItems = {
+    starting: [{ itemIds: preset.starting, winRate: Number(winRate.toFixed(1)), pickRate: 75.0, gamesPlayed: 10000 }],
+    early: [{ itemIds: [preset.buildOrder[0] || preset.core[0], preset.boots[0]], winRate: Number(winRate.toFixed(1)), pickRate: 65.0, gamesPlayed: 9000 }],
+    core: [{ itemIds: preset.core, winRate: Number((winRate + 1.2).toFixed(1)), pickRate: 58.0, gamesPlayed: 8000 }],
+    completed: [{ itemIds: preset.fullBuild, winRate: Number((winRate + 4.5).toFixed(1)), pickRate: 35.0, gamesPlayed: 4500 }],
+    buildOrder: preset.buildOrder,
+    boots: [{ itemIds: preset.boots, winRate: Number(winRate.toFixed(1)), pickRate: 85.0, gamesPlayed: 11000 }],
+    situational: [{ itemIds: preset.fullBuild.slice(-3), winRate: Number(winRate.toFixed(1)), pickRate: 40.0, gamesPlayed: 5500 }],
+    trinkets: [{ itemIds: [3340], winRate: Number(winRate.toFixed(1)), pickRate: 90.0, gamesPlayed: 12000 }],
   }
-> = {
-  Mage: {
-    first: 'AP Burst',
-    second: 'Control CDR',
-    third: 'DoT Burn',
-  },
-  Assassin: {
-    first: 'Burst Lethality',
-    second: 'Roam Speed',
-    third: 'Duel Sustain',
-  },
-  Fighter: {
-    first: 'Bruiser AD',
-    second: 'Sustain HP',
-    third: 'Lethality Burst',
-  },
-  Marksman: {
-    first: 'Crit DPS',
-    second: 'On-Hit AS',
-    third: 'Lethality Poke',
-  },
-  Tank: {
-    first: 'Tank Armor',
-    second: 'Engage CC',
-    third: 'Sustain Grasp',
-  },
-  Support: {
-    first: 'Enchanter Utility',
-    second: 'Engage Peel',
-    third: 'Poke Harass',
-  },
+
+  const spells: SpellPair[] = [
+    { spell1Id: preset.spells[0], spell2Id: preset.spells[1], winRate: Number((winRate + 0.8).toFixed(1)), pickRate: 68.0 },
+    { spell1Id: preset.spells[0], spell2Id: preset.spells[1] === 12 ? 14 : 12, winRate: Number(winRate.toFixed(1)), pickRate: 32.0 },
+  ]
+
+  return { items, spells }
+}
+
+function createRuneSetup(
+  preset: ArchetypeRunePreset,
+  winRate: number,
+  pickRate: number
+): RuneSetupBackend {
+  const primaryName = RUNE_STYLE_NAME[preset.primaryStyleId]?.en || preset.primaryStyleName
+  const subName = RUNE_STYLE_NAME[preset.subStyleId]?.en || preset.subStyleName
+
+  return {
+    primaryStyleId: preset.primaryStyleId,
+    primaryStyleName: primaryName,
+    keystoneId: preset.keystoneId,
+    selectedPerkIds: preset.selectedPerkIds,
+    subStyleId: preset.subStyleId,
+    subStyleName: subName,
+    subPerkIds: preset.subPerkIds,
+    statShards: {
+      offense: preset.statShards?.offense ?? 5008,
+      flex: preset.statShards?.flex ?? 5008,
+      defense: preset.statShards?.defense ?? 5001,
+      slots: [
+        preset.statShards?.offense ?? 5008,
+        preset.statShards?.flex ?? 5008,
+        preset.statShards?.defense ?? 5001,
+      ],
+    },
+    winRate,
+    pickRate,
+  }
 }
 
 export function generateChampionArchetypes(
@@ -110,8 +96,10 @@ export function generateChampionArchetypes(
 
   const classKey = isApDominated ? 'Mage' : primaryClass in CLASS_NAMES ? primaryClass : 'Fighter'
   const names = CLASS_NAMES[classKey] || CLASS_NAMES.Mage
+  const itemPresets = CLASS_ITEM_PRESETS[classKey] || CLASS_ITEM_PRESETS.Mage
+  const runePresets = CLASS_RUNE_PRESETS[classKey] || CLASS_RUNE_PRESETS.Marksman
 
-  // 2. Pick rates & matches calculation (Sum of matches ALWAYS equals totalMatches)
+  // 2. Pick rates & matches calculation
   const rawPick1 = buildData?.runes?.mostPopular?.pickRate ?? 65.0
   const rawPick2 = buildData?.runes?.highestWinRate?.pickRate ?? 24.5
 
@@ -129,40 +117,49 @@ export function generateChampionArchetypes(
     buildData?.runes?.highestWinRate?.winRate ?? Number((winRate1 + 1.6).toFixed(1))
   const winRate3 = Number((Math.min(winRate1, winRate2) - 0.9).toFixed(1))
 
-  // 4. Runes keystones & icons
-  const mostPopKeystone = buildData?.runes?.mostPopular?.keystoneId ?? (isApDominated ? 8229 : 8010)
-  const mostPopSubStyle = buildData?.runes?.mostPopular?.subStyleId ?? (isApDominated ? 8000 : 8400)
+  // 4. Distinct Runes Generation: ensure no duplicates across archetypes
+  const runes1: RuneSetupBackend =
+    buildData?.runes?.mostPopular && buildData.runes.mostPopular.selectedPerkIds?.length >= 3
+      ? buildData.runes.mostPopular
+      : createRuneSetup(runePresets[0], winRate1, pickRate1)
 
-  const highWinKeystone =
-    buildData?.runes?.highestWinRate?.keystoneId ?? (isApDominated ? 8369 : 8005)
-  const highWinSubStyle =
-    buildData?.runes?.highestWinRate?.subStyleId ?? (isApDominated ? 8200 : 8100)
+  const isSetup2Duplicate = Boolean(
+    buildData?.runes?.highestWinRate &&
+      buildData.runes.highestWinRate.keystoneId === runes1.keystoneId &&
+      buildData.runes.highestWinRate.subStyleId === runes1.subStyleId
+  )
 
-  const thirdTemplate = CLASS_THIRD_ARCHETYPES[classKey] || CLASS_THIRD_ARCHETYPES.Mage
-  let thirdKeystone = thirdTemplate.keystoneId
-  let thirdSubStyle = thirdTemplate.subStyleId
+  const runes2: RuneSetupBackend =
+    buildData?.runes?.highestWinRate &&
+    buildData.runes.highestWinRate.selectedPerkIds?.length >= 3 &&
+    !isSetup2Duplicate
+      ? buildData.runes.highestWinRate
+      : createRuneSetup(runePresets[1], winRate2, pickRate2)
 
-  // Avoid identical keystones across archetypes if possible
-  if (thirdKeystone === mostPopKeystone || thirdKeystone === highWinKeystone) {
-    thirdKeystone = isApDominated ? 8112 : 8230 // Electrocute or Phase Rush
-  }
-  if (thirdSubStyle === mostPopSubStyle) {
-    thirdSubStyle = 8300 // Inspiration
-  }
+  const runes3: RuneSetupBackend = createRuneSetup(runePresets[2], winRate3, pickRate3)
 
-  const keystone1 = getPerkInfo(mostPopKeystone)
-  const keystone2 = getPerkInfo(highWinKeystone)
-  const keystone3 = getPerkInfo(thirdKeystone)
+  const keystone1 = getPerkInfo(runes1.keystoneId)
+  const keystone2 = getPerkInfo(runes2.keystoneId)
+  const keystone3 = getPerkInfo(runes3.keystoneId)
 
   const secondaryIcon1 =
-    RUNE_STYLE_ICON[mostPopSubStyle] ??
+    RUNE_STYLE_ICON[runes1.subStyleId] ??
     'https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/7201_Precision.png'
   const secondaryIcon2 =
-    RUNE_STYLE_ICON[highWinSubStyle] ??
+    RUNE_STYLE_ICON[runes2.subStyleId] ??
     'https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/7202_Sorcery.png'
   const secondaryIcon3 =
-    RUNE_STYLE_ICON[thirdSubStyle] ??
+    RUNE_STYLE_ICON[runes3.subStyleId] ??
     'https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/7204_Resolve.png'
+
+  // 5. Generate distinct items & spells for each archetype
+  const build1 =
+    buildData?.items && buildData.items.core?.length > 0 && buildData.items.core[0].itemIds?.length >= 3
+      ? { items: buildData.items, spells: buildData.spells || createArchetypeItems(itemPresets[0], winRate1).spells }
+      : createArchetypeItems(itemPresets[0], winRate1)
+
+  const build2 = createArchetypeItems(itemPresets[1], winRate2)
+  const build3 = createArchetypeItems(itemPresets[2], winRate3)
 
   return [
     {
@@ -174,6 +171,9 @@ export function generateChampionArchetypes(
       winRate: Number(winRate1.toFixed(1)),
       matches: matches1,
       pickRate: pickRate1,
+      items: build1.items,
+      spells: build1.spells,
+      runes: runes1,
     },
     {
       id: isApDominated ? 'utility' : 'secondary',
@@ -184,6 +184,9 @@ export function generateChampionArchetypes(
       winRate: Number(winRate2.toFixed(1)),
       matches: matches2,
       pickRate: pickRate2,
+      items: build2.items,
+      spells: build2.spells,
+      runes: runes2,
     },
     {
       id: isApDominated ? 'dps' : 'situational',
@@ -194,6 +197,9 @@ export function generateChampionArchetypes(
       winRate: Number(winRate3.toFixed(1)),
       matches: matches3,
       pickRate: pickRate3,
+      items: build3.items,
+      spells: build3.spells,
+      runes: runes3,
     },
   ]
 }

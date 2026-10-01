@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import type { ChampionMeta, Role, RankBracket, Region } from '../types/champion'
 import { useChampions } from '../api/get-champions'
@@ -73,6 +73,13 @@ export function ChampionsView() {
   const totalChampions = data?.total ?? champions.length
   const totalPages = data?.totalPages ?? Math.max(1, Math.ceil(totalChampions / pageSize))
 
+  // Ensure current page does not exceed available pages
+  useEffect(() => {
+    if (page > totalPages && totalPages > 0) {
+      setPage(1)
+    }
+  }, [page, totalPages])
+
   // Quick stats summary
   const summaryStats = useMemo(() => {
     if (!champions.length) return { total: totalChampions, sPlusCount: 0 }
@@ -117,11 +124,21 @@ export function ChampionsView() {
 
       {/* 3. CHAMPIONS LIST DATA DISPLAY */}
       {isLoading ? (
-        <div className="py-20 text-center space-y-3">
-          <div className="w-10 h-10 border-4 border-rose-500/20 border-t-rose-500 rounded-full animate-spin mx-auto" />
-          <p className="text-zinc-400 text-sm font-medium">
-            Loading champions...
-          </p>
+        <div className="rounded-xl border border-zinc-800 bg-[#121620] shadow-xl p-4 space-y-3 animate-pulse">
+          <div className="h-9 w-full bg-zinc-800/60 rounded-lg" />
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-12 w-full bg-zinc-800/30 rounded-lg flex items-center px-4 gap-4"
+            >
+              <div className="w-5 h-4 bg-zinc-700/50 rounded" />
+              <div className="w-8 h-8 rounded-lg bg-zinc-700/60 shrink-0" />
+              <div className="w-28 h-4 bg-zinc-700/50 rounded" />
+              <div className="w-10 h-6 rounded bg-zinc-700/40 ml-auto hidden sm:block" />
+              <div className="w-16 h-4 bg-zinc-700/50 rounded hidden sm:block" />
+              <div className="w-16 h-4 bg-zinc-700/50 rounded hidden md:block" />
+            </div>
+          ))}
         </div>
       ) : champions.length === 0 ? (
         <div className="py-16 text-center bg-zinc-900/40 border border-zinc-800/80 rounded-2xl p-6">

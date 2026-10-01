@@ -1,4 +1,5 @@
-import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
+import type { QueryClient } from "@tanstack/react-query";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -6,7 +7,11 @@ import { AuthModal } from "@/features/auth";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 
-export const Route = createRootRoute({
+export interface MyRouterContext {
+  queryClient: QueryClient;
+}
+
+export const Route = createRootRouteWithContext<MyRouterContext>()({
   component: RootComponent,
 });
 

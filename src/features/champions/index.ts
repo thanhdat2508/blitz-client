@@ -1,6 +1,5 @@
 export * from './types/champion'
 export * from './types/champion-build'
-export * from './data/mock-champions'
 export * from './api/get-champions'
 export * from './api/get-champion-build'
 export * from './api/get-pro-players'

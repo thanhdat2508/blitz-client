@@ -42,6 +42,7 @@ export interface TierListResponse {
   page?: number;
   limit?: number;
   totalPages?: number;
+  tierCounts?: Record<string, number>;
   data: TierChampionApiItem[];
 }
 

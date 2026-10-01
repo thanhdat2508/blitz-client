@@ -53,11 +53,19 @@ export function TabRunesItems({
     ? selectedArchetype
     : (archetypes[0]?.id ?? 'ap')
 
+  const currentArchetype = archetypes.find((a) => a.id === currentArchetypeId) ?? archetypes[0]
+  const activeItems = currentArchetype?.items ?? activeBuild.items
+  const activeSpells = currentArchetype?.spells ?? activeBuild.spells
+  const activeRunes =
+    currentArchetype?.runes ??
+    activeBuild.runes?.[activeRunePreset] ??
+    activeBuild.runes?.mostPopular
+
   const handleArchetypeSelect = (id: string) => {
     setSelectedArchetype(id)
     if (id === archetypes[0]?.id) {
       setActiveRunePreset('mostPopular')
-    } else {
+    } else if (id === archetypes[1]?.id) {
       setActiveRunePreset('highestWinRate')
     }
   }
@@ -72,9 +80,10 @@ export function TabRunesItems({
   }
 
   const selectedKeystoneId =
-    currentArchetypeId === archetypes[1]?.id
+    currentArchetype?.runes?.keystoneId ??
+    (currentArchetypeId === archetypes[1]?.id
       ? activeBuild.runes?.highestWinRate?.keystoneId
-      : activeBuild.runes?.mostPopular?.keystoneId
+      : activeBuild.runes?.mostPopular?.keystoneId)
 
   const handleOpenPreview = (data: FloatingCardData) => {
     if (closeTimerRef.current) {
@@ -123,7 +132,7 @@ export function TabRunesItems({
       />
 
       {/* ── 1. UNIFIED MAIN BUILD CANVAS (BLITZ.GG ARCHITECTURE) ── */}
-      <div className="relative rounded-2xl border border-zinc-800/80 bg-[#0d0f17]/95 p-4 sm:p-5 shadow-2xl backdrop-blur-md overflow-hidden">
+      <div className="relative rounded-2xl border border-zinc-800/80 bg-[#0d0f17]/95 p-3.5 sm:p-4.5 shadow-2xl backdrop-blur-md overflow-hidden">
         {/* Ambient background champion splash art */}
         {splashUrl && (
           <div
@@ -132,10 +141,10 @@ export function TabRunesItems({
           />
         )}
 
-        {/* 3-Column Balanced Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 relative z-10 items-stretch">
-          {/* ── COLUMN 1: SIDEBAR (ARCHETYPES, OTP & PRO BUILDS FEED) - Cols 1 to 3 ── */}
-          <div className="lg:col-span-3 flex flex-col space-y-3 h-full">
+        {/* 3-Column Grid: Sidebars shrunk slightly, Middle Runes expanded */}
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,2.8fr)_minmax(0,5.4fr)_minmax(0,2.8fr)] gap-3.5 lg:gap-4 relative z-10 items-stretch">
+          {/* ── COLUMN 1: SIDEBAR (ARCHETYPES, OTP & PRO BUILDS FEED) ── */}
+          <div className="min-w-0 flex flex-col space-y-3 h-full">
             <ArchetypeSelector
               archetypes={archetypes}
               selectedId={currentArchetypeId}
@@ -143,16 +152,21 @@ export function TabRunesItems({
             />
             <OtpBuildsCard
               championName={championName}
-              coreItemIds={activeBuild.items?.core?.[0]?.itemIds}
+              coreItemIds={activeItems?.core?.[0]?.itemIds}
               keystoneId={selectedKeystoneId}
+              secondaryStyleId={
+                currentArchetype?.runes?.subStyleId ??
+                activeRunes?.subStyleId
+              }
             />
             <ProBuildsCard championName={championName} />
           </div>
 
-          {/* ── COLUMN 2: RUNES & INTEGRATED SKILL MATRIX - Cols 4 to 8 ── */}
-          <div className="lg:col-span-5 space-y-3.5 self-start">
+          {/* ── COLUMN 2: RUNES & INTEGRATED SKILL MATRIX (EXPANDED CENTER) ── */}
+          <div className="min-w-0 space-y-3.5 self-start">
             <RuneTreeVisual
               runes={activeBuild.runes}
+              activeSetup={activeRunes}
               splashUrl={splashUrl}
               activePreset={activeRunePreset}
               onPresetChange={handleRunePresetChange}
@@ -165,11 +179,11 @@ export function TabRunesItems({
             />
           </div>
 
-          {/* ── COLUMN 3: SUMMONERS & SEQUENTIAL ITEMS - Cols 9 to 12 ── */}
-          <div className="lg:col-span-4 flex flex-col h-full">
+          {/* ── COLUMN 3: SUMMONERS & SEQUENTIAL ITEMS ── */}
+          <div className="min-w-0 flex flex-col h-full">
             <ItemBuildPath
-              items={activeBuild.items}
-              spells={activeBuild.spells}
+              items={activeItems}
+              spells={activeSpells}
               championName={championName}
               role={backendRole}
               onSelectPreview={handleOpenPreview}

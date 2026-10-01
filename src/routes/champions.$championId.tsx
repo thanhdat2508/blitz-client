@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate, useParams } from '@tanstack/react-router'
 import { useState } from 'react'
-import { useChampion } from '@/features/champions/api/get-champions'
-import { useChampionBuild } from '@/features/champions/api/get-champion-build'
+import { championKeys, fetchChampionById, useChampion } from '@/features/champions/api/get-champions'
+import { championBuildKeys, fetchChampionBuild, useChampionBuild } from '@/features/champions/api/get-champion-build'
 import type { BuildRole, BuildTier } from '@/features/champions/types/champion-build'
 import { ChampionHeroHeader } from '@/features/champions/components/detail/champion-hero-header'
 import { ChampionFilterToolbar } from '@/features/champions/components/detail/champion-filter-toolbar'
@@ -12,6 +12,16 @@ import type { Role, ChampionMeta } from '@/features/champions/types/champion'
 import { getChampionAvatarUrl, getChampionSplashUrl } from '@/features/champions/data/ddragon-ids'
 
 export const Route = createFileRoute('/champions/$championId')({
+  loader: async ({ params: { championId }, context: { queryClient } }) => {
+    queryClient.prefetchQuery({
+      queryKey: championKeys.detail(championId),
+      queryFn: () => fetchChampionById(championId),
+    })
+    return queryClient.ensureQueryData({
+      queryKey: championBuildKeys.build(championId, 'mid', { tier: 'EMERALD+', region: 'WORLD' }),
+      queryFn: () => fetchChampionBuild(championId, 'mid', { tier: 'EMERALD+', region: 'WORLD' }),
+    })
+  },
   component: ChampionDetailPage,
 })
 
@@ -134,7 +144,7 @@ function ChampionDetailPage() {
   }
 
   return (
-    <div className="space-y-4 select-none pb-12 font-sans">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-0 py-6 space-y-4 select-none pb-12 font-sans">
       {/* 1. HERO HEADER */}
       <ChampionHeroHeader
         champion={resolvedChampion}

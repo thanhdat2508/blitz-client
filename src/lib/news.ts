@@ -1,6 +1,66 @@
-import { MOCK_NEWS_ARTICLES } from "@/features/news/data/mock-news";
-import type { GetNewsParams, NewsArticle, NewsCategory } from "@/types/news";
+import type { ChampionChange, GetNewsParams, NewsArticle, NewsCategory } from "@/types/news";
 import { getPosts } from "@/features/news/api/get-posts";
+
+function extractChampionChanges(content: string): ChampionChange[] {
+  const changes: ChampionChange[] = [];
+  if (!content) return changes;
+
+  let currentType: "buff" | "nerf" | "adjust" | "rework" = "adjust";
+  const lines = content.split("\n");
+
+  let currentChampion = "";
+  let currentSummaryParts: string[] = [];
+
+  const flush = () => {
+    if (currentChampion && currentSummaryParts.length > 0) {
+      const champClean = currentChampion.replace(/[^a-zA-Z]/g, "");
+      changes.push({
+        champion: currentChampion,
+        avatarUrl: `https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/${champClean}.png`,
+        type: currentType,
+        summary: currentSummaryParts.join("; "),
+      });
+      currentChampion = "";
+      currentSummaryParts = [];
+    }
+  };
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (/CHAMPION BUFFS/i.test(line)) {
+      flush();
+      currentType = "buff";
+      continue;
+    }
+    if (/CHAMPION NERFS/i.test(line)) {
+      flush();
+      currentType = "nerf";
+      continue;
+    }
+    if (/CHAMPION ADJUSTMENTS/i.test(line) || /CHAMPION REWORKS/i.test(line)) {
+      flush();
+      currentType = /REWORK/i.test(line) ? "rework" : "adjust";
+      continue;
+    }
+
+    const champMatch = line.match(/^[•\-*]\s*([A-Za-z\s']+):$/);
+    if (champMatch) {
+      flush();
+      currentChampion = champMatch[1].trim();
+      continue;
+    }
+
+    if (currentChampion && (line.startsWith("-") || line.startsWith("•") || line.startsWith("*"))) {
+      const summaryText = line.replace(/^[•\-*]\s*/, "").trim();
+      if (summaryText) {
+        currentSummaryParts.push(summaryText);
+      }
+    }
+  }
+
+  flush();
+  return changes;
+}
 
 export async function getNews({
   category = "all",
@@ -36,14 +96,14 @@ export async function getNews({
           }
         }
 
-        // Extract patch version if present (e.g. "15.5", "15.4")
-        const patchMatch = post.title.match(/(\d+\.\d+)/);
+        // Extract patch version if present (e.g. "26.19", "15.5")
+        const patchMatch = post.title.match(/(?:Patch\s*)?(\d+\.\d+)/i);
         const patchVersion =
           matchedCategory === "patch-notes" && patchMatch
             ? patchMatch[1]
             : undefined;
 
-        // Generate summary from markdown content
+        // Generate clean summary from content intro
         const cleanContent = (post.content || "")
           .replace(/[#*`_~[\]]/g, "")
           .replace(/\n+/g, " ")
@@ -52,6 +112,12 @@ export async function getNews({
           cleanContent.length > 160
             ? cleanContent.slice(0, 160).trim() + "..."
             : cleanContent || post.title;
+
+        // Extract structured balance changes for patch notes
+        const changes =
+          matchedCategory === "patch-notes" && post.content
+            ? extractChampionChanges(post.content)
+            : undefined;
 
         return {
           id: post.id,
@@ -67,31 +133,15 @@ export async function getNews({
           readTimeMinutes:
             post.readingTime ||
             Math.max(2, Math.round((post.content?.length || 500) / 400)),
-          author: post.author?.name || post.author?.username || "Riot Games",
+          author: post.author?.name || post.author?.username || "Blitz Editorial Team",
           content: post.content,
+          changes: changes && changes.length > 0 ? changes : undefined,
         };
       });
     }
   } catch (err) {
-    console.warn("Backend /api/posts fetch error, falling back to local dataset:", err);
+    console.warn("[news] Backend /api/posts fetch error:", err);
   }
 
-  // 2. Offline fallback to local mock data
-  let filtered = [...MOCK_NEWS_ARTICLES];
-
-  if (category && category !== "all") {
-    filtered = filtered.filter((item) => item.category === category);
-  }
-
-  if (search.trim()) {
-    const query = search.trim().toLowerCase();
-    filtered = filtered.filter(
-      (item) =>
-        item.title.toLowerCase().includes(query) ||
-        item.summary.toLowerCase().includes(query) ||
-        (item.patchVersion && item.patchVersion.toLowerCase().includes(query)),
-    );
-  }
-
-  return filtered;
+  return [];
 }

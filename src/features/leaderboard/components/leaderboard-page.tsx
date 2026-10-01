@@ -110,8 +110,9 @@ export function LeaderboardPage() {
     setIsMobileSheetOpen(false);
   };
 
-  // Compute tier distribution counts from items
+  // Compute tier distribution counts from items (use server-calculated total counts if available)
   const tierCounts = React.useMemo(() => {
+    if (data?.tierCounts) return data.tierCounts;
     if (!data?.data) return undefined;
     const counts: Record<string, number> = { S: 0, A: 0, B: 0, C: 0, D: 0 };
     data.data.forEach((item) => {
@@ -119,7 +120,7 @@ export function LeaderboardPage() {
       if (counts[t] !== undefined) counts[t]++;
     });
     return counts;
-  }, [data?.data]);
+  }, [data?.tierCounts, data?.data]);
 
   const champions = data?.data || [];
   const totalItems = data?.total || champions.length;

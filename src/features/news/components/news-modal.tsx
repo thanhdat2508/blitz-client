@@ -174,16 +174,23 @@ export function NewsModal({ article, onClose }: NewsModalProps) {
               <Separator />
 
               {/* Overview Section */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <h4 className="text-sm sm:text-base font-bold text-foreground">
-                  Patch Overview
+                  {article.category === "patch-notes"
+                    ? "Patch Overview"
+                    : article.category === "esports"
+                    ? "Tournament Report"
+                    : article.category === "gameplay"
+                    ? "Strategy Guide"
+                    : "Community Highlights"}
                 </h4>
-                <p className="text-muted-foreground text-sm leading-relaxed">
-                  {article.summary}
-                </p>
-                {article.content && (
-                  <p className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line">
+                {article.content ? (
+                  <div className="text-muted-foreground text-sm leading-relaxed whitespace-pre-line space-y-2">
                     {article.content}
+                  </div>
+                ) : (
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    {article.summary}
                   </p>
                 )}
               </div>
