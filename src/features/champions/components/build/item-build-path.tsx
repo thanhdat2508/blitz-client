@@ -119,6 +119,12 @@ export function ItemBuildPath({
   const situationalIds = items.situational.flatMap((s) => s.itemIds)
   const trinketId = items.trinkets[0]?.itemIds[0]
 
+  const ALL_BOOT_IDS = new Set([3006, 3009, 3020, 3047, 3111, 3117, 3158, 2422])
+  const completedHasBoots =
+    completedIds.some((id) => ALL_BOOT_IDS.has(id)) ||
+    (bootItemId ? completedIds.includes(bootItemId) : false)
+  const shouldRenderSeparateBoot = Boolean(bootItemId && !completedHasBoots && completedIds.length < 6)
+
   return (
     <div className="bg-[#0E121A] border border-zinc-800/80 rounded-xl p-4 shadow-lg select-none h-full flex flex-col justify-between space-y-3.5">
       {/* ── Top Header ── */}
@@ -252,7 +258,7 @@ export function ItemBuildPath({
               onClosePreview={onClosePreview}
             />
           ))}
-          {bootItemId && (
+          {shouldRenderSeparateBoot && bootItemId && (
             <ItemIcon
               itemId={bootItemId}
               onSelectPreview={onSelectPreview}

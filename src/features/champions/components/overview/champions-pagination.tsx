@@ -52,7 +52,7 @@ export function ChampionsPagination({
   }
 
   const pages = getPageNumbers()
-  const startItem = Math.min(totalItems, (currentPage - 1) * pageSize + 1)
+  const startItem = totalItems === 0 ? 0 : Math.min(totalItems, (currentPage - 1) * pageSize + 1)
   const endItem = Math.min(totalItems, currentPage * pageSize)
 
   return (

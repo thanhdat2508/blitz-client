@@ -93,9 +93,11 @@ export function HomeNewsSection() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {newsItems.map((item) => (
-          <div
+          <Link
             key={item.id || item.version}
-            className="group relative h-56 rounded-2xl overflow-hidden cursor-pointer shadow-lg border border-gray-800 hover:scale-[1.02] transition-transform duration-300"
+            to="/news"
+            hash={item.slug || ""}
+            className="group relative h-56 rounded-2xl overflow-hidden cursor-pointer shadow-lg border border-gray-800 hover:scale-[1.02] transition-transform duration-300 block"
             style={{
               backgroundImage: `url('${item.image}')`,
               backgroundSize: "cover",
@@ -114,7 +116,7 @@ export function HomeNewsSection() {
                 {item.description}
               </p>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </section>

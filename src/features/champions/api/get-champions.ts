@@ -1,6 +1,5 @@
-import { useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import type { ChampionMeta, ChampionFilterState, ChampionsResponse, Role, Tier } from '../types/champion'
-import { MOCK_CHAMPIONS } from '../data/mock-champions'
 
 export const championKeys = {
   all: ['champions'] as const,
@@ -116,8 +115,13 @@ export async function fetchChampions(filters?: Partial<ChampionFilterState>): Pr
     const totalPages = typeof json.totalPages === 'number' ? json.totalPages : Math.max(1, Math.ceil(total / pageSize))
     const patch = typeof json.patch === 'string' ? json.patch : undefined
 
+    // Fallback safeguard: if backend returns unpaginated array (mapped.length > limitParam), slice client-side
+    const pagedChampions = mapped.length > limitParam
+      ? mapped.slice((pageParam - 1) * limitParam, pageParam * limitParam)
+      : mapped
+
     return {
-      champions: mapped,
+      champions: pagedChampions,
       total,
       page,
       pageSize,
@@ -125,47 +129,22 @@ export async function fetchChampions(filters?: Partial<ChampionFilterState>): Pr
       patch,
     }
   } catch (err) {
-    console.warn('Backend tier-list query failed, using local mock fallback:', err)
-
-    // Fallback logic
-    let result = [...MOCK_CHAMPIONS]
-    if (filters?.role && filters.role !== 'ALL') {
-      result = result.filter((champ) => champ.roles.includes(filters.role!))
-    }
-    if (filters?.search && filters.search.trim() !== '') {
-      const q = filters.search.toLowerCase().trim()
-      result = result.filter(
-        (champ) => champ.name.toLowerCase().includes(q) || champ.title.toLowerCase().includes(q)
-      )
-    }
-
-    const total = result.length
-    const page = pageParam
-    const pageSize = limitParam
-    const totalPages = Math.max(1, Math.ceil(total / pageSize))
-    const startIndex = (page - 1) * pageSize
-    const paginated = (filters?.page !== undefined || filters?.pageSize !== undefined)
-      ? result.slice(startIndex, startIndex + pageSize)
-      : result
-
+    console.warn('[get-champions] Backend tier-list query failed:', err)
     return {
-      champions: paginated,
-      total,
-      page,
-      pageSize,
-      totalPages,
+      champions: [],
+      total: 0,
+      page: pageParam,
+      pageSize: limitParam,
+      totalPages: 0,
     }
   }
 }
 
 export async function fetchChampionById(id: string): Promise<ChampionMeta | undefined> {
   const res = await fetchChampions({ page: 1, pageSize: 200 })
-  const found = res.champions.find(
+  return res.champions.find(
     (c) => c.id.toLowerCase() === id.toLowerCase() || c.name.toLowerCase() === id.toLowerCase()
   )
-  if (found) return found
-
-  return MOCK_CHAMPIONS.find((c) => c.id.toLowerCase() === id.toLowerCase())
 }
 
 export function useChampions(filters?: Partial<ChampionFilterState>) {
@@ -173,6 +152,7 @@ export function useChampions(filters?: Partial<ChampionFilterState>) {
     queryKey: championKeys.list(filters || {}),
     queryFn: () => fetchChampions(filters),
     staleTime: 1000 * 60 * 5,
+    placeholderData: keepPreviousData,
   })
 }
 

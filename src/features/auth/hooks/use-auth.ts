@@ -519,31 +519,10 @@ export function useAuth() {
         return;
       }
 
-      // Mock Discord fallback
-      updateStore((prev) => ({ ...prev, status: "submitting", error: null }));
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      const mockName = "GamerPro#2026";
-      const user: AuthUser = {
-        id: `usr_discord_${Date.now()}`,
-        email: `discord_user@example.com`,
-        name: mockName,
-        avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${mockName}`,
-        provider: "discord",
-        isPremium: true,
-        createdAt: new Date().toISOString(),
-      };
-
-      authStorage.setUser(user);
-
       updateStore((prev) => ({
         ...prev,
-        user,
-        isAuthenticated: true,
-        status: "authenticated",
-        isModalOpen: false,
-        pendingEmail: undefined,
-        error: null,
+        status: "idle",
+        error: "Discord login is currently not supported. Please sign in with Google or Riot Games.",
       }));
     },
     [],

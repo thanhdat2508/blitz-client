@@ -39,18 +39,18 @@ export function ProBuildsSection() {
             {[1, 2, 3].map((n) => (
               <div
                 key={n}
-                className="bg-[#1a1b26] p-4 rounded-xl flex items-center justify-between border border-gray-800 animate-pulse"
+                className="bg-[#1a1b26] p-4 rounded-xl flex flex-col gap-3 border border-gray-800 animate-pulse"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-zinc-800" />
-                  <div className="space-y-2">
+                  <div className="w-12 h-12 rounded-full bg-zinc-800 shrink-0" />
+                  <div className="space-y-2 flex-1">
                     <div className="w-24 h-4 bg-zinc-800 rounded" />
-                    <div className="w-36 h-3 bg-zinc-850 rounded" />
+                    <div className="w-48 h-3 bg-zinc-850 rounded" />
                   </div>
                 </div>
-                <div className="flex gap-1.5">
-                  {[1, 2, 3, 4, 5].map((i) => (
-                    <div key={i} className="w-9 h-9 rounded-md bg-zinc-800" />
+                <div className="flex gap-1.5 pt-0.5">
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <div key={i} className="w-9 h-9 rounded-md bg-zinc-800 shrink-0" />
                   ))}
                 </div>
               </div>
@@ -82,7 +82,7 @@ export function ProBuildsSection() {
               return (
                 <div
                   key={player.id}
-                  className="bg-[#1a1b26] p-4 rounded-xl flex flex-wrap items-center justify-between border border-gray-800 hover:border-gray-600 hover:scale-[1.01] cursor-pointer transition-all duration-300"
+                  className="bg-[#1a1b26] p-4 rounded-xl flex flex-col gap-3 border border-gray-800 hover:border-gray-600 hover:scale-[1.01] cursor-pointer transition-all duration-300"
                 >
                   <div className="flex items-center gap-4">
                     <img
@@ -90,28 +90,28 @@ export function ProBuildsSection() {
                       alt={champName}
                       className={`w-12 h-12 rounded-full border-2 ${
                         BORDER_COLORS[player.themeColor] || "border-purple-500/60"
-                      } object-cover shadow-md`}
+                      } object-cover shadow-md shrink-0`}
                       onError={(e) => {
                         (e.target as HTMLImageElement).src =
                           "https://ddragon.leagueoflegends.com/cdn/14.24.1/img/champion/Ahri.png";
                       }}
                     />
 
-                    <div>
-                      <p className="font-bold text-base text-white">{champName}</p>
-                      <p className="text-xs font-semibold text-gray-400 mt-1">
+                    <div className="min-w-0 flex-1">
+                      <p className="font-bold text-base text-white truncate">{champName}</p>
+                      <p className="text-xs font-semibold text-gray-400 mt-1 truncate">
                         {roleInfo}
                       </p>
                     </div>
                   </div>
 
                   {itemIcons.length > 0 && (
-                    <div className="flex gap-1.5 mt-3 sm:mt-0">
+                    <div className="flex items-center gap-1.5 pt-0.5">
                       {itemIcons.slice(0, 6).map((itemUrl, idx) => (
                         <img
                           key={idx}
                           src={itemUrl}
-                          className="w-9 h-9 rounded-md border border-gray-700 object-cover"
+                          className="w-9 h-9 rounded-md border border-gray-700 object-cover shrink-0 shadow-sm"
                           alt={`Item ${idx + 1}`}
                           onError={(e) => {
                             (e.target as HTMLImageElement).style.display = "none";

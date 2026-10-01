@@ -1,3 +1,6 @@
+import type { ChampionItems, SpellPair, RuneSetupBackend } from '../../types/champion-build'
+import { RuneIcon } from './rune-icon'
+
 export interface Archetype {
   id: string
   name: string
@@ -7,6 +10,9 @@ export interface Archetype {
   winRate: number
   matches: number
   pickRate: number
+  items?: ChampionItems
+  spells?: SpellPair[]
+  runes?: RuneSetupBackend
 }
 
 interface ArchetypeSelectorProps {
@@ -17,36 +23,44 @@ interface ArchetypeSelectorProps {
 
 const DEFAULT_ARCHETYPES: Archetype[] = [
   {
-    id: 'ap',
-    name: 'AP Burst',
-    primaryKeystone: 'Arcane Comet',
-    keystoneIcon: 'https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/Sorcery/ArcaneComet/ArcaneComet.png',
+    id: 'burst',
+    name: 'BURST',
+    primaryKeystone: 'Electrocute',
+    keystoneIcon: 'https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/Domination/Electrocute/Electrocute.png',
     secondaryIcon: 'https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/7201_Precision.png',
-    winRate: 54.2,
-    matches: 7890,
-    pickRate: 68.5,
+    winRate: 50.0,
+    matches: 16717,
+    pickRate: 67.4,
   },
   {
-    id: 'utility',
-    name: 'Control / CDR',
-    primaryKeystone: 'First Strike',
-    keystoneIcon: 'https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/Inspiration/FirstStrike/FirstStrike.png',
+    id: 'roam',
+    name: 'ROAM',
+    primaryKeystone: 'Dark Harvest',
+    keystoneIcon: 'https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/Domination/DarkHarvest/DarkHarvest.png',
     secondaryIcon: 'https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/7202_Sorcery.png',
-    winRate: 52.8,
-    matches: 5026,
-    pickRate: 22.0,
+    winRate: 51.5,
+    matches: 4092,
+    pickRate: 16.5,
   },
   {
-    id: 'dps',
-    name: 'DoT Burn',
-    primaryKeystone: 'Summon Aery',
-    keystoneIcon: 'https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/Sorcery/SummonAery/SummonAery.png',
-    secondaryIcon: 'https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/7204_Resolve.png',
-    winRate: 51.5,
-    matches: 2257,
-    pickRate: 9.5,
+    id: 'duel',
+    name: 'DUEL',
+    primaryKeystone: 'Conqueror',
+    keystoneIcon: 'https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/Precision/Conqueror/Conqueror.png',
+    secondaryIcon: 'https://ddragon.leagueoflegends.com/cdn/img/perk-images/Styles/7203_Whimsy.png',
+    winRate: 49.1,
+    matches: 3994,
+    pickRate: 16.1,
   },
 ]
+
+function formatMatches(matches: number): string {
+  if (!matches) return '0'
+  if (matches >= 1000) {
+    return `${(matches / 1000).toFixed(1)}k`
+  }
+  return matches.toLocaleString()
+}
 
 export function ArchetypeSelector({
   archetypes = DEFAULT_ARCHETYPES,
@@ -54,8 +68,8 @@ export function ArchetypeSelector({
   onSelect,
 }: ArchetypeSelectorProps) {
   return (
-    <div className="bg-[#12141c]/90 border border-zinc-800/80 rounded-xl p-2 space-y-1.5 shadow-lg select-none">
-      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+    <div className="bg-[#12141c]/90 border border-zinc-800/80 rounded-xl p-2 shadow-lg select-none">
+      <div className="grid grid-cols-3 gap-1.5 w-full">
         {archetypes.map((arch) => {
           const isSelected = arch.id === selectedId
           return (
@@ -63,47 +77,53 @@ export function ArchetypeSelector({
               key={arch.id}
               type="button"
               onClick={() => onSelect(arch.id)}
-              className={`p-2 rounded-lg border transition-all cursor-pointer flex-1 min-w-[110px] flex items-center justify-between gap-1.5 ${
+              className={`p-1.5 sm:p-2 rounded-xl border transition-all cursor-pointer flex flex-col justify-between gap-1 overflow-hidden w-full relative ${
                 isSelected
-                  ? 'bg-cyan-950/50 border-cyan-500/70 shadow-md shadow-cyan-950/20'
-                  : 'bg-zinc-950/60 border-zinc-850 hover:bg-zinc-900/60 hover:border-zinc-700'
+                  ? 'bg-cyan-950/40 border-cyan-500/70 shadow-md shadow-cyan-950/30 ring-1 ring-cyan-500/30'
+                  : 'bg-zinc-950/70 border-zinc-850 hover:bg-zinc-900/70 hover:border-zinc-700'
               }`}
             >
-              <div className="text-left min-w-0">
-                <p
-                  className={`text-xs font-black uppercase leading-tight ${
-                    isSelected ? 'text-cyan-400' : 'text-zinc-300'
-                  }`}
-                >
-                  {arch.name.split(' ')[0]}
-                </p>
-                <p className="text-[9px] text-zinc-500 font-mono tracking-tight">
-                  {arch.matches?.toLocaleString()} GAMES
-                </p>
-              </div>
-
-              <div className="flex items-center gap-1 shrink-0">
-                <div className="flex items-center -space-x-1">
-                  <img
-                    src={arch.keystoneIcon}
-                    alt={arch.primaryKeystone}
-                    className="w-4 h-4 rounded-full border border-zinc-700 bg-zinc-900"
-                  />
-                  <img
-                    src={arch.secondaryIcon}
-                    alt="Secondary"
-                    className="w-3.5 h-3.5 rounded-full border border-zinc-800 bg-zinc-950"
-                  />
-                </div>
+              {/* Top Row: Title + WinRate Badge */}
+              <div className="flex items-center justify-between w-full min-w-0 gap-1">
                 <span
-                  className={`text-[9px] font-black px-1 py-0.2 rounded ${
+                  className={`text-[11px] sm:text-xs font-black uppercase tracking-tight whitespace-nowrap ${
+                    isSelected ? 'text-cyan-400' : 'text-zinc-100'
+                  }`}
+                  title={arch.name}
+                >
+                  {arch.name}
+                </span>
+                <span
+                  className={`text-[9px] font-black px-1.5 py-0.5 rounded shrink-0 leading-none ${
                     isSelected
-                      ? 'bg-cyan-500 text-zinc-950'
-                      : 'bg-zinc-850 text-zinc-400'
+                      ? 'bg-cyan-500 text-zinc-950 font-bold'
+                      : 'bg-zinc-800 text-zinc-300'
                   }`}
                 >
                   {arch.winRate}%
                 </span>
+              </div>
+
+              {/* Bottom Row: Compact Matches + Separated Rune Icons */}
+              <div className="flex items-center justify-between w-full min-w-0 gap-0.5 pt-0.5">
+                <span className="text-[9px] sm:text-[9.5px] text-zinc-400 font-mono tracking-tight truncate">
+                  {formatMatches(arch.matches)}
+                </span>
+
+                <div className="flex items-center gap-0.5 shrink-0">
+                  <RuneIcon
+                    iconUrl={arch.keystoneIcon}
+                    alt={arch.primaryKeystone}
+                    size="w-4 h-4"
+                    isKeystone
+                  />
+                  <RuneIcon
+                    iconUrl={arch.secondaryIcon}
+                    alt="Secondary Rune"
+                    size="w-3.5 h-3.5"
+                    isSecondaryStyle
+                  />
+                </div>
               </div>
             </button>
           )

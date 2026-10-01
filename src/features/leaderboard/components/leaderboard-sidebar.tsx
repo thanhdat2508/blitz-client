@@ -196,8 +196,15 @@ export function LeaderboardSidebar({
         <div className="flex flex-col gap-1">
           {TIERS.map((t) => {
             const isActive = tier === t.id;
+            const totalCount = tierCounts
+              ? Object.values(tierCounts).reduce((acc, c) => acc + (c || 0), 0)
+              : undefined;
             const count =
-              tierCounts && t.id !== "all" ? tierCounts[t.id] : undefined;
+              t.id === "all"
+                ? totalCount
+                : tierCounts
+                ? tierCounts[t.id]
+                : undefined;
 
             return (
               <Button

@@ -73,37 +73,10 @@ export function ChampionsHeader({
         </div>
       </div>
 
-      {/* 2. SUB-TABS ROW (Ranked Stats, Mastery Stats, etc.) */}
+      {/* 2. SUB-TABS ROW (Ranked Stats) */}
       <div className="flex items-center gap-1 border-b border-zinc-800/80 overflow-x-auto scrollbar-none text-xs md:text-sm font-semibold pt-1">
-        <button
-          type="button"
-          className="px-3 py-2 text-white border-b-2 border-amber-400 whitespace-nowrap cursor-pointer font-bold"
-        >
+        <div className="px-3 py-2 text-white border-b-2 border-amber-400 whitespace-nowrap font-bold">
           <p>Ranked Stats</p>
-        </button>
-
-        <div className="px-3 py-2 text-zinc-400 hover:text-zinc-200 whitespace-nowrap cursor-pointer font-medium">
-          <p>Mastery</p>
-        </div>
-
-        <div className="px-3 py-2 text-zinc-400 hover:text-zinc-200 whitespace-nowrap cursor-pointer font-medium">
-          <p>ARAM</p>
-        </div>
-
-        <div className="px-3 py-2 text-zinc-400 hover:text-zinc-200 whitespace-nowrap cursor-pointer font-medium">
-          <p>URF</p>
-        </div>
-
-        <div className="px-3 py-2 text-zinc-400 hover:text-zinc-200 whitespace-nowrap cursor-pointer font-medium">
-          <p>Arena</p>
-        </div>
-
-        <div className="px-3 py-2 text-zinc-400 hover:text-zinc-200 whitespace-nowrap cursor-pointer font-medium">
-          <p>Arena 3v3</p>
-        </div>
-
-        <div className="px-3 py-2 text-zinc-400 hover:text-zinc-200 whitespace-nowrap cursor-pointer font-medium">
-          <p>Synergies</p>
         </div>
       </div>
     </div>

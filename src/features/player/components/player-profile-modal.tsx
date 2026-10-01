@@ -1,10 +1,7 @@
-import { useState } from "react";
 import {
   X,
   Trophy,
   Swords,
-  Copy,
-  Check,
   Clock,
   Loader2,
   AlertCircle,
@@ -32,8 +29,6 @@ export function PlayerProfileModal({
   tagLine,
   region,
 }: PlayerProfileModalProps) {
-  const [copiedPuuid, setCopiedPuuid] = useState(false);
-
   const {
     data: profile,
     isLoading,
@@ -45,12 +40,6 @@ export function PlayerProfileModal({
   );
 
   if (!isOpen) return null;
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedPuuid(true);
-    setTimeout(() => setCopiedPuuid(false), 2000);
-  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md animate-in fade-in-0 duration-200">
@@ -139,38 +128,6 @@ export function PlayerProfileModal({
                     <Badge className="bg-yellow-500/20 text-yellow-400 border border-yellow-500/30 font-bold uppercase text-[11px] px-2.5 py-0.5">
                       {profile.regionName} ({profile.region.toUpperCase()})
                     </Badge>
-                  </div>
-
-                  {/* PUUID & Icon ID */}
-                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 text-xs text-gray-400 pt-1">
-                    <div className="flex items-center gap-1.5 bg-[#0e0f17] px-3 py-1.5 rounded-lg border border-gray-800">
-                      <span className="text-gray-500 font-semibold">
-                        PUUID:
-                      </span>
-                      <span className="font-mono text-gray-300 truncate max-w-35 sm:max-w-50">
-                        {profile.puuid}
-                      </span>
-                      <button
-                        onClick={() => copyToClipboard(profile.puuid)}
-                        className="hover:text-yellow-400 ml-1 transition cursor-pointer"
-                        title="Copy PUUID"
-                      >
-                        {copiedPuuid ? (
-                          <Check size={14} className="text-green-400" />
-                        ) : (
-                          <Copy size={14} />
-                        )}
-                      </button>
-                    </div>
-
-                    <div className="flex items-center gap-1.5 bg-[#0e0f17] px-3 py-1.5 rounded-lg border border-gray-800">
-                      <span className="text-gray-500 font-semibold">
-                        Icon ID:
-                      </span>
-                      <span className="font-mono text-gray-300">
-                        {profile.profileIconId}
-                      </span>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -306,6 +263,54 @@ export function PlayerProfileModal({
 
 // ----------------- SUB-COMPONENTS -----------------
 
+const RANK_EMBLEMS: Record<string, string> = {
+  iron: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-iron.png',
+  bronze: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-bronze.png',
+  silver: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-silver.png',
+  gold: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-gold.png',
+  platinum: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-platinum.png',
+  emerald: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-emerald.png',
+  diamond: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-diamond.png',
+  master: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-master.png',
+  grandmaster: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-grandmaster.png',
+  challenger: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-challenger.png',
+  unranked: 'https://raw.communitydragon.org/latest/plugins/rcp-fe-lol-static-assets/global/default/images/ranked-emblem/emblem-unranked.png',
+};
+
+const RANK_FALLBACKS: Record<string, string> = {
+  iron: 'https://opgg-static.akamaized.net/images/medals_new/iron.png',
+  bronze: 'https://opgg-static.akamaized.net/images/medals_new/bronze.png',
+  silver: 'https://opgg-static.akamaized.net/images/medals_new/silver.png',
+  gold: 'https://opgg-static.akamaized.net/images/medals_new/gold.png',
+  platinum: 'https://opgg-static.akamaized.net/images/medals_new/platinum.png',
+  emerald: 'https://opgg-static.akamaized.net/images/medals_new/emerald.png',
+  diamond: 'https://opgg-static.akamaized.net/images/medals_new/diamond.png',
+  master: 'https://opgg-static.akamaized.net/images/medals_new/master.png',
+  grandmaster: 'https://opgg-static.akamaized.net/images/medals_new/grandmaster.png',
+  challenger: 'https://opgg-static.akamaized.net/images/medals_new/challenger.png',
+  unranked: 'https://opgg-static.akamaized.net/images/medals_new/unranked.png',
+};
+
+function getRankKey(tier?: string): string {
+  if (!tier) return 'unranked';
+  const t = tier.toLowerCase();
+  for (const k of [
+    'challenger',
+    'grandmaster',
+    'master',
+    'diamond',
+    'emerald',
+    'platinum',
+    'gold',
+    'silver',
+    'bronze',
+    'iron',
+  ]) {
+    if (t.includes(k)) return k;
+  }
+  return 'unranked';
+}
+
 function RankCard({
   title,
   rankInfo,
@@ -313,12 +318,26 @@ function RankCard({
   title: string;
   rankInfo: CleanRankInfo | null;
 }) {
+  const tierKey = getRankKey(rankInfo?.tier);
+  const emblemUrl = RANK_EMBLEMS[tierKey] || RANK_EMBLEMS.unranked;
+  const fallbackUrl = RANK_FALLBACKS[tierKey] || RANK_FALLBACKS.unranked;
+
   if (!rankInfo) {
     return (
-      <div className="p-5 rounded-2xl bg-[#141522] border border-gray-800 flex items-center justify-between">
+      <div className="p-5 rounded-2xl bg-[#141522] border border-gray-800 flex items-center justify-between shadow-lg">
         <div className="flex items-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-[#090a0f] border border-gray-800 flex items-center justify-center text-gray-600 font-black text-sm">
-            UNRANKED
+          <div className="w-14 h-14 rounded-2xl bg-[#090a0f] border border-gray-800 flex items-center justify-center p-2 overflow-hidden shadow-inner">
+            <img
+              src={emblemUrl}
+              alt="Unranked"
+              className="w-full h-full object-contain opacity-40 filter grayscale"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                if (target.src !== fallbackUrl) {
+                  target.src = fallbackUrl;
+                }
+              }}
+            />
           </div>
           <div>
             <p className="text-xs uppercase font-extrabold text-gray-400 tracking-wider">
@@ -334,27 +353,20 @@ function RankCard({
 
   const tierName = rankInfo.tier?.toUpperCase() || "UNRANKED";
 
-  const getRankBadgeSvg = (t: string) => {
-    const upper = t.toUpperCase();
-    if (upper.includes("CHALLENGER") || upper.includes("GRANDMASTER"))
-      return "/tier_s.svg";
-    if (upper.includes("MASTER") || upper.includes("DIAMOND"))
-      return "/tier_a.svg";
-    if (upper.includes("EMERALD") || upper.includes("PLATINUM"))
-      return "/tier_b.svg";
-    if (upper.includes("GOLD") || upper.includes("SILVER"))
-      return "/tier_c.svg";
-    return "/tier_d.svg";
-  };
-
   return (
     <div className="p-5 rounded-2xl bg-[#141522] border border-gray-800 flex flex-wrap items-center justify-between gap-4 shadow-lg">
       <div className="flex items-center gap-4">
-        <div className="w-14 h-14 rounded-2xl bg-[#090a0f] border border-gray-700/60 flex items-center justify-center shadow-inner">
+        <div className="w-14 h-14 rounded-2xl bg-[#090a0f] border border-gray-700/60 flex items-center justify-center p-1.5 overflow-hidden shadow-inner">
           <img
-            src={getRankBadgeSvg(tierName)}
+            src={emblemUrl}
             alt={tierName}
-            className="w-9 h-9 object-contain drop-shadow"
+            className="w-full h-full object-contain filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.6)]"
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              if (target.src !== fallbackUrl) {
+                target.src = fallbackUrl;
+              }
+            }}
           />
         </div>
 
