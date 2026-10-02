@@ -15,6 +15,10 @@ import {
   Flame,
 } from "lucide-react";
 import { PlayerProfileModal } from "@/features/player/components/player-profile-modal";
+import { NewsModal } from "@/features/news/components/news-modal";
+import { getPostBySlug } from "@/features/news/api/get-posts";
+import { mapPostToNewsArticle } from "@/lib/news";
+import type { NewsArticle } from "@/types/news";
 import { Button } from "@/components/ui/button";
 import { useGlobalSearch } from "@/hooks/use-global-search";
 import type {
@@ -43,6 +47,9 @@ export function HeroSection() {
   const [region, setRegion] = useState("vn2");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const [selectedNewsArticle, setSelectedNewsArticle] =
+    useState<NewsArticle | null>(null);
 
   const [activeModal, setActiveModal] = useState<{
     isOpen: boolean;
@@ -105,13 +112,26 @@ export function HeroSection() {
     openSummonerModal(player.riotGameName, player.riotTagLine, targetRegion);
   };
 
-  // Handle Post Selection: navigates directly to the exact article via search param!
-  const handleSelectPost = (post: PostSearchResult) => {
+  const handleSelectPost = async (post: PostSearchResult) => {
     setIsDropdownOpen(false);
-    navigate({
-      to: "/news",
-      search: { article: post.slug } as any,
-    });
+    try {
+      const fullPost = await getPostBySlug(post.slug);
+      setSelectedNewsArticle(mapPostToNewsArticle(fullPost));
+    } catch {
+      setSelectedNewsArticle({
+        id: post.id,
+        slug: post.slug,
+        title: post.title,
+        summary: post.contentSnippet || post.title,
+        category: "patch-notes",
+        bannerUrl:
+          post.coverImageUrl ||
+          "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000&auto=format&fit=crop",
+        publishedAt: post.createdAt || new Date().toISOString(),
+        readTimeMinutes: 3,
+        author: post.authorName || "Riot Games",
+      });
+    }
   };
 
   const handleSearchSubmit = (rawInput?: string, targetRegion?: string) => {
@@ -533,6 +553,11 @@ export function HeroSection() {
         gameName={activeModal.gameName}
         tagLine={activeModal.tagLine}
         region={activeModal.region}
+      />
+
+      <NewsModal
+        article={selectedNewsArticle}
+        onClose={() => setSelectedNewsArticle(null)}
       />
     </div>
   );

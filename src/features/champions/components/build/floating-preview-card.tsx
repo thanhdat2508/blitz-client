@@ -1,84 +1,89 @@
-import { useEffect, useRef } from 'react'
-import { X, Sparkles } from 'lucide-react'
+import { useEffect, useRef } from "react";
+import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export interface FloatingCardData {
-  title: string
-  enTitle?: string
-  icon: string
-  tag?: string
-  cost?: string
-  tier?: string
-  stats?: string[]
-  enStats?: string[]
-  desc: string
-  enDesc?: string
-  subDesc?: string
-  enSubDesc?: string
-  cooldown?: string
-  enCooldown?: string
-  guide?: string
-  enGuide?: string
-  winRate: number
-  games: string | number
-  pickRate: number
-  rect?: DOMRect
+  title: string;
+  enTitle?: string;
+  icon: string;
+  tag?: string;
+  cost?: string;
+  tier?: string;
+  stats?: string[];
+  enStats?: string[];
+  desc: string;
+  enDesc?: string;
+  subDesc?: string;
+  enSubDesc?: string;
+  cooldown?: string;
+  enCooldown?: string;
+  guide?: string;
+  enGuide?: string;
+  winRate: number;
+  games: string | number;
+  pickRate: number;
+  rect?: DOMRect;
 }
 
 interface FloatingPreviewCardProps {
-  data: FloatingCardData | null
-  onClose: () => void
-  onMouseEnter?: () => void
+  data: FloatingCardData | null;
+  onClose: () => void;
+  onMouseEnter?: () => void;
 }
 
 function computeCoords(rect?: DOMRect) {
-  if (!rect) return { top: 120, left: 120 }
+  if (!rect) return { top: 120, left: 120 };
 
-  const cardWidth = 360
-  const cardHeight = 280
+  const cardWidth = 360;
+  const cardHeight = 280;
 
   // Position nicely to the right or left of element
-  let left = rect.right + 12
-  let top = rect.top - 20
+  let left = rect.right + 12;
+  let top = rect.top - 20;
 
-  const winWidth = typeof window !== 'undefined' ? window.innerWidth : 1440
-  const winHeight = typeof window !== 'undefined' ? window.innerHeight : 800
+  const winWidth = typeof window !== "undefined" ? window.innerWidth : 1440;
+  const winHeight = typeof window !== "undefined" ? window.innerHeight : 800;
 
   // Clamp horizontally to stay inside viewport
   if (left < 16) {
-    left = 16
+    left = 16;
   } else if (left + cardWidth > winWidth - 16) {
-    left = Math.max(16, rect.left - cardWidth - 12)
+    left = Math.max(16, rect.left - cardWidth - 12);
   }
 
   // Clamp vertically
   if (top + cardHeight > winHeight - 16) {
-    top = Math.max(16, winHeight - cardHeight - 16)
+    top = Math.max(16, winHeight - cardHeight - 16);
   }
 
-  return { top, left }
+  return { top, left };
 }
 
-export function FloatingPreviewCard({ data, onClose, onMouseEnter }: FloatingPreviewCardProps) {
-  const cardRef = useRef<HTMLDivElement>(null)
-  const coords = computeCoords(data?.rect)
+export function FloatingPreviewCard({
+  data,
+  onClose,
+  onMouseEnter,
+}: FloatingPreviewCardProps) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const coords = computeCoords(data?.rect);
 
   // Handle ESC key to dismiss
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [onClose])
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
 
-  if (!data) return null
+  if (!data) return null;
 
-  const title = data.enTitle ?? data.title
-  const desc = data.enDesc ?? data.desc
-  const subDesc = data.enSubDesc ?? data.subDesc
-  const cooldown = data.enCooldown ?? data.cooldown
-  const guide = data.enGuide ?? data.guide
-  const stats = data.enStats ?? data.stats
+  const title = data.enTitle ?? data.title;
+  const desc = data.enDesc ?? data.desc;
+  const subDesc = data.enSubDesc ?? data.subDesc;
+  const cooldown = data.enCooldown ?? data.cooldown;
+  const guide = data.enGuide ?? data.guide;
+  const stats = data.enStats ?? data.stats;
 
   return (
     <div
@@ -86,7 +91,7 @@ export function FloatingPreviewCard({ data, onClose, onMouseEnter }: FloatingPre
       style={{ top: `${coords.top}px`, left: `${coords.left}px` }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onClose}
-      className="fixed z-[9999] w-[350px] sm:w-[370px] rounded-2xl bg-[#0B0E14]/95 border border-zinc-700/80 shadow-[0_20px_50px_rgba(0,0,0,0.85)] backdrop-blur-xl p-4 text-zinc-100 select-none animate-in fade-in zoom-in-95 duration-150 pointer-events-auto"
+      className="fixed z-9999 max-w-md rounded-2xl bg-[#0B0E14]/95 border border-zinc-700/80 shadow-[0_20px_50px_rgba(0,0,0,0.85)] backdrop-blur-xl p-4 text-zinc-100 select-none animate-in fade-in zoom-in-95 duration-150 pointer-events-auto"
       onClick={(e) => e.stopPropagation()}
     >
       {/* 1. HEADER (ICON + TITLE + TAG + CLOSE BUTTON) */}
@@ -118,14 +123,15 @@ export function FloatingPreviewCard({ data, onClose, onMouseEnter }: FloatingPre
           </div>
         </div>
 
-        <button
+        <Button
           type="button"
           onClick={onClose}
+          variant="ghost"
           aria-label="Close Preview"
           className="w-6 h-6 rounded-md hover:bg-zinc-800 text-zinc-400 hover:text-zinc-200 flex items-center justify-center transition-colors cursor-pointer"
         >
           <X className="w-3.5 h-3.5" />
-        </button>
+        </Button>
       </div>
 
       {/* 2. STATS CHIPS (IF ANY) */}
@@ -157,9 +163,8 @@ export function FloatingPreviewCard({ data, onClose, onMouseEnter }: FloatingPre
 
       {/* 4. TACTICAL GUIDE */}
       {guide && (
-        <div className="mt-3 p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/25 text-amber-200/90 text-[11px] leading-snug space-y-1">
-          <div className="flex items-center gap-1.5 text-amber-400 font-bold text-[10px] uppercase tracking-wider">
-            <Sparkles className="w-3 h-3 text-amber-400" />
+        <div className="mt-3 p-2.5 rounded-xl border border-muted-foreground text-[11px] leading-snug space-y-1">
+          <div className="flex items-center gap-1.5 font-bold text-[10px] uppercase tracking-wider">
             <p>Tactical Guide</p>
           </div>
           <p className="text-zinc-300">{guide}</p>
@@ -190,5 +195,5 @@ export function FloatingPreviewCard({ data, onClose, onMouseEnter }: FloatingPre
         </div>
       </div>
     </div>
-  )
+  );
 }

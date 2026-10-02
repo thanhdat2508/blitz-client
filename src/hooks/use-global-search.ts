@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGlobalSearch, type GlobalSearchData } from "@/lib/search";
 
-export function useGlobalSearch(rawQuery: string, region: string = "vn2", debounceMs: number = 250) {
+export function useGlobalSearch(
+  rawQuery: string,
+  region: string = "vn2",
+  debounceMs: number = 250,
+) {
   const [debouncedQuery, setDebouncedQuery] = useState(rawQuery);
 
   useEffect(() => {
@@ -22,7 +26,8 @@ export function useGlobalSearch(rawQuery: string, region: string = "vn2", deboun
     staleTime: 1000 * 30, // 30 seconds
   });
 
-  const isDebouncing = rawQuery.trim() !== debouncedQuery && rawQuery.trim().length > 0;
+  const isDebouncing =
+    rawQuery.trim() !== debouncedQuery && rawQuery.trim().length > 0;
 
   return {
     ...queryResult,

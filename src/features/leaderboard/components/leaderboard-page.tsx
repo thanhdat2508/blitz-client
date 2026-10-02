@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useSearch, useNavigate } from "@tanstack/react-router";
 import { useLeaderboardTierList } from "../api/get-leaderboard";
 import { LeaderboardSidebar } from "./leaderboard-sidebar";
 import { LeaderboardTable } from "./leaderboard-table";
@@ -22,6 +23,7 @@ import type {
   LeaderboardSortBy,
   LeaderboardViewMode,
 } from "../types/leaderboard.types";
+import type { LeaderboardSearchParams } from "@/routes/leaderboard";
 import {
   Flame,
   SlidersHorizontal,
@@ -31,34 +33,85 @@ import {
 } from "lucide-react";
 
 export function LeaderboardPage() {
-  const [role, setRole] = React.useState<LeaderboardRole>("all");
-  const [tier, setTier] = React.useState<LeaderboardTier>("all");
-  const [rank, setRank] = React.useState<LeaderboardRank>("emerald");
-  const [search, setSearch] = React.useState("");
-  const [sortBy, setSortBy] = React.useState<LeaderboardSortBy>("winRate");
-  const [order] = React.useState<"asc" | "desc">("desc");
-  const [page, setPage] = React.useState(1);
-  const [pageSize, setPageSize] = React.useState(20);
-  const [viewMode, setViewMode] = React.useState<LeaderboardViewMode>("table");
-  const [isMobileSheetOpen, setIsMobileSheetOpen] = React.useState(false);
+  const searchParams = useSearch({
+    from: "/leaderboard",
+  }) as LeaderboardSearchParams;
+  const navigate = useNavigate();
 
-  // Debounced search
-  const [debouncedSearch, setDebouncedSearch] = React.useState("");
+  const role: LeaderboardRole = searchParams.role || "all";
+  const tier: LeaderboardTier = searchParams.tier || "all";
+  const rank: LeaderboardRank = searchParams.rank || "emerald";
+  const sortBy: LeaderboardSortBy = searchParams.sortBy || "winRate";
+  const order: "asc" | "desc" = searchParams.order || "desc";
+  const page: number = searchParams.page || 1;
+  const pageSize: number = searchParams.pageSize || 20;
+  const viewMode: LeaderboardViewMode = searchParams.viewMode || "table";
+
+  const [isMobileSheetOpen, setIsMobileSheetOpen] = React.useState(false);
+  const [searchInput, setSearchInput] = React.useState(
+    searchParams.search || "",
+  );
+
+  const [prevSearchParam, setPrevSearchParam] = React.useState(
+    searchParams.search || "",
+  );
+  if ((searchParams.search || "") !== prevSearchParam) {
+    setPrevSearchParam(searchParams.search || "");
+    setSearchInput(searchParams.search || "");
+  }
+
+  // Sync filter updates to URL query string
+  const updateQueryParams = React.useCallback(
+    (updates: Partial<LeaderboardSearchParams>) => {
+      navigate({
+        to: "/leaderboard",
+        search: (prev: Record<string, unknown>) => {
+          const next = { ...prev, ...updates };
+          const cleaned: Record<string, unknown> = {};
+
+          if (next.role && next.role !== "all") cleaned.role = next.role;
+          if (next.tier && next.tier !== "all") cleaned.tier = next.tier;
+          if (next.rank && next.rank !== "emerald") cleaned.rank = next.rank;
+          if (typeof next.search === "string" && next.search.trim()) {
+            cleaned.search = next.search.trim();
+          }
+          if (next.sortBy && next.sortBy !== "winRate")
+            cleaned.sortBy = next.sortBy;
+          if (next.order && next.order !== "desc") cleaned.order = next.order;
+          if (typeof next.page === "number" && next.page > 1)
+            cleaned.page = next.page;
+          if (typeof next.pageSize === "number" && next.pageSize !== 20) {
+            cleaned.pageSize = next.pageSize;
+          }
+          if (next.viewMode && next.viewMode !== "table")
+            cleaned.viewMode = next.viewMode;
+
+          return cleaned;
+        },
+        replace: true,
+      });
+    },
+    [navigate],
+  );
+
+  // Debounced search sync to URL
   React.useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedSearch(search);
-      setPage(1);
-    }, 250);
+      const trimmed = searchInput.trim();
+      if (trimmed !== (searchParams.search || "")) {
+        updateQueryParams({ search: trimmed || undefined, page: undefined });
+      }
+    }, 300);
     return () => clearTimeout(timer);
-  }, [search]);
+  }, [searchInput, searchParams.search, updateQueryParams]);
 
-  // Query parameter preparation
+  // Query parameter preparation for backend request
   const queryParams = React.useMemo(() => {
     return {
       role,
       tier: tier !== "all" ? tier : undefined,
       rank,
-      search: debouncedSearch.trim() || undefined,
+      search: (searchParams.search || "").trim() || undefined,
       sortBy,
       order,
       page: viewMode === "table" ? page : undefined,
@@ -68,7 +121,7 @@ export function LeaderboardPage() {
     role,
     tier,
     rank,
-    debouncedSearch,
+    searchParams.search,
     sortBy,
     order,
     page,
@@ -79,34 +132,42 @@ export function LeaderboardPage() {
   const { data, isLoading, isError, error, refetch } =
     useLeaderboardTierList(queryParams);
 
-  // Reset to page 1 on filter changes
+  // Handlers updating query params (which automatically trigger re-renders with new URL)
   const handleRoleChange = (newRole: LeaderboardRole) => {
-    setRole(newRole);
-    setPage(1);
+    updateQueryParams({ role: newRole, page: undefined });
   };
 
   const handleTierChange = (newTier: LeaderboardTier) => {
-    setTier(newTier);
-    setPage(1);
+    updateQueryParams({ tier: newTier, page: undefined });
   };
 
   const handleRankChange = (newRank: LeaderboardRank) => {
-    setRank(newRank);
-    setPage(1);
+    updateQueryParams({ rank: newRank, page: undefined });
+  };
+
+  const handleSortByChange = (newSortBy: LeaderboardSortBy) => {
+    updateQueryParams({ sortBy: newSortBy, page: undefined });
+  };
+
+  const handlePageChange = (newPage: number) => {
+    updateQueryParams({ page: newPage });
   };
 
   const handlePageSizeChange = (newSize: number) => {
-    setPageSize(newSize);
-    setPage(1);
+    updateQueryParams({ pageSize: newSize, page: undefined });
+  };
+
+  const handleViewModeChange = (newMode: LeaderboardViewMode) => {
+    updateQueryParams({ viewMode: newMode, page: undefined });
   };
 
   const handleResetFilters = () => {
-    setRole("all");
-    setTier("all");
-    setRank("emerald");
-    setSearch("");
-    setSortBy("winRate");
-    setPage(1);
+    setSearchInput("");
+    navigate({
+      to: "/leaderboard",
+      search: {},
+      replace: true,
+    });
     setIsMobileSheetOpen(false);
   };
 
@@ -120,10 +181,14 @@ export function LeaderboardPage() {
       if (counts[t] !== undefined) counts[t]++;
     });
     return counts;
-  }, [data?.tierCounts, data?.data]);
+  }, [data]);
 
-  const champions = data?.data || [];
-  const totalItems = data?.total || champions.length;
+  const allChampions = data?.data || [];
+  const champions =
+    viewMode === "table" && allChampions.length > pageSize
+      ? allChampions.slice((page - 1) * pageSize, page * pageSize)
+      : allChampions;
+  const totalItems = data?.total || allChampions.length;
   const totalPages = data?.totalPages || Math.ceil(totalItems / pageSize) || 1;
   const patchVersion = data?.patch || "15.5";
 
@@ -132,7 +197,7 @@ export function LeaderboardPage() {
     (role !== "all" ? 1 : 0) +
     (tier !== "all" ? 1 : 0) +
     (rank !== "emerald" ? 1 : 0) +
-    (search ? 1 : 0);
+    (searchInput.trim() ? 1 : 0);
 
   const roleLabels: Record<LeaderboardRole, string> = {
     all: "All Roles",
@@ -167,9 +232,9 @@ export function LeaderboardPage() {
             LoL Champion Tier List &amp; Leaderboard
           </h1>
           <p className="text-xs sm:text-sm text-neutral-400 max-w-2xl leading-relaxed">
-            Live meta analytics sourced from millions of ranked matches worldwide.
-            Explore win rates, pick rates, ban rates, and tier rankings for
-            every role.
+            Live meta analytics sourced from millions of ranked matches
+            worldwide. Explore win rates, pick rates, ban rates, and tier
+            rankings for every role.
           </p>
         </div>
 
@@ -197,13 +262,13 @@ export function LeaderboardPage() {
               role={role}
               tier={tier}
               rank={rank}
-              search={search}
+              search={searchInput}
               sortBy={sortBy}
               onRoleChange={handleRoleChange}
               onTierChange={handleTierChange}
               onRankChange={handleRankChange}
-              onSearchChange={setSearch}
-              onSortByChange={setSortBy}
+              onSearchChange={setSearchInput}
+              onSortByChange={handleSortByChange}
               onResetFilters={handleResetFilters}
               tierCounts={tierCounts}
             />
@@ -257,7 +322,7 @@ export function LeaderboardPage() {
                         role={role}
                         tier={tier}
                         rank={rank}
-                        search={search}
+                        search={searchInput}
                         sortBy={sortBy}
                         onRoleChange={(r) => {
                           handleRoleChange(r);
@@ -268,8 +333,8 @@ export function LeaderboardPage() {
                           setIsMobileSheetOpen(false);
                         }}
                         onRankChange={handleRankChange}
-                        onSearchChange={setSearch}
-                        onSortByChange={setSortBy}
+                        onSearchChange={setSearchInput}
+                        onSortByChange={handleSortByChange}
                         onResetFilters={handleResetFilters}
                         tierCounts={tierCounts}
                       />
@@ -295,12 +360,12 @@ export function LeaderboardPage() {
                     Tier {tier}
                   </Badge>
                 )}
-                {search && (
+                {searchParams.search && (
                   <Badge
                     variant="outline"
                     className="border-neutral-800 bg-[#171924] text-neutral-300 text-xs truncate max-w-32"
                   >
-                    "{search}"
+                    "{searchParams.search}"
                   </Badge>
                 )}
               </div>
@@ -326,7 +391,7 @@ export function LeaderboardPage() {
                   type="button"
                   variant={viewMode === "table" ? "default" : "ghost"}
                   size="icon-xs"
-                  onClick={() => setViewMode("table")}
+                  onClick={() => handleViewModeChange("table")}
                   className={`h-7 w-7 rounded-lg ${
                     viewMode === "table"
                       ? "bg-neutral-800 text-white"
@@ -340,7 +405,7 @@ export function LeaderboardPage() {
                   type="button"
                   variant={viewMode === "grouped" ? "default" : "ghost"}
                   size="icon-xs"
-                  onClick={() => setViewMode("grouped")}
+                  onClick={() => handleViewModeChange("grouped")}
                   className={`h-7 w-7 rounded-lg ${
                     viewMode === "grouped"
                       ? "bg-neutral-800 text-white"
@@ -407,7 +472,7 @@ export function LeaderboardPage() {
                 totalPages={totalPages}
                 totalItems={totalItems}
                 pageSize={pageSize}
-                onPageChange={setPage}
+                onPageChange={handlePageChange}
                 onPageSizeChange={handlePageSizeChange}
               />
             </div>

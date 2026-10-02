@@ -7,6 +7,7 @@ interface ChampionAbility {
 }
 
 interface NewChampion {
+  id: string;
   name: string;
   isNew?: boolean;
   description: string;
@@ -17,6 +18,7 @@ interface NewChampion {
 
 const NEW_CHAMPIONS: NewChampion[] = [
   {
+    id: "Locke",
     name: "Locke",
     isNew: true,
     description: "Check out Locke's abilities, builds, and stats",
@@ -47,6 +49,7 @@ const NEW_CHAMPIONS: NewChampion[] = [
     ],
   },
   {
+    id: "Zaahen",
     name: "Zaahen",
     description:
       "Get a sneak peek at Zaahen, the newest champion in League of Legends!",
@@ -77,6 +80,7 @@ const NEW_CHAMPIONS: NewChampion[] = [
     ],
   },
   {
+    id: "Yunara",
     name: "Yunara",
     description: "Check out Yunara's abilities, builds, and stats",
     splashUrl:
@@ -128,9 +132,11 @@ export function NewChampionsSection() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {NEW_CHAMPIONS.map((champ) => (
-          <div
-            key={champ.name}
-            className="group relative h-108 rounded-2xl overflow-hidden cursor-pointer border border-gray-700 shadow-xl hover:border-gray-500 hover:scale-[1.02] transition-all duration-300"
+          <Link
+            key={champ.id}
+            to="/champions/$championId"
+            params={{ championId: champ.id }}
+            className="group relative h-108 rounded-2xl overflow-hidden cursor-pointer border border-gray-700 shadow-xl hover:border-gray-500 hover:scale-[1.02] transition-all duration-300 block text-left"
             style={{
               backgroundImage: `url('${champ.splashUrl}')`,
               backgroundSize: "cover",
@@ -176,7 +182,7 @@ export function NewChampionsSection() {
                 />
               </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </section>

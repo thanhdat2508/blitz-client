@@ -1,7 +1,7 @@
 import type { ChampionChange, GetNewsParams, NewsArticle, NewsCategory } from "@/types/news";
 import { getPosts } from "@/features/news/api/get-posts";
 
-function extractChampionChanges(content: string): ChampionChange[] {
+export function extractChampionChanges(content: string): ChampionChange[] {
   const changes: ChampionChange[] = [];
   if (!content) return changes;
 
@@ -62,12 +62,70 @@ function extractChampionChanges(content: string): ChampionChange[] {
   return changes;
 }
 
+export function mapPostToNewsArticle(post: any): NewsArticle {
+  const tagSlugs = (post.tags || [])
+    .map(
+      (t: any) =>
+        t?.slug ||
+        t?.tag?.slug ||
+        t?.name?.toLowerCase().replace(/\s+/g, "-") ||
+        "",
+    )
+    .filter(Boolean);
+
+  let matchedCategory: NewsCategory = "community";
+  for (const t of tagSlugs) {
+    if (["patch-notes", "esports", "gameplay", "community"].includes(t)) {
+      matchedCategory = t as NewsCategory;
+      break;
+    }
+  }
+
+  const patchMatch = post.title?.match(/(?:Patch\s*)?(\d+\.\d+)/i);
+  const patchVersion =
+    matchedCategory === "patch-notes" && patchMatch
+      ? patchMatch[1]
+      : undefined;
+
+  const cleanContent = (post.content || "")
+    .replace(/[#*`_~[\]]/g, "")
+    .replace(/\n+/g, " ")
+    .trim();
+  const summary =
+    cleanContent.length > 160
+      ? cleanContent.slice(0, 160).trim() + "..."
+      : cleanContent || post.title || "";
+
+  const changes =
+    matchedCategory === "patch-notes" && post.content
+      ? extractChampionChanges(post.content)
+      : undefined;
+
+  return {
+    id: post.id,
+    slug: post.slug,
+    title: post.title,
+    summary,
+    category: matchedCategory,
+    patchVersion,
+    bannerUrl:
+      post.coverImageUrl ||
+      "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000&auto=format&fit=crop",
+    publishedAt: post.createdAt,
+    readTimeMinutes:
+      post.readingTime ||
+      Math.max(2, Math.round((post.content?.length || 500) / 400)),
+    author: post.author?.name || post.author?.username || "Blitz Editorial Team",
+    content: post.content,
+    changes: changes && changes.length > 0 ? changes : undefined,
+  };
+}
+
 export async function getNews({
   category = "all",
   search = "",
 }: GetNewsParams = {}): Promise<NewsArticle[]> {
   try {
-    // 1. Fetch real blog posts directly from backend API
     const res = await getPosts({
       search: search.trim() || undefined,
       tag: category && category !== "all" ? category : undefined,
@@ -75,69 +133,7 @@ export async function getNews({
     });
 
     if (res && Array.isArray(res.items)) {
-      return res.items.map((post) => {
-        // Tag could be direct { slug } or nested { tag: { slug } }
-        const tagSlugs = (post.tags || [])
-          .map(
-            (t: any) =>
-              t?.slug ||
-              t?.tag?.slug ||
-              t?.name?.toLowerCase().replace(/\s+/g, "-") ||
-              "",
-          )
-          .filter(Boolean);
-
-        // Map tag to known NewsCategory
-        let matchedCategory: NewsCategory = "community";
-        for (const t of tagSlugs) {
-          if (["patch-notes", "esports", "gameplay", "community"].includes(t)) {
-            matchedCategory = t as NewsCategory;
-            break;
-          }
-        }
-
-        // Extract patch version if present (e.g. "26.19", "15.5")
-        const patchMatch = post.title.match(/(?:Patch\s*)?(\d+\.\d+)/i);
-        const patchVersion =
-          matchedCategory === "patch-notes" && patchMatch
-            ? patchMatch[1]
-            : undefined;
-
-        // Generate clean summary from content intro
-        const cleanContent = (post.content || "")
-          .replace(/[#*`_~[\]]/g, "")
-          .replace(/\n+/g, " ")
-          .trim();
-        const summary =
-          cleanContent.length > 160
-            ? cleanContent.slice(0, 160).trim() + "..."
-            : cleanContent || post.title;
-
-        // Extract structured balance changes for patch notes
-        const changes =
-          matchedCategory === "patch-notes" && post.content
-            ? extractChampionChanges(post.content)
-            : undefined;
-
-        return {
-          id: post.id,
-          slug: post.slug,
-          title: post.title,
-          summary,
-          category: matchedCategory,
-          patchVersion,
-          bannerUrl:
-            post.coverImageUrl ||
-            "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000&auto=format&fit=crop",
-          publishedAt: post.createdAt,
-          readTimeMinutes:
-            post.readingTime ||
-            Math.max(2, Math.round((post.content?.length || 500) / 400)),
-          author: post.author?.name || post.author?.username || "Blitz Editorial Team",
-          content: post.content,
-          changes: changes && changes.length > 0 ? changes : undefined,
-        };
-      });
+      return res.items.map(mapPostToNewsArticle);
     }
   } catch (err) {
     console.warn("[news] Backend /api/posts fetch error:", err);

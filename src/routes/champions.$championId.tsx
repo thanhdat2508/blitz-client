@@ -1,118 +1,143 @@
-import { createFileRoute, useNavigate, useParams } from '@tanstack/react-router'
-import { useState } from 'react'
-import { championKeys, fetchChampionById, useChampion } from '@/features/champions/api/get-champions'
-import { championBuildKeys, fetchChampionBuild, useChampionBuild } from '@/features/champions/api/get-champion-build'
-import type { BuildRole, BuildTier } from '@/features/champions/types/champion-build'
-import { ChampionHeroHeader } from '@/features/champions/components/detail/champion-hero-header'
-import { ChampionFilterToolbar } from '@/features/champions/components/detail/champion-filter-toolbar'
-import { ChampionMetaStatsBar } from '@/features/champions/components/detail/champion-meta-stats-bar'
-import { TabRunesItems } from '@/features/champions/components/modal/tab-runes-items'
-import { ArrowLeft } from 'lucide-react'
-import type { Role, ChampionMeta } from '@/features/champions/types/champion'
-import { getChampionAvatarUrl, getChampionSplashUrl } from '@/features/champions/data/ddragon-ids'
+import {
+  createFileRoute,
+  useNavigate,
+  useParams,
+} from "@tanstack/react-router";
+import { useState } from "react";
+import {
+  championKeys,
+  fetchChampionById,
+  useChampion,
+} from "@/features/champions/api/get-champions";
+import {
+  championBuildKeys,
+  fetchChampionBuild,
+  useChampionBuild,
+} from "@/features/champions/api/get-champion-build";
+import type {
+  BuildRole,
+  BuildTier,
+} from "@/features/champions/types/champion-build";
+import { ChampionHeroHeader } from "@/features/champions/components/detail/champion-hero-header";
+import { ChampionFilterToolbar } from "@/features/champions/components/detail/champion-filter-toolbar";
+import { ChampionMetaStatsBar } from "@/features/champions/components/detail/champion-meta-stats-bar";
+import { TabRunesItems } from "@/features/champions/components/modal/tab-runes-items";
+import { ArrowLeft } from "lucide-react";
+import type { Role, ChampionMeta } from "@/features/champions/types/champion";
+import {
+  getChampionAvatarUrl,
+  getChampionSplashUrl,
+} from "@/features/champions/data/ddragon-ids";
 
-export const Route = createFileRoute('/champions/$championId')({
+export const Route = createFileRoute("/champions/$championId")({
   loader: async ({ params: { championId }, context: { queryClient } }) => {
     queryClient.prefetchQuery({
       queryKey: championKeys.detail(championId),
       queryFn: () => fetchChampionById(championId),
-    })
+    });
     return queryClient.ensureQueryData({
-      queryKey: championBuildKeys.build(championId, 'mid', { tier: 'EMERALD+', region: 'WORLD' }),
-      queryFn: () => fetchChampionBuild(championId, 'mid', { tier: 'EMERALD+', region: 'WORLD' }),
-    })
+      queryKey: championBuildKeys.build(championId, "mid", {
+        tier: "EMERALD+",
+        region: "WORLD",
+      }),
+      queryFn: () =>
+        fetchChampionBuild(championId, "mid", {
+          tier: "EMERALD+",
+          region: "WORLD",
+        }),
+    });
   },
   component: ChampionDetailPage,
-})
+});
 
 // Map frontend role format (ALL, TOP, JUNGLE...) to backend format (top, jungle...)
 function toBackendRole(role: Role): BuildRole {
   const map: Record<string, BuildRole> = {
-    TOP: 'top',
-    JUNGLE: 'jungle',
-    MID: 'mid',
-    ADC: 'adc',
-    SUPPORT: 'support',
-  }
-  return map[role] ?? 'mid'
+    TOP: "top",
+    JUNGLE: "jungle",
+    MID: "mid",
+    ADC: "adc",
+    SUPPORT: "support",
+  };
+  return map[role] ?? "mid";
 }
 
 function ChampionDetailPage() {
-  const navigate = useNavigate()
-  const { championId } = useParams({ from: '/champions/$championId' })
+  const navigate = useNavigate();
+  const { championId } = useParams({ from: "/champions/$championId" });
 
   // Champion meta from backend or local catalog
-  const { data: champion, isLoading: isLoadingMeta } = useChampion(championId)
+  const { data: champion, isLoading: isLoadingMeta } = useChampion(championId);
 
-  const [selectedRoleOverride, setSelectedRoleOverride] = useState<Role | null>(null)
-  const [selectedRank, setSelectedRank] = useState<BuildTier>('EMERALD+')
-  const [selectedRegion, setSelectedRegion] = useState('WORLD')
-  const [selectedMatchup, setSelectedMatchup] = useState('')
+  const [selectedRoleOverride, setSelectedRoleOverride] = useState<Role | null>(
+    null,
+  );
+  const [selectedRank, setSelectedRank] = useState<BuildTier>("EMERALD+");
+  const [selectedRegion, setSelectedRegion] = useState("WORLD");
+  const [selectedMatchup, setSelectedMatchup] = useState("");
 
-  const frontendRole: Role = selectedRoleOverride ?? champion?.primaryRole ?? 'MID'
-  const backendRole: BuildRole = toBackendRole(frontendRole)
+  const frontendRole: Role =
+    selectedRoleOverride ?? champion?.primaryRole ?? "MID";
+  const backendRole: BuildRole = toBackendRole(frontendRole);
 
   // Champion build from backend API
-  const {
-    data: buildData,
-    isLoading: isLoadingBuild,
-  } = useChampionBuild(
+  const { data: buildData, isLoading: isLoadingBuild } = useChampionBuild(
     champion?.id ?? championId,
     backendRole,
-    { tier: selectedRank, region: selectedRegion }
-  )
+    { tier: selectedRank, region: selectedRegion },
+  );
 
   // Robust champion resolution combining tier-list catalog and live build overview
   const resolvedChampion: ChampionMeta | undefined = champion
     ? {
-      ...champion,
-      matches: buildData?.overview?.gamesPlayed ?? champion.matches,
-      winRate: buildData?.overview?.winRate ?? champion.winRate,
-      pickRate: buildData?.overview?.pickRate ?? champion.pickRate,
-      banRate: buildData?.overview?.banRate ?? champion.banRate,
-      avatarUrl: buildData?.overview?.avatarUrl || champion.avatarUrl,
-      splashUrl: buildData?.overview?.splashUrl || champion.splashUrl,
-    }
+        ...champion,
+        matches: buildData?.overview?.gamesPlayed ?? champion.matches,
+        winRate: buildData?.overview?.winRate ?? champion.winRate,
+        pickRate: buildData?.overview?.pickRate ?? champion.pickRate,
+        banRate: buildData?.overview?.banRate ?? champion.banRate,
+        avatarUrl: buildData?.overview?.avatarUrl ?? champion.avatarUrl,
+        splashUrl: buildData?.overview?.splashUrl ?? champion.splashUrl,
+      }
     : buildData?.overview
       ? {
-        id: buildData.overview.key || buildData.overview.id || championId,
-        name: buildData.overview.name || championId,
-        title: buildData.overview.title || championId,
-        roles: [frontendRole],
-        primaryRole: frontendRole,
-        avatarUrl:
-          buildData.overview.avatarUrl ||
-          getChampionAvatarUrl(buildData.overview.key || championId),
-        splashUrl:
-          buildData.overview.splashUrl ||
-          getChampionSplashUrl(buildData.overview.key || championId),
-        tier: (buildData.overview.tierRank as any) || 'S',
-        winRate: buildData.overview.winRate ?? 52.0,
-        pickRate: buildData.overview.pickRate ?? 5.0,
-        banRate: buildData.overview.banRate ?? 2.0,
-        matches: buildData.overview.gamesPlayed ?? 10000,
-        trend: buildData.previousPatch?.winRateDiff ?? 0,
-        counters: [],
-        buildGuide: {
-          skillOrder: ['Q', 'E', 'W'],
-          skillPriority: 'Q > E > W',
-          runes: {
-            primaryTree: 'Precision',
-            keystone: { name: 'Conqueror', iconUrl: '' },
-            primaryRunes: [],
-            secondaryTree: 'Resolve',
-            secondaryRunes: [],
-            shards: [],
+          id: buildData.overview.key ?? buildData.overview.id ?? championId,
+          name: buildData.overview.name ?? championId,
+          title: buildData.overview.title ?? championId,
+          roles: [frontendRole],
+          primaryRole: frontendRole,
+          avatarUrl:
+            buildData.overview.avatarUrl ??
+            getChampionAvatarUrl(buildData.overview.key ?? championId),
+          splashUrl:
+            buildData.overview.splashUrl ??
+            getChampionSplashUrl(buildData.overview.key ?? championId),
+          tier: (buildData.overview.tierRank as any) ?? "S",
+          winRate: buildData.overview.winRate ?? 52.0,
+          pickRate: buildData.overview.pickRate ?? 5.0,
+          banRate: buildData.overview.banRate ?? 2.0,
+          matches: buildData.overview.gamesPlayed ?? 10000,
+          trend: buildData.previousPatch?.winRateDiff ?? 0,
+          counters: [],
+          buildGuide: {
+            skillOrder: ["Q", "E", "W"],
+            skillPriority: "Q > E > W",
+            runes: {
+              primaryTree: "Precision",
+              keystone: { name: "Conqueror", iconUrl: "" },
+              primaryRunes: [],
+              secondaryTree: "Resolve",
+              secondaryRunes: [],
+              shards: [],
+            },
+            items: { starting: [], core: [], boots: [], situational: [] },
+            strengths: [],
+            weaknesses: [],
+            keyTips: [],
           },
-          items: { starting: [], core: [], boots: [], situational: [] },
-          strengths: [],
-          weaknesses: [],
-          keyTips: [],
-        },
-      }
-      : undefined
+        }
+      : undefined;
 
-  const isLoading = (isLoadingMeta || isLoadingBuild) && !resolvedChampion
+  const isLoading = (isLoadingMeta || isLoadingBuild) && !resolvedChampion;
 
   if (isLoading) {
     return (
@@ -122,25 +147,23 @@ function ChampionDetailPage() {
           Loading champion data...
         </p>
       </div>
-    )
+    );
   }
 
   if (!resolvedChampion) {
     return (
       <div className="py-20 text-center space-y-4 select-none">
-        <p className="text-lg font-bold text-zinc-200">
-          Champion not found
-        </p>
+        <p className="text-lg font-bold text-zinc-200">Champion not found</p>
         <button
           type="button"
-          onClick={() => navigate({ to: '/champions' })}
+          onClick={() => navigate({ to: "/champions" })}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-semibold cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           <p>All Champions</p>
         </button>
       </div>
-    )
+    );
   }
 
   return (
@@ -156,7 +179,6 @@ function ChampionDetailPage() {
         {/* Active Build Header */}
         <div className="flex items-center justify-between pb-2 border-b border-zinc-800/80">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
             <p className="text-xs font-bold uppercase tracking-wider text-amber-300">
               Champion Build &amp; Meta Guide
             </p>
@@ -200,5 +222,5 @@ function ChampionDetailPage() {
         />
       </div>
     </div>
-  )
+  );
 }

@@ -1,54 +1,59 @@
-import { useState, useEffect } from 'react'
-import { Link as RouterLink, useNavigate } from '@tanstack/react-router'
-import { Check, Link as LinkIcon, ArrowLeft, X } from 'lucide-react'
-import type { ChampionMeta, Role } from '../../types/champion'
-import { TierBadge } from '../tier-badge'
-import { getChampionAvatarUrl } from '../../data/ddragon-ids'
+import { useState, useEffect } from "react";
+import { Link as RouterLink, useNavigate } from "@tanstack/react-router";
+import { Check, Link as LinkIcon, ArrowLeft } from "lucide-react";
+import type { ChampionMeta, Role } from "../../types/champion";
+import { TierBadge } from "../tier-badge";
+import { getChampionAvatarUrl } from "../../data/ddragon-ids";
 
 interface ChampionHeroHeaderProps {
-  champion: ChampionMeta
-  selectedRole?: Role
+  champion: ChampionMeta;
+  selectedRole?: Role;
 }
 
 const ROLE_DISPLAY_NAMES: Record<string, string> = {
-  MID: 'Mid',
-  TOP: 'Top',
-  JUNGLE: 'Jungle',
-  ADC: 'ADC',
-  SUPPORT: 'Support',
-}
+  MID: "Mid",
+  TOP: "Top",
+  JUNGLE: "Jungle",
+  ADC: "ADC",
+  SUPPORT: "Support",
+};
 
-export function ChampionHeroHeader({ champion, selectedRole }: ChampionHeroHeaderProps) {
-  const navigate = useNavigate()
-  const [copied, setCopied] = useState(false)
-  const [imgErr, setImgErr] = useState(false)
-  const [avatarFailed, setAvatarFailed] = useState(false)
+export function ChampionHeroHeader({
+  champion,
+  selectedRole,
+}: ChampionHeroHeaderProps) {
+  const navigate = useNavigate();
+  const [copied, setCopied] = useState(false);
+  const [imgErr, setImgErr] = useState(false);
+  const [avatarFailed, setAvatarFailed] = useState(false);
 
-  const activeRole = selectedRole ?? champion.primaryRole
-  const champKey = champion.id || champion.name
+  const activeRole = selectedRole ?? champion.primaryRole;
+  const champKey = champion.id || champion.name;
 
-  const canonicalAvatarUrl = getChampionAvatarUrl(champKey)
-  const avatarSrc = imgErr ? canonicalAvatarUrl : (champion.avatarUrl || canonicalAvatarUrl)
-  const roleText = ROLE_DISPLAY_NAMES[activeRole] || activeRole
+  const canonicalAvatarUrl = getChampionAvatarUrl(champKey);
+  const avatarSrc = imgErr
+    ? canonicalAvatarUrl
+    : champion.avatarUrl || canonicalAvatarUrl;
+  const roleText = ROLE_DISPLAY_NAMES[activeRole] || activeRole;
 
   // Support ESC shortcut to quickly exit back to champion catalog
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        navigate({ to: '/champions' })
+      if (e.key === "Escape") {
+        navigate({ to: "/champions" });
       }
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [navigate])
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [navigate]);
 
   const handleCopyLink = () => {
-    if (typeof window !== 'undefined') {
-      navigator.clipboard.writeText(window.location.href)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+    if (typeof window !== "undefined") {
+      navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
-  }
+  };
 
   return (
     <div className="space-y-3.5 select-none">
@@ -66,12 +71,21 @@ export function ChampionHeroHeader({ champion, selectedRole }: ChampionHeroHeade
             </p>
           </RouterLink>
 
-          <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-zinc-500">
-            <RouterLink to="/" className="hover:text-zinc-300 transition-colors">
+          <nav
+            aria-label="Breadcrumb"
+            className="flex items-center gap-1.5 text-zinc-500"
+          >
+            <RouterLink
+              to="/"
+              className="hover:text-zinc-300 transition-colors"
+            >
               Home
             </RouterLink>
             <span className="text-zinc-600">/</span>
-            <RouterLink to="/champions" className="hover:text-amber-400 transition-colors">
+            <RouterLink
+              to="/champions"
+              className="hover:text-amber-400 transition-colors"
+            >
               Champions
             </RouterLink>
             <span className="text-zinc-600">/</span>
@@ -80,17 +94,6 @@ export function ChampionHeroHeader({ champion, selectedRole }: ChampionHeroHeade
             </span>
           </nav>
         </div>
-
-        {/* Quick Close (X) to exit to champion catalog */}
-        <button
-          type="button"
-          onClick={() => navigate({ to: '/champions' })}
-          title="Exit to the champion list (Esc)"
-          aria-label="Exit to the champion list"
-          className="w-8 h-8 rounded-lg flex items-center justify-center border border-zinc-800 bg-[#0E121A] hover:bg-zinc-850 hover:border-zinc-700 text-zinc-400 hover:text-white transition-all cursor-pointer"
-        >
-          <X className="w-4 h-4" />
-        </button>
       </div>
 
       {/* 2. MAIN HERO HEADER BANNER */}
@@ -109,15 +112,15 @@ export function ChampionHeroHeader({ champion, selectedRole }: ChampionHeroHeade
                   height={80}
                   onError={() => {
                     if (!imgErr) {
-                      setImgErr(true)
+                      setImgErr(true);
                     } else {
-                      setAvatarFailed(true)
+                      setAvatarFailed(true);
                     }
                   }}
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full bg-gradient-to-br from-amber-900/60 to-zinc-950 flex items-center justify-center font-black text-amber-400 text-lg">
+                <div className="w-full h-full bg-linear-to-br from-amber-900/60 to-zinc-950 flex items-center justify-center font-black text-amber-400 text-lg">
                   {champion.name.slice(0, 2).toUpperCase()}
                 </div>
               )}
@@ -133,7 +136,8 @@ export function ChampionHeroHeader({ champion, selectedRole }: ChampionHeroHeade
               {champion.name} {roleText} Build & Runes - Patch 26.19 (Emerald+)
             </h1>
             <p className="text-xs text-zinc-400 max-w-3xl">
-              Optimal runes, items, skill order, and win rate stats for {champion.name} {roleText} in Emerald+ on Patch 26.19.
+              Optimal runes, items, skill order, and win rate stats for{" "}
+              {champion.name} {roleText} in Emerald+ on Patch 26.19.
             </p>
             <p className="text-[11px] text-zinc-500 font-medium">
               Data updated 3 hours ago.
@@ -148,12 +152,17 @@ export function ChampionHeroHeader({ champion, selectedRole }: ChampionHeroHeade
             onClick={handleCopyLink}
             aria-label="Copy link"
             title={copied ? "Copied link!" : "Copy link"}
-            className={`w-9 h-9 rounded-lg flex items-center justify-center border transition-all cursor-pointer ${copied
-              ? 'bg-emerald-950/80 border-emerald-500 text-emerald-300 shadow-md shadow-emerald-500/20'
-              : 'bg-zinc-900 border-zinc-700/80 hover:bg-zinc-800 text-zinc-400 hover:text-white'
-              }`}
+            className={`w-9 h-9 rounded-lg flex items-center justify-center border transition-all cursor-pointer ${
+              copied
+                ? "bg-emerald-950/80 border-emerald-500 text-emerald-300 shadow-md shadow-emerald-500/20"
+                : "bg-zinc-900 border-zinc-700/80 hover:bg-zinc-800 text-zinc-400 hover:text-white"
+            }`}
           >
-            {copied ? <Check className="w-4 h-4" /> : <LinkIcon className="w-4 h-4" />}
+            {copied ? (
+              <Check className="w-4 h-4" />
+            ) : (
+              <LinkIcon className="w-4 h-4" />
+            )}
           </button>
           {copied && (
             <div className="absolute -bottom-8 right-0 whitespace-nowrap px-2 py-0.5 rounded bg-emerald-900 border border-emerald-700 text-emerald-200 text-[10px] font-bold shadow-lg animate-fade-in">
@@ -163,5 +172,5 @@ export function ChampionHeroHeader({ champion, selectedRole }: ChampionHeroHeade
         </div>
       </div>
     </div>
-  )
+  );
 }

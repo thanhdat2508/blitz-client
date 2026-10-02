@@ -1,6 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import { useNews } from "../api/get-news";
 import { getPostBySlug } from "../api/get-posts";
+import { mapPostToNewsArticle } from "@/lib/news";
 import { NewsFilter } from "./news-filter";
 import { NewsCard } from "./news-card";
 import { NewsSkeletonGrid } from "./news-skeleton";
@@ -56,21 +57,7 @@ const NewsList = () => {
     getPostBySlug(slugToFind)
       .then((post) => {
         if (post) {
-          const mapped: NewsArticle = {
-            id: post.id,
-            slug: post.slug,
-            title: post.title,
-            summary: post.content?.slice(0, 160) || post.title,
-            category: "patch-notes",
-            bannerUrl:
-              post.coverImageUrl ||
-              "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1000&auto=format&fit=crop",
-            publishedAt: post.createdAt,
-            readTimeMinutes: post.readingTime || 3,
-            author: post.author?.name || post.author?.username || "Riot Games",
-            content: post.content,
-          };
-          setSelectedArticle(mapped);
+          setSelectedArticle(mapPostToNewsArticle(post));
         }
       })
       .catch(() => {});
